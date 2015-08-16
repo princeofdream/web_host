@@ -10,8 +10,20 @@ build:
 zlib:
 	./build.sh zlib
 
+xml:
+	./build.sh xml
+
+atomic:
+	./build.sh atomic
+
 ssl:
 	./build.sh ssl
+
+ssh:
+	./build.sh ssh
+
+php5:
+	./build.sh php
 
 php:
 	./build.sh php

@@ -9,23 +9,31 @@ OPENSSL_NAME=openssl
 OPENSSL_VER=1.0.2d
 
 arch=ARM
+PREFIX_PATH=/system_sec
 
 
 ## prepare env ##
 
-function compile_zlib()
+compile_zlib()
 {
 	cd $TOP_DIR
 	rm -rf ./zlib-1.2.8
 	tar zxf zlib-1.2.8.tar.gz
 	cd ./zlib-1.2.8
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
-	./configure --prefix=/system_sec --static
+	CONF_ARGS="--prefix=/system_sec --static"
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS
 	sed -i "s/gcc/$DEF_GCC/g" Makefile
 	make -j3 && make install
 }
 
-#function compile_lzma()
+#compile_lzma()
 #{
 	#cd $TOP_DIR
 	#rm -rf ./lzma-4.65
@@ -39,14 +47,24 @@ function compile_zlib()
 #}
 
 
-function compile_libxml2()
+compile_libxml2()
 {
 	cd $TOP_DIR
 	rm -rf ./libxml2-2.9.2/
 	tar zxf libxml2-2.9.2.tar.gz
 	cd ./libxml2-2.9.2/
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
-	./configure --prefix=/system_sec --host=arm-openwrt-linux-gnueabi CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --target=arm --enable-static=yes
+	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS+="--host=arm-linux "
+	CONF_ARGS+=" --target=arm "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+="--enable-static=yes"
+	./configure $CONF_ARGS
 	sed -i "s/\-llzma//g" Makefile
 	#sed -i "s/LZMA_LIBS/#LZMA_LIBS/g" Makefile
 	sed -i "s/PYTHON\ =/#PYTHON\ =/g" Makefile
@@ -61,36 +79,59 @@ function compile_libxml2()
 }
 
 
-function compile_php5()
+compile_php5()
 {
 	cd $TOP_DIR
 	rm -rf ./php-5.4.27/
 	tar jxf php-5.4.27.tar.bz2
 	cd ./php-5.4.27/
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS="--prefix=/system_sec "
+	if [ "$arch" == "ARM" ]
+	then
+		CONF_ARGS+=" --host=arm-linux --target=arm "
+		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+		CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	else
+		echo "compile for host"
+	fi
 	CONF_ARGS+=" --enable-static=yes --enable-fpm --enable-inline-optimization "
-	CONF_ARGS+=" --disable-all "
-	echo "./configure $CONF_ARGS"
-	./configure $CONF_ARGS
+	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	#--with-gd --with-zlib
-	#./configure --prefix=/system_sec --enable-static=yes --enable-fpm --with-curl --with-gd --enable-inline-optimization --with-bz2 --with-zli
-	make -j3 && make install
+	#CONF_ARGS+=" --disable-all "
+
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
+	#sed -i "s/-I\/usr\/include/-I\system_sec\/include/g" Makefile
+	sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
+	sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
+	sed -i "s/\$(top_builddir)\/sapi\/cli\/php/\$(top_builddir)\/..\/host_php_ext\/sapi\/cli\/php/g" Makefile
+	sed -i "s/\$(top_builddir)\/\$(SAPI_CLI_PATH)/\$(top_builddir)\/..\/host_php_ext\/\$(SAPI_CLI_PATH)/g" Makefile
+	make -j3 && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
 }
 
-function compile_ncurses()
+compile_ncurses()
 {
 	cd $TOP_DIR
 	VER=5.9
 	rm -rf ./ncurses-$VER
 	tar zxf ncurses-5.9.tar.gz
 	cd ./ncurses-5.9
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp "
-	CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
@@ -105,6 +146,11 @@ compile_mysql()
 	rm -rf mysql-$VER
 	tar zxf mysql-$VER.tar.gz
 	cd ./mysql-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
 	if [ "$arch" == "ARM" ]
 	then
@@ -123,7 +169,7 @@ compile_mysql()
 		cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
 	fi
 }
-#function compile_httpd()
+#compile_httpd()
 #{
 	#VER=2.2.27
 	##VER=2.4.16
@@ -139,25 +185,40 @@ compile_mysql()
 	#make -j3 && make install
 #}
 
-function compile_pcre()
+compile_pcre()
 {
 	VER=8.37
 	cd $TOP_DIR
 	rm -rf ./pcre-$VER/
 	tar jxf pcre-$VER.tar.bz2
 	cd ./pcre-$VER/
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
-	./configure --prefix=/system_sec --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --target=arm --enable-static=yes
+	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	./configure $CONF_ARGS
 	make -j3 && make install
 }
 
 
-function compile_openssl()
+compile_openssl()
 {
 	cd $TOP_DIR
 	rm -rf ./openssl-1.0.2d
 	tar zxf  openssl-1.0.2d.tar.gz
 	cd ./openssl-1.0.2d/
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
 	echo "Enter $(pwd)"
 	if [ "$arch" == "ARM" ]
 	then
@@ -184,20 +245,33 @@ function compile_openssl()
 
 
 
-function compile_atomic_ops()
+compile_atomic_ops()
 {
-	cd libatomic_ops
-	rm -rf *
-	git reset --hard
+	cd $TOP_DIR
+	VER=7.4.2
+	rm -rf libatomic_ops-$VER
+	tar zxf libatomic_ops-$VER.tar.gz
+	cd libatomic_ops-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+
 	echo "Enter $(pwd)"
 	./autogen.sh
-	./configure --prefix=/system_sec --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --target=arm --enable-static=yes
+	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	./configure $CONF_ARGS
 	make
 	cd src
 	ln -s .libs/libatomic_ops.a libatomic_ops.a
 }
 
-function compile_nginx()
+compile_nginx()
 {
 	#compile_atomic_ops
 	cd $TOP_DIR
@@ -207,7 +281,7 @@ function compile_nginx()
 	rm -rf ./nginx-$VER
 	tar zxf nginx-$VER.tar.gz
 
-	cp ./patches/nginx/patches/* ./nginx-$VER
+	cp $TOP_DIR/patches/nginx/patches/* ./nginx-$VER
 	cd ./nginx-$VER
 	patch -p1 < 101-feature_test_fix.patch
 	patch -p1 < 102-sizeof_test_fix.patch
@@ -224,29 +298,23 @@ function compile_nginx()
 
 	sed -i "/ngx_open_file_cache\.c/a\src/core/ngx_regex.c\\" auto/sources
 
+		CONF_ARGS=" --with-ipv6 "
+		CONF_ARGS+=" --without-http_rewrite_module "
+		CONF_ARGS+=" --prefix=/usr "
+		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops "
+		CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
+		CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
+		CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2 "
 	if [ "$arch" == "ARM" ]
 	then
 		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\ --target=arm\ --enable-static=yes/g" auto/lib/pcre/make
-		./configure --with-ipv6 \
-			--without-http_rewrite_module \
-			--prefix=/usr  \
-			--without-http_upstream_zone_module \
-			--with-cc=arm-openwrt-linux-gnueabi-gcc \
-			--crossbuild=Linux::arm  \
-			--with-libatomic=$TOP_DIR/libatomic_ops \
-			--with-pcre=$TOP_DIR/pcre-8.37 \
-			--with-openssl=$TOP_DIR/openssl-1.0.2d \
-			--with-zlib=$TOP_DIR/zlib-1.2.8
+		CONF_ARGS+=" --without-http_upstream_zone_module "
+		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
+		CONF_ARGS+=" --crossbuild=Linux::arm "
 	else
-		./configure --with-ipv6 \
-			--without-http_rewrite_module \
-			--prefix=/usr  \
-			--without-http_upstream_zone_module \
-			--with-libatomic=$TOP_DIR/libatomic_ops \
-			--with-pcre=$TOP_DIR/pcre-8.37 \
-			--with-openssl=$TOP_DIR/openssl-1.0.2d \
-			--with-zlib=$TOP_DIR/zlib-1.2.8
+		echo "compile for host"
 	fi
+		./configure $CONF_ARGS
 
 
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
@@ -262,16 +330,6 @@ function compile_nginx()
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
 	##--with-http_ssl_module \
 	##--with-openssl=$TOP_DIR/openssl-1.0.2d \
-### for openssl ###
-	#sed -i 's/\.\/config\ /\.\/Configure android-armv7\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\ /g' objs/Makefile
-	#sed -i '/Configure\ /a\\t%% sed -i '\''s\/CC=\\\ cc\/CC=\\\ arm-openwrt-linux-gnueabi-gcc\/g'\''\ Makefile\ \\'  objs/Makefile
-	#sed -i 's/\-mandroid//g' Makefile
-	#sed -i 's/LD_LIBRARY_PATH=/#LD_LIBRARY_PATH=/g' Makefile
-	#sed -i 's/\/usr/\/system_sec\/usr/g' tools/c_rehash
-	#sed -i '/MAKEFILE=/a\INSTALL_PREFIX=\/system_sec' tools/Makefile
-	#find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
-	#sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
-### end of openssl ###
 
 	sed -i '5 a\DESTDIR=\/system_sec' objs/Makefile
 
@@ -298,6 +356,19 @@ then
 	echo "compile zlib"
 	compile_zlib
 fi
+
+if [ "$1" == "xml" ]
+then
+	echo "compile libxml2"
+	compile_libxml2
+fi
+
+if [ "$1" == "atomic" ]
+then
+	echo "compile libatomic_ops"
+	compile_atomic_ops
+fi
+
 
 if [ "$1" == "ssl" ]
 then
