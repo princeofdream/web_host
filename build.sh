@@ -161,13 +161,19 @@ function compile_openssl()
 	echo "Enter $(pwd)"
 	if [ "$arch" == "ARM" ]
 	then
-		./Configure android-armv7 --prefix=/system_sec/ no-asm shared CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++
-		sed -i 's/CC=\ gcc/CC=\ arm-openwrt-linux-gnueabi-gcc/g' Makefile
-		sed -i 's/CC=\ cc/CC=\ arm-openwrt-linux-gnueabi-gcc/g' Makefile
+		CONF_ARGS="android-armv7 "
+		CONF_ARGS+=" --prefix=/system_sec "
+		#CONF_ARGS+=" no-asm shared "
+		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+		CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld CPP=arm-openwrt-linux-gnueabi-cpp "
+		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+		echo "./Configure $CONF_ARGS"
+		./Configure $CONF_ARGS
+		sed -i 's/CC=\ gcc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
+		sed -i 's/CC=\ cc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
 		sed -i 's/\-mandroid//g' Makefile
 		sed -i 's/LD_LIBRARY_PATH=/#LD_LIBRARY_PATH=/g' Makefile
-		sed -i 's/\/usr/\/system_sec\/usr/g' tools/c_rehash
-		sed -i '/MAKEFILE=/a\INSTALL_PREFIX=\/system_sec' tools/Makefile
+		sed -i 's/\/usr/\/system\/usr/g' tools/c_rehash
 		find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
 		sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
 	else
