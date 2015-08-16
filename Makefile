@@ -22,6 +22,9 @@ nginx:
 mysql:
 	./build.sh mysql
 
+ncurses:
+	./build.sh ncurses
+
 install:
 	echo "not ready yet"
 

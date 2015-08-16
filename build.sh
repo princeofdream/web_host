@@ -68,13 +68,9 @@ function compile_php5()
 	tar jxf php-5.4.27.tar.bz2
 	cd ./php-5.4.27/
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec \
-		--host=arm-linux \
-		CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ \
-		--target=arm \
-		--enable-static=yes \
-		--enable-fpm \
-		--enable-inline-optimization "
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" --enable-static=yes --enable-fpm --enable-inline-optimization "
 	CONF_ARGS+=" --disable-all "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
@@ -83,17 +79,49 @@ function compile_php5()
 	make -j3 && make install
 }
 
+function compile_ncurses()
+{
+	cd $TOP_DIR
+	VER=5.9
+	rm -rf ./ncurses-$VER
+	tar zxf ncurses-5.9.tar.gz
+	cd ./ncurses-5.9
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp "
+	CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS
+	sed -i "s/samples//g" Ada95/Makefile
+	make -j3 && make install
+}
+
 compile_mysql()
 {
+	cd $TOP_DIR
 	VER=5.5.37
 	rm -rf mysql-$VER
 	tar zxf mysql-$VER.tar.gz
 	cd ./mysql-$VER
 	echo "Enter $(pwd)"
-	./configure --prefix=/system_sec \
-		--host=arm-linux \
-		CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ \
-		--target=arm
+	if [ "$arch" == "ARM" ]
+	then
+		echo "build mysql for arm!"
+		CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/system_sec "
+		CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-gnueabi-g++ "
+		CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
+		CMAKE_ARGS+=" -DWITH_READLINE=1 "
+		#CMAKE_ARGS+=" -DWITH_SSL=system "
+		CMAKE_ARGS+=" -DWITH_ZLIB=system "
+		CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
+		CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
+		CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
+		cmake $CMAKE_ARGS
+	else
+		cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
+	fi
 }
 #function compile_httpd()
 #{
@@ -281,6 +309,18 @@ if [ "$1" == "nginx" ]
 then
 	echo "compile nginx"
 	compile_nginx
+fi
+
+if [ "$1" == "mysql" ]
+then
+	echo "compile mysql"
+	compile_mysql
+fi
+
+if [ "$1" == "ncurses" ]
+then
+	echo "compile ncurses"
+	compile_ncurses
 fi
 
 
