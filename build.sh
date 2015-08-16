@@ -64,8 +64,8 @@ function compile_libxml2()
 function compile_php5()
 {
 	cd $TOP_DIR
-	#rm -rf ./php-5.4.27/
-	#tar jxf php-5.4.27.tar.bz2
+	rm -rf ./php-5.4.27/
+	tar jxf php-5.4.27.tar.bz2
 	cd ./php-5.4.27/
 	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=/system_sec \
