@@ -46,6 +46,55 @@ compile_zlib()
 	##make && make install
 #}
 
+compile_libpng()
+{
+	cd $TOP_DIR
+	VER=1.6.18
+	rm -rf ./libpng-$VER
+	tar Jxf libpng-$VER.tar.xz
+	cd ./libpng-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS+=" --host=arm-linux "
+	CONF_ARGS+=" --target=arm "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" --enable-static=yes "
+	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
+	./configure $CONF_ARGS
+	sed -i "s/SYMBOL_CFLAGS\ =\ /SYMBOL_CFLAGS\ =\ \${CFLAGS} /g" Makefile
+	make -j3 && make install
+}
+
+compile_libjpeg()
+{
+	cd $TOP_DIR
+	rm -rf ./jpeg-9a
+	tar zxf jpegsrc.v9a.tar.gz
+	cd ./jpeg-9a
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS+=" --host=arm-linux "
+	CONF_ARGS+=" --target=arm "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" --enable-static=yes "
+	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
+	./configure $CONF_ARGS
+	make -j3 && make install
+}
 
 compile_libxml2()
 {
@@ -63,6 +112,8 @@ compile_libxml2()
 	CONF_ARGS+="--host=arm-linux "
 	CONF_ARGS+=" --target=arm "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	CONF_ARGS+="--enable-static=yes"
 	./configure $CONF_ARGS
 	sed -i "s/\-llzma//g" Makefile
@@ -103,8 +154,10 @@ compile_php5()
 	fi
 	CONF_ARGS+=" --enable-static=yes --enable-fpm --enable-inline-optimization "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
-	#--with-gd --with-zlib
-	#CONF_ARGS+=" --disable-all "
+	CONF_ARGS+=" --with-openssl-dir=$PREFIX_PATH/usr/local/ssl "
+	CONF_ARGS+=" --with-jpeg-dir=$PREFIX_PATH "
+	CONF_ARGS+=" --with-png-dir=$PREFIX_PATH "
+	CONF_ARGS+=" --with-gd --with-zlib "
 
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
@@ -355,6 +408,18 @@ if [ "$1" == "zlib" ]
 then
 	echo "compile zlib"
 	compile_zlib
+fi
+
+if [ "$1" == "png" ]
+then
+	echo "compile libpng"
+	compile_libpng
+fi
+
+if [ "$1" == "jpg" ]
+then
+	echo "compile libjpeg"
+	compile_libjpeg
 fi
 
 if [ "$1" == "xml" ]

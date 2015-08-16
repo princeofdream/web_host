@@ -22,6 +22,12 @@ ssl:
 ssh:
 	./build.sh ssh
 
+png:
+	./build.sh png
+
+jpg:
+	./build.sh jpg
+
 php5:
 	./build.sh php
 
