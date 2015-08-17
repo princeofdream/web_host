@@ -252,6 +252,12 @@ compile_pcre()
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include "
+	CONF_ARGS+=" CPPFLAGS=-I$PREFIX_PATH/include "
+	CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
+	CONF_ARGS+=" --enable-pcre16 --enable-pcre32 "
+	CONF_ARGS+=" --enable-jit --enable-utf8 -enable-unicode-properties "
+	CONF_ARGS+=" --enable-pcregrep-libz "
 	./configure $CONF_ARGS
 	make -j3 && make install
 }
@@ -321,6 +327,7 @@ compile_atomic_ops()
 	make
 	cd src
 	ln -s .libs/libatomic_ops.a libatomic_ops.a
+	make install
 }
 
 compile_nginx()
@@ -354,20 +361,25 @@ compile_nginx()
 		CONF_ARGS=" --with-ipv6 "
 		CONF_ARGS+=" --without-http_rewrite_module "
 		CONF_ARGS+=" --prefix=/usr "
-		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops "
+		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
 		CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
-		CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
-		CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2 "
+		CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
+		#CONF_ARGS+=" --with-pcre-opt= "
 	if [ "$arch" == "ARM" ]
 	then
-		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\ --target=arm\ --enable-static=yes/g" auto/lib/pcre/make
+		sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
+		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\ --target=arm\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
 		CONF_ARGS+=" --with-http_stub_status_module "
+		#CONF_ARGS+=" --with-http_ssl_module "
+		#CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
 	else
 		echo "compile for host"
 	fi
-		./configure $CONF_ARGS
+		./configure $CONF_ARGS \
+			#--with-pcre-opt="--host=arm-linux --target=arm CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I/system_sec/lib " 
+			#--with-openssl-opt=""
 
 
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
@@ -380,14 +392,20 @@ compile_nginx()
 	#--http-client-body-temp-path=/var/lib/nginx/body  \
 	#--http-proxy-temp-path=/var/lib/nginx/proxy \
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
-	##--with-http_ssl_module \
-	##--with-openssl=$TOP_DIR/openssl-1.0.2d \
 
 	sed -i '5 a\DESTDIR=\/system_sec' objs/Makefile
 
 	make -j3 && make install
 }
 
+
+check_compile_status()
+{
+	echo "========================================================"
+	echo "Double checkout compile $1 is ok"
+	echo "========================================================"
+	sleep 3
+}
 
 
 
@@ -400,7 +418,25 @@ echo "using $DEF_GCC"
 if [ "$1" == "ok" ]
 then
 	compile_zlib
-fi
+	check_compile_status "zlib"
+	compile_libpng
+	check_compile_status "libpng"
+	compile_libjpeg
+	check_compile_status "libjpeg"
+	compile_libxml2
+	check_compile_status "libxml2"
+	compile_atomic_ops
+	check_compile_status "libatomic_ops"
+	compile_openssl
+	check_compile_status "openssl"
+	compile_pcre
+	check_compile_status "pcre"
+	compile_ncurses
+	check_compile_status "ncurses"
+	compile_php5
+	check_compile_status "php 5"
+	compile_nginx
+	check_compile_status "nginx"
 
 
 if [ "$1" == "zlib" ]
@@ -461,7 +497,6 @@ fi
 
 
 #################### NG ###################
-#compile_httpd
 
 
 
