@@ -177,14 +177,65 @@ compile_php5()
 	make -j3 && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
 }
 
+compile_systemtap()
+{
+	VER=2.8
+	echo "Compileing systemtap-$VER"
+	cd $TOP_DIR
+	rm -rf ./systemtap-$VER
+	tar zxf systemtap-$VER.tar.gz
+	cd ./systemtap-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils" LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib"
+	./configure $CONF_ARGS
+	make -j3 && make install
+}
+
+compile_elfutils()
+{
+	VER=0.163
+	echo "Compileing elfutils-$VER"
+	cd $TOP_DIR
+	rm -rf ./elfutils-$VER
+	tar jxf elfutils-$VER.tar.bz2
+	cd ./elfutils-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+
+	#### portability patch ####
+	cp $TOP_DIR/patches/elfutils/*.patch ./
+	patch -p1 < elfutils-portability-0.163.patch
+
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS
+	make -j3 && make install
+}
+
 compile_ncurses()
 {
 	VER=5.9
 	echo "Compileing ncurses-$VER"
 	cd $TOP_DIR
 	rm -rf ./ncurses-$VER
-	tar zxf ncurses-5.9.tar.gz
-	cd ./ncurses-5.9
+	tar zxf ncurses-$VER.tar.gz
+	cd ./ncurses-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
@@ -227,10 +278,15 @@ compile_mysql()
 		#CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
 		#CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
 		CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
+		CMAKE_ARGS+=" -DCUSTOM_C_FLAGS=-I/system_sec/include "
 		cmake $CMAKE_ARGS
 	else
 		cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
 	fi
+
+	sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system_sec\/include\ -I\/system_sec\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
+
+	make
 }
 
 compile_pcre()
@@ -326,6 +382,19 @@ compile_openssh()
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include " \
 		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib "
+
+
+	##########################################################################
+	# add below cmd to /etc/passwd first
+	# sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+	# generate the host key
+	# ssh-keygen -q -t rsa -f /etc/ssh/ssh_host_rsa_key -C '' -N ''
+	# ssh-keygen -q -t dsa -f /etc/ssh/ssh_host_dsa_key -C '' -N ''
+	# ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -C '' -N ''
+	# ssh-keygen -q -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -C '' -N ''
+	#
+	# use /etc/init.d/sshd to start service
+	##########################################################################
 }
 
 compile_atomic_ops()
@@ -494,6 +563,16 @@ fi
 if [ "$1" == "xml" ]
 then
 	compile_libxml2
+fi
+
+if [ "$1" == "elf" ]
+then
+	compile_elfutils
+fi
+
+if [ "$1" == "systap" ]
+then
+	compile_systemtap
 fi
 
 if [ "$1" == "atomic" ]

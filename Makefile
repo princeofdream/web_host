@@ -25,6 +25,12 @@ ssl:
 ssh:
 	./build.sh ssh
 
+elf:
+	./build.sh elf
+
+systap:
+	./build.sh systap
+
 png:
 	./build.sh png
 
