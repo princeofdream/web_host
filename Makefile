@@ -43,8 +43,8 @@ php:
 nginx:
 	./build.sh nginx
 
-mysql:
-	./build.sh mysql
+sql:
+	./build.sh sql
 
 ncurses:
 	./build.sh ncurses

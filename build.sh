@@ -220,12 +220,12 @@ compile_mysql()
 		echo "build mysql for arm!"
 		CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/system_sec "
 		CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-gnueabi-g++ "
-		CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
-		CMAKE_ARGS+=" -DWITH_READLINE=1 "
+		#CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
+		#CMAKE_ARGS+=" -DWITH_READLINE=1 "
 		#CMAKE_ARGS+=" -DWITH_SSL=system "
-		CMAKE_ARGS+=" -DWITH_ZLIB=system "
-		CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
-		CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
+		#CMAKE_ARGS+=" -DWITH_ZLIB=system "
+		#CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
+		#CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
 		CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
 		cmake $CMAKE_ARGS
 	else
@@ -300,7 +300,33 @@ compile_openssl()
 	make -j3 && make install
 }
 
-
+compile_openssh()
+{
+	VER=7.0p1
+	echo "Compileing openssh-$VER   ------------NOT READY YET---------"
+	cd $TOP_DIR
+	rm -rf ./ssh
+	tar zxf  openssh-$VER.tar.gz
+	cd ./openssh-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS=" --prefix=/system_sec "
+	if [ "$arch" == "ARM" ]
+	then
+		CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
+		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+		CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	fi
+	echo "./configure $CONF_ARGS "
+	./configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include " \
+		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib "
+}
 
 compile_atomic_ops()
 {
@@ -356,6 +382,14 @@ compile_nginx()
 		patch -p1 < 401-nginx-1.4.0-syslog.patch
 	fi
 
+
+	################ change php settings ######################
+	sed -i "s/\/scripts/\$document_root/g" conf/nginx.conf
+	###########################################################
+
+
+
+
 	sed -i "/ngx_open_file_cache\.c/a\src/core/ngx_regex.c\\" auto/sources
 
 		CONF_ARGS=" --with-ipv6 "
@@ -396,6 +430,8 @@ compile_nginx()
 	sed -i '5 a\DESTDIR=\/system_sec' objs/Makefile
 
 	make -j3 && make install
+	##############
+	echo "!!!!!!!!!!!!!! remember change nginx.conf php config /script to \$document_root !!!!!!!!!!!"
 }
 
 
@@ -437,6 +473,7 @@ then
 	check_compile_status "php 5"
 	compile_nginx
 	check_compile_status "nginx"
+fi
 
 
 if [ "$1" == "zlib" ]
@@ -469,6 +506,11 @@ then
 	compile_openssl
 fi
 
+if [ "$1" == "ssh" ]
+then
+	compile_openssh
+fi
+
 if [ "$1" == "pcre" ]
 then
 	compile_pcre
@@ -484,7 +526,7 @@ then
 	compile_nginx
 fi
 
-if [ "$1" == "mysql" ]
+if [ "$1" == "sql" ]
 then
 	compile_mysql
 fi
@@ -497,12 +539,5 @@ fi
 
 
 #################### NG ###################
-
-
-
-
-
-
-###### php-cgi-b 127.0.0.1:9000 -c /usr/local/lib/php.ini &
 
 
