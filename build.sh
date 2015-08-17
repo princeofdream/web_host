@@ -16,10 +16,12 @@ PREFIX_PATH=/system_sec
 
 compile_zlib()
 {
+	VER=1.2.8
+	echo "Compileing zlib-$VER"
 	cd $TOP_DIR
-	rm -rf ./zlib-1.2.8
-	tar zxf zlib-1.2.8.tar.gz
-	cd ./zlib-1.2.8
+	rm -rf ./zlib-$VER
+	tar zxf zlib-$VER.tar.gz
+	cd ./zlib-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
@@ -48,8 +50,9 @@ compile_zlib()
 
 compile_libpng()
 {
-	cd $TOP_DIR
 	VER=1.6.18
+	echo "Compileing libpng-$VER"
+	cd $TOP_DIR
 	rm -rf ./libpng-$VER
 	tar Jxf libpng-$VER.tar.xz
 	cd ./libpng-$VER
@@ -74,6 +77,7 @@ compile_libpng()
 
 compile_libjpeg()
 {
+	echo "Compileing libjpeg-v9a"
 	cd $TOP_DIR
 	rm -rf ./jpeg-9a
 	tar zxf jpegsrc.v9a.tar.gz
@@ -98,10 +102,12 @@ compile_libjpeg()
 
 compile_libxml2()
 {
+	VER=2.9.2
+	echo "Compileing libxml2-$VER"
 	cd $TOP_DIR
-	rm -rf ./libxml2-2.9.2/
-	tar zxf libxml2-2.9.2.tar.gz
-	cd ./libxml2-2.9.2/
+	rm -rf ./libxml2-$VER
+	tar zxf libxml2-$VER.tar.gz
+	cd ./libxml2-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
@@ -132,10 +138,12 @@ compile_libxml2()
 
 compile_php5()
 {
+	VER=5.4.27
+	echo "Compileing php-$VER"
 	cd $TOP_DIR
-	rm -rf ./php-5.4.27/
-	tar jxf php-5.4.27.tar.bz2
-	cd ./php-5.4.27/
+	rm -rf ./php-$VER
+	tar jxf php-$VER.tar.bz2
+	cd ./php-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
@@ -171,8 +179,9 @@ compile_php5()
 
 compile_ncurses()
 {
-	cd $TOP_DIR
 	VER=5.9
+	echo "Compileing ncurses-$VER"
+	cd $TOP_DIR
 	rm -rf ./ncurses-$VER
 	tar zxf ncurses-5.9.tar.gz
 	cd ./ncurses-5.9
@@ -194,8 +203,9 @@ compile_ncurses()
 
 compile_mysql()
 {
-	cd $TOP_DIR
 	VER=5.5.37
+	echo "Compileing mysql-$VER"
+	cd $TOP_DIR
 	rm -rf mysql-$VER
 	tar zxf mysql-$VER.tar.gz
 	cd ./mysql-$VER
@@ -222,25 +232,11 @@ compile_mysql()
 		cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
 	fi
 }
-#compile_httpd()
-#{
-	#VER=2.2.27
-	##VER=2.4.16
-	#cd $TOP_DIR
-	#rm -rf ./httpd-$VER/
-	#tar jxf httpd-$VER.tar.bz2
-	#cp apache/patches/* httpd-$VER
-	#cd ./httpd-$VER/
-	##patch -p1 < 001-Makefile_in.patch
-	#echo "Enter $(pwd)"
-	#sed -i "s/ap_cv_void_ptr_lt_long=yes/ap_cv_void_ptr_lt_long=no/g" configure
-	#./configure --prefix=/system_sec --host=arm-openwrt-linux-gnueabi CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++
-	#make -j3 && make install
-#}
 
 compile_pcre()
 {
 	VER=8.37
+	echo "Compileing pcre-$VER"
 	cd $TOP_DIR
 	rm -rf ./pcre-$VER/
 	tar jxf pcre-$VER.tar.bz2
@@ -263,10 +259,12 @@ compile_pcre()
 
 compile_openssl()
 {
+	VER=1.0.2d
+	echo "Compileing openssl-$VER"
 	cd $TOP_DIR
-	rm -rf ./openssl-1.0.2d
-	tar zxf  openssl-1.0.2d.tar.gz
-	cd ./openssl-1.0.2d/
+	rm -rf ./openssl-$VER
+	tar zxf  openssl-$VER.tar.gz
+	cd ./openssl-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
@@ -300,8 +298,9 @@ compile_openssl()
 
 compile_atomic_ops()
 {
-	cd $TOP_DIR
 	VER=7.4.2
+	echo "Compileing libatomic_ops-$VER"
+	cd $TOP_DIR
 	rm -rf libatomic_ops-$VER
 	tar zxf libatomic_ops-$VER.tar.gz
 	cd libatomic_ops-$VER
@@ -330,6 +329,7 @@ compile_nginx()
 	cd $TOP_DIR
 	#VER=1.4.7
 	VER=1.9.3
+	echo "Compileing nginx-$VER"
 
 	rm -rf ./nginx-$VER
 	tar zxf nginx-$VER.tar.gz
@@ -361,9 +361,9 @@ compile_nginx()
 	if [ "$arch" == "ARM" ]
 	then
 		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\ --target=arm\ --enable-static=yes/g" auto/lib/pcre/make
-		CONF_ARGS+=" --without-http_upstream_zone_module "
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
+		CONF_ARGS+=" --with-http_stub_status_module "
 	else
 		echo "compile for host"
 	fi
@@ -371,7 +371,6 @@ compile_nginx()
 
 
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
-	#--with-http_stub_status_module \
 	#--with-http_flv_module  \
 	#--with-http_dav_module \
 	#--error-log-path=/var/log/nginx/error.log  \
@@ -397,71 +396,65 @@ echo "start compile ..."
 echo "TOP Dir is $TOP_DIR"
 echo "using $DEF_GCC"
 #################### OK ###################
-#compile_zlib
-#compile_openssl
-#compile_libxml2
-#compile_pcre
-#compile_nginx
+
+if [ "$1" == "ok" ]
+then
+	compile_zlib
+fi
 
 
 if [ "$1" == "zlib" ]
 then
-	echo "compile zlib"
 	compile_zlib
 fi
 
 if [ "$1" == "png" ]
 then
-	echo "compile libpng"
 	compile_libpng
 fi
 
 if [ "$1" == "jpg" ]
 then
-	echo "compile libjpeg"
 	compile_libjpeg
 fi
 
 if [ "$1" == "xml" ]
 then
-	echo "compile libxml2"
 	compile_libxml2
 fi
 
 if [ "$1" == "atomic" ]
 then
-	echo "compile libatomic_ops"
 	compile_atomic_ops
 fi
 
-
 if [ "$1" == "ssl" ]
 then
-	echo "compile ssl"
 	compile_openssl
+fi
+
+if [ "$1" == "pcre" ]
+then
+	compile_pcre
 fi
 
 if [ "$1" == "php" ]
 then
-	echo "compile php5"
 	compile_php5
 fi
 
 if [ "$1" == "nginx" ]
 then
-	echo "compile nginx"
 	compile_nginx
 fi
 
 if [ "$1" == "mysql" ]
 then
-	echo "compile mysql"
 	compile_mysql
 fi
 
 if [ "$1" == "ncurses" ]
 then
-	echo "compile ncurses"
 	compile_ncurses
 fi
 

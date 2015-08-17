@@ -7,6 +7,9 @@ clean:
 build:
 	./build.sh
 
+ok:
+	./build.sh ok
+
 zlib:
 	./build.sh zlib
 
@@ -24,6 +27,9 @@ ssh:
 
 png:
 	./build.sh png
+
+pcre:
+	./build.sh pcre
 
 jpg:
 	./build.sh jpg
