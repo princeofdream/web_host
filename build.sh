@@ -704,12 +704,12 @@ then
 	check_compile_status "pcre"
 	compile_ncurses
 	check_compile_status "ncurses"
-	compile_glibc
-	check_compile_status "glibc"
+	#compile_glibc
+	#check_compile_status "glibc"
 	compile_elfutils
 	check_compile_status "elfutils"
-	compile_systemtap
-	check_compile_status "systap"
+	#compile_systemtap
+	#check_compile_status "systap"
 	compile_php5
 	check_compile_status "php 5"
 	compile_nginx
