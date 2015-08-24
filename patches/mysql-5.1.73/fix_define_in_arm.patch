@@ -1,0 +1,12 @@
+diff --git a/sql/sql_parse.cc b/sql/sql_parse.cc
+index d9d9a60..8dac17c 100644
+--- a/sql/sql_parse.cc
++++ b/sql/sql_parse.cc
+@@ -5738,6 +5738,7 @@ bool check_global_access(THD *thd, ulong want_access)
+ 
+ #ifndef EMBEDDED_LIBRARY
+ 
++#define STACK_DIRECTION 1
+ #if STACK_DIRECTION < 0
+ #define used_stack(A,B) (long) (A - B)
+ #else

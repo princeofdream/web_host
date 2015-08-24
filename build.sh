@@ -177,6 +177,138 @@ compile_php5()
 	make -j3 && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
 }
 
+compile_common()
+{
+	NAME=$1
+	VER=$2
+	EXT_NAME=$3
+	echo "Compileing $1-$VER"
+	cd $TOP_DIR
+	rm -rf ./$1-$VER
+	if [ "$EXT_NAME" == "tar.xz" ]
+	then
+		tar Jxf $NAME-$VER.$EXT_NAME
+	else
+		tar zxf $1-$VER.tar.gz
+	fi
+	cd ./$1-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
+		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
+		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
+		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils \
+		-L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib "
+	make -j3 && make install
+}
+
+compile_yajl()
+{
+	VER=""
+	NAME="lloyd-yajl-2.1.0-0-ga0ecdde"
+	echo "Compileing lloyd-yajl-2.1.0-0-ga0ecdde"
+	cd $TOP_DIR
+	rm -rf ./lloyd-yajl-66cb08c
+	tar zxf lloyd-yajl-2.1.0-0-ga0ecdde.tar.gz
+	cd ./lloyd-yajl-66cb08c
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	sed -i "s/prefix=\"\/usr\/local\"/prefix=\"\/system_sec\/usr\/local\"/g" configure
+	sed -i "s/DCMAKE_INSTALL_PREFIX=\"\$prefix\"/DCMAKE_INSTALL_PREFIX=\"\$prefix\"\ -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc\ /g" configure
+	CONF_ARGS="--p /system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc "
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS
+	make distro && make install
+}
+
+
+compile_libvirt()
+{
+	VER=1.2.9
+	echo "Compileing libvirt-$VER"
+	cd $TOP_DIR
+	rm -rf ./libvirt-$VER
+	tar zxf libvirt-$VER.tar.gz
+	cd ./libvirt-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
+	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
+	make -j3 && make install
+}
+
+
+compile_glibc()
+{
+	VER=2.22
+	NAME=glibc
+	FORMAT="tar.xz"
+	echo "Compileing $NAME-$VER.$FORMAT"
+	cd $TOP_DIR
+	rm -rf ./$NAME-$VER
+	if [ "$FORMAT" == "tar.xz" ]
+	then
+		echo "uncompress $NAME-$VER.$FORMAT"
+		tar Jxf $NAME-$VER.$FORMAT
+	else
+		echo "uncompress $NAME-$VER.$FORMAT"
+	fi
+
+	cd ./$NAME-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+
+	mkdir for_arm
+	cd for_arm
+	echo "Enter $(pwd)"
+
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
+
+	#../configure $CONF_ARGS \
+		#CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		#CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		#CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		#LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
+
+	../configure --prefix=/system_sec --host=arm-linux --target=arm CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  CFLAGS="-I/system_sec/include -I/system_sec/include/elfutils " LDFLAGS="-L/system_sec/lib/elfutils -L/system_sec/lib"
+
+	make -j3 && make install
+}
+
 compile_systemtap()
 {
 	VER=2.8
@@ -196,7 +328,11 @@ compile_systemtap()
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils" LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib"
-	./configure $CONF_ARGS
+	./configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp" \
+		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
+		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
+		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	make -j3 && make install
 }
 
@@ -242,7 +378,7 @@ compile_ncurses()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm --enable-static "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -254,39 +390,69 @@ compile_ncurses()
 
 compile_mysql()
 {
-	VER=5.5.37
+	#VER=5.5.37
+	VER=5.1.73
+	NAME=mysql
 	echo "Compileing mysql-$VER"
 	cd $TOP_DIR
-	rm -rf mysql-$VER
-	tar zxf mysql-$VER.tar.gz
-	cd ./mysql-$VER
+	rm -rf $NAME-$VER
+	tar zxf $NAME-$VER.tar.gz
+	cd ./$NAME-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
 		exit
 	fi
 	echo "Enter $(pwd)"
-	if [ "$arch" == "ARM" ]
-	then
-		echo "build mysql for arm!"
-		CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/system_sec "
-		CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-gnueabi-g++ "
-		#CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
-		#CMAKE_ARGS+=" -DWITH_READLINE=1 "
-		#CMAKE_ARGS+=" -DWITH_SSL=system "
-		#CMAKE_ARGS+=" -DWITH_ZLIB=system "
-		#CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
-		#CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
-		CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
-		CMAKE_ARGS+=" -DCUSTOM_C_FLAGS=-I/system_sec/include "
-		cmake $CMAKE_ARGS
-	else
-		cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
-	fi
 
-	sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system_sec\/include\ -I\/system_sec\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
 
-	make
+	#if [ "$arch" == "ARM" ]
+	#then
+		#echo "build mysql for arm!"
+		#CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/system_sec "
+		#CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-gnueabi-g++ "
+		##CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
+		##CMAKE_ARGS+=" -DWITH_READLINE=1 "
+		##CMAKE_ARGS+=" -DWITH_SSL=system "
+		##CMAKE_ARGS+=" -DWITH_ZLIB=system "
+		##CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
+		##CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
+		#CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
+		#CMAKE_ARGS+=" -DCUSTOM_C_FLAGS=-I/system_sec/include "
+		#cmake $CMAKE_ARGS
+	#else
+		#cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
+	#fi
+
+	#sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system_sec\/include\ -I\/system_sec\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
+
+	# for 5.1.73
+	#{
+
+	cp $TOP_DIR/patches/mysql-5.1.73/*.patch ./
+	patch -p1 < fix-cross-compile.patch
+	patch -p1 < fix_define_in_arm.patch
+	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	#CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include "
+	#CONF_ARGS+=" CPPFLAGS=-I$PREFIX_PATH/include "
+	#CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
+	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include/atomic_ops -I$PREFIX_PATH/include"
+
+
+	./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
+
+	make -j3
+	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+	make -j3 && make install
+	#}
+
+
+	#make
 }
 
 compile_pcre()
@@ -565,6 +731,21 @@ then
 	compile_libxml2
 fi
 
+if [ "$1" == "yajl" ]
+then
+	compile_yajl
+fi
+
+if [ "$1" == "virt" ]
+then
+	compile_libvirt
+fi
+
+if [ "$1" == "glibc" ]
+then
+	compile_glibc
+fi
+
 if [ "$1" == "elf" ]
 then
 	compile_elfutils
@@ -614,6 +795,16 @@ if [ "$1" == "ncurses" ]
 then
 	compile_ncurses
 fi
+
+if [ "$1" == "xdr" ]
+then
+	compile_common "portablexdr" "4.9.1"
+fi
+
+#if [ "$1" == "uclibc" ]
+#then
+	#compile_common "uClibc" "0.9.33.2" "tar.xz"
+#fi
 
 
 

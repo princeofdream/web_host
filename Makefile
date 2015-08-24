@@ -10,6 +10,15 @@ build:
 ok:
 	./build.sh ok
 
+xdr:
+	./build.sh xdr
+
+uclibc:
+	./build.sh uclibc
+
+glibc:
+	./build.sh glibc
+
 zlib:
 	./build.sh zlib
 
@@ -24,6 +33,12 @@ ssl:
 
 ssh:
 	./build.sh ssh
+
+yajl:
+	./build.sh yajl
+
+virt:
+	./build.sh virt
 
 elf:
 	./build.sh elf
