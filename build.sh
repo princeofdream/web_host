@@ -28,7 +28,7 @@ compile_zlib()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --static"
+	CONF_ARGS="--prefix=$PREFIX_PATH --static"
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
 	sed -i "s/gcc/$DEF_GCC/g" Makefile
@@ -62,7 +62,7 @@ compile_libpng()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-linux "
 	CONF_ARGS+=" --target=arm "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
@@ -88,7 +88,7 @@ compile_libjpeg()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-linux "
 	CONF_ARGS+=" --target=arm "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
@@ -114,7 +114,7 @@ compile_libxml2()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+="--host=arm-linux "
 	CONF_ARGS+=" --target=arm "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
@@ -150,10 +150,10 @@ compile_php5()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec "
+	CONF_ARGS="--prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS+=" --host=arm-linux --target=arm "
+		CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 		CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -169,7 +169,6 @@ compile_php5()
 
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
-	#sed -i "s/-I\/usr\/include/-I\system_sec\/include/g" Makefile
 	sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
 	sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
 	sed -i "s/\$(top_builddir)\/sapi\/cli\/php/\$(top_builddir)\/..\/host_php_ext\/sapi\/cli\/php/g" Makefile
@@ -198,7 +197,7 @@ compile_common()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -229,7 +228,7 @@ compile_yajl()
 	echo "Enter $(pwd)"
 	sed -i "s/prefix=\"\/usr\/local\"/prefix=\"\/system_sec\/usr\/local\"/g" configure
 	sed -i "s/DCMAKE_INSTALL_PREFIX=\"\$prefix\"/DCMAKE_INSTALL_PREFIX=\"\$prefix\"\ -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc\ /g" configure
-	CONF_ARGS="--p /system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--p $PREFIX_PATH --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -254,7 +253,7 @@ compile_libvirt()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -292,7 +291,7 @@ compile_glibc()
 	cd for_arm
 	echo "Enter $(pwd)"
 
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm --enable-static=yes"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -304,7 +303,7 @@ compile_glibc()
 		#CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		#LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 
-	../configure --prefix=/system_sec --host=arm-linux --target=arm CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  CFLAGS="-I/system_sec/include -I/system_sec/include/elfutils " LDFLAGS="-L/system_sec/lib/elfutils -L/system_sec/lib"
+	../configure --prefix=$PREFIX_PATH --host=arm-linux --target=arm CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  CFLAGS="-I/system_sec/include -I/system_sec/include/elfutils " LDFLAGS="-L/system_sec/lib/elfutils -L/system_sec/lib"
 
 	make -j3 && make install
 }
@@ -323,7 +322,7 @@ compile_systemtap()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -355,7 +354,7 @@ compile_elfutils()
 	cp $TOP_DIR/patches/elfutils/*.patch ./
 	patch -p1 < elfutils-portability-0.163.patch
 
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -378,7 +377,7 @@ compile_ncurses()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=/system_sec --host=arm-linux --target=arm --enable-static "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --target=arm --enable-static "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -434,7 +433,7 @@ compile_mysql()
 	patch -p1 < fix_define_in_arm.patch
 	patch -p1 < fix_my_fast_mutexattr.patch
 	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
-	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
@@ -470,7 +469,7 @@ compile_pcre()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
@@ -503,7 +502,7 @@ compile_openssl()
 	if [ "$arch" == "ARM" ]
 	then
 		CONF_ARGS="android-armv7 "
-		CONF_ARGS+=" --prefix=/system_sec "
+		CONF_ARGS+=" --prefix=$PREFIX_PATH "
 		#CONF_ARGS+=" no-asm shared "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 		CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld CPP=arm-openwrt-linux-gnueabi-cpp "
@@ -518,7 +517,7 @@ compile_openssl()
 		find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
 		sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
 	else
-		./config --prefix=/system_sec/
+		./config --prefix=$PREFIX_PATH
 	fi
 	make -j3 && make install
 }
@@ -537,7 +536,7 @@ compile_openssh()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
 		CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
@@ -580,7 +579,7 @@ compile_atomic_ops()
 
 	echo "Enter $(pwd)"
 	./autogen.sh
-	CONF_ARGS=" --prefix=/system_sec "
+	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
