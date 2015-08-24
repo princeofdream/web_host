@@ -432,6 +432,7 @@ compile_mysql()
 	cp $TOP_DIR/patches/mysql-5.1.73/*.patch ./
 	patch -p1 < fix-cross-compile.patch
 	patch -p1 < fix_define_in_arm.patch
+	patch -p1 < fix_my_fast_mutexattr.patch
 	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
 	CONF_ARGS=" --prefix=/system_sec "
 	CONF_ARGS+=" --host=arm-linux --target=arm --enable-static=yes "
@@ -704,10 +705,18 @@ then
 	check_compile_status "pcre"
 	compile_ncurses
 	check_compile_status "ncurses"
+	compile_glibc
+	check_compile_status "glibc"
+	compile_elfutils
+	check_compile_status "elfutils"
+	compile_systemtap
+	check_compile_status "systap"
 	compile_php5
 	check_compile_status "php 5"
 	compile_nginx
 	check_compile_status "nginx"
+	compile_mysql
+	check_compile_status "mysql"
 fi
 
 
