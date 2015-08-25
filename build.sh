@@ -165,6 +165,13 @@ compile_php5()
 	CONF_ARGS+=" --with-jpeg-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-png-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-gd --with-zlib "
+	CONF_ARGS+=" --with-mysql=mysqlnd "
+	CONF_ARGS+=" --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --enable-fastcgi --enable-sockets --enable-wddx"
+	CONF_ARGS+=" --enable-zip --enable-calendar --enable-bcmath --enable-soap --with-iconv --with-xmlrpc --enable-mbstring "
+	CONF_ARGS+=" --without-sqlite --enable-ftp --with-mcrypt "
+	#CONF_ARGS+=" --with-curl "
+	#CONF_ARGS+=" --with-freetype-dir=/usr/local/freetype.2.1.10 "
+	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-safe-mode --disable-fileinfo "
 
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
@@ -619,12 +626,6 @@ compile_nginx()
 		patch -p1 < 401-nginx-1.4.0-syslog.patch
 	fi
 
-
-	################ change php settings ######################
-	#sed -i "s/\/scripts/\$document_root/g" conf/nginx.conf
-	#sed -i "s/user\ nobody\ nogroup;/user\ root\ root;/g" conf/nginx.conf
-	###########################################################
-
 	sed -i "/ngx_open_file_cache\.c/a\src/core/ngx_regex.c\\" auto/sources
 
 		CONF_ARGS=" --with-ipv6 "
@@ -651,6 +652,10 @@ compile_nginx()
 	else
 		echo "compile for host"
 	fi
+
+		echo "./configure $CONF_ARGS --with-pcre-opt=--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " 
+
+
 		./configure $CONF_ARGS \
 			#--with-pcre-opt="--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " 
 			#--with-openssl-opt=""
@@ -821,5 +826,31 @@ fi
 
 
 #################### NG ###################
+# 1. replace android chown to busybox chown in case of mysql error : No such user 'mysql'
+# 2. nginx.conf must use root as user in case of permission error
+# 3. php-fpm.conf needs to change user to ftp(or mysql/network) to start php-fpm
+# 4. add adduser addgroup to bin and passwd group to /etc
+# 5. create dir /tmp and mount tmpfs to it
+# 6. needs to run "mysql_install_db --user=root" to create db and then run mysqld_safe to run daemon
+# 7. place my.cnf to $PREFIX_PATH/etc
+# 8. /bin/safe --user=root && mysql_upgrade && /system_sec/bin/mysql_secure_installation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
