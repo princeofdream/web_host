@@ -160,25 +160,49 @@ compile_php5()
 		echo "compile for host"
 	fi
 	CONF_ARGS+=" --enable-static=yes --enable-fpm --enable-inline-optimization "
-	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	CONF_ARGS+=" --with-openssl-dir=$PREFIX_PATH/usr/local/ssl "
 	CONF_ARGS+=" --with-jpeg-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-png-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-gd --with-zlib "
-	CONF_ARGS+=" --with-mysql=mysqlnd "
-	CONF_ARGS+=" --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --enable-fastcgi --enable-sockets --enable-wddx"
-	CONF_ARGS+=" --enable-zip --enable-calendar --enable-bcmath --enable-soap --with-iconv --with-xmlrpc --enable-mbstring "
-	CONF_ARGS+=" --without-sqlite --enable-ftp --with-mcrypt "
-	#CONF_ARGS+=" --with-curl "
-	#CONF_ARGS+=" --with-freetype-dir=/usr/local/freetype.2.1.10 "
-	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-safe-mode --disable-fileinfo "
+	CONF_ARGS+=" --enable-mysqlnd "
+	CONF_ARGS+=" --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd "
+	CONF_ARGS+=" --enable-sockets --enable-wddx "
+	CONF_ARGS+=" --enable-zip --enable-calendar "
+	CONF_ARGS+=" --enable-bcmath --enable-soap "
+	CONF_ARGS+=" --with-iconv --with-xmlrpc --enable-mbstring "
+	CONF_ARGS+=" --without-sqlite "
+	#CONF_ARGS+=" --enable-ftp "
+	#CONF_ARGS+=" --with-mcrypt "
+	CONF_ARGS+=" --with-curl "
+	CONF_ARGS+=" --with-freetype-dir=$PREFIX_PATH "
+	#CONF_ARGS+=" --disable-safe-mode "
+	#CONF_ARGS+=" --enable-fastcgi "
+	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-fileinfo "
 
-	echo "./configure $CONF_ARGS"
-	./configure $CONF_ARGS EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
+	echo "./configure $CONF_ARGS \
+		CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include\" \
+		LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib \"
+		EXTRA_LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib\""
+	./configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include" \
+		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib "
+		EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
+
 	sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
 	sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
 	sed -i "s/\$(top_builddir)\/sapi\/cli\/php/\$(top_builddir)\/..\/host_php_ext\/sapi\/cli\/php/g" Makefile
 	sed -i "s/\$(top_builddir)\/\$(SAPI_CLI_PATH)/\$(top_builddir)\/..\/host_php_ext\/\$(SAPI_CLI_PATH)/g" Makefile
+
+	############################### Fix "include <ext/mysqlnd/php_mysqlnd_config.h>" ###########################################
+	cd ext/mysqlnd/
+	mv config9.m4 config.m4
+	sed -ie "s{ext/mysqlnd/php_mysqlnd_config.h{config.h{" mysqlnd_portability.h
+	#phpize
+	cd ../../
+	##########################################################################
+
+
+
 	make -j4 && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
 }
 
@@ -194,7 +218,12 @@ compile_common()
 	then
 		tar Jxf $NAME-$VER.$EXT_NAME
 	else
-		tar zxf $1-$VER.tar.gz
+		if [ "$EXT_NAME" == "tar.bz2" ]
+		then
+			tar jxf $NAME-$VER.$EXT_NAME
+		else
+			tar zxf $NAME-$VER.tar.gz
+		fi
 	fi
 	cd ./$1-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
@@ -719,6 +748,8 @@ then
 	check_compile_status "elfutils"
 	#compile_systemtap
 	#check_compile_status "systap"
+	compile_common "curl" "7.44.0" "tar.bz2"
+	check_compile_status "curl 7.44.0"
 	compile_php5
 	check_compile_status "php 5"
 	compile_nginx
@@ -816,6 +847,24 @@ fi
 if [ "$1" == "xdr" ]
 then
 	compile_common "portablexdr" "4.9.1"
+fi
+
+if [ "$1" == "freetype" ]
+then
+	#compile_common "freetype" "2.5.5" "tar.bz2"
+	compile_common "freetype" "2.4.12" "tar.bz2"
+fi
+
+if [ "$1" == "curl" ]
+then
+	compile_common "curl" "7.44.0" "tar.bz2"
+fi
+
+if [ "$1" == "harfbuzz" ]
+then
+	#compile_common "harfbuzz" "1.0.2" "tar.bz2"
+	#compile_common "harfbuzz" "0.9.42" "tar.bz2"
+	compile_common "harfbuzz" "0.9.26" "tar.bz2"
 fi
 
 #if [ "$1" == "uclibc" ]

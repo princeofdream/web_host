@@ -16,6 +16,15 @@ xdr:
 uclibc:
 	./build.sh uclibc
 
+curl:
+	./build.sh curl
+
+harfbuzz:
+	./build.sh harfbuzz
+
+freetype:
+	./build.sh freetype
+
 glibc:
 	./build.sh glibc
 
