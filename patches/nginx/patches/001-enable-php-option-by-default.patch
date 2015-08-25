@@ -1,0 +1,32 @@
+diff --git a/conf/nginx.conf b/conf/nginx.conf
+index 29bc085..b984838 100644
+--- a/conf/nginx.conf
++++ b/conf/nginx.conf
+@@ -1,5 +1,6 @@
+ 
+ #user  nobody;
++user root root
+ worker_processes  1;
+ 
+ #error_log  logs/error.log;
+@@ -62,13 +63,13 @@ http {
+ 
+         # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+         #
+-        #location ~ \.php$ {
+-        #    root           html;
+-        #    fastcgi_pass   127.0.0.1:9000;
+-        #    fastcgi_index  index.php;
+-        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+-        #    include        fastcgi_params;
+-        #}
++        location ~ \.php$ {
++            root           html;
++            fastcgi_pass   127.0.0.1:9000;
++            fastcgi_index  index.php;
++            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
++            include        fastcgi_params;
++        }
+ 
+         # deny access to .htaccess files, if Apache's document root
+         # concurs with nginx's one

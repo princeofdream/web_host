@@ -604,6 +604,7 @@ compile_nginx()
 
 	cp $TOP_DIR/patches/nginx/patches/* ./nginx-$VER
 	cd ./nginx-$VER
+	patch -p1 < 001-enable-php-option-by-default.patch
 	patch -p1 < 101-feature_test_fix.patch
 	patch -p1 < 102-sizeof_test_fix.patch
 	patch -p1 < 103-sys_nerr.patch
@@ -619,7 +620,8 @@ compile_nginx()
 
 
 	################ change php settings ######################
-	sed -i "s/\/scripts/\$document_root/g" conf/nginx.conf
+	#sed -i "s/\/scripts/\$document_root/g" conf/nginx.conf
+	#sed -i "s/user\ nobody\ nogroup;/user\ root\ root;/g" conf/nginx.conf
 	###########################################################
 
 
