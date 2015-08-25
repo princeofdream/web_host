@@ -438,6 +438,7 @@ compile_mysql()
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" --enable-shared=no --enable-static=yes"
 	#CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include "
 	#CONF_ARGS+=" CPPFLAGS=-I$PREFIX_PATH/include "
 	#CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
