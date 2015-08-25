@@ -210,32 +210,32 @@ compile_common()
 	make -j4 && make install
 }
 
-compile_yajl()
-{
-	VER=""
-	NAME="lloyd-yajl-2.1.0-0-ga0ecdde"
-	echo "Compileing lloyd-yajl-2.1.0-0-ga0ecdde"
-	cd $TOP_DIR
-	rm -rf ./lloyd-yajl-66cb08c
-	tar zxf lloyd-yajl-2.1.0-0-ga0ecdde.tar.gz
-	cd ./lloyd-yajl-66cb08c
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
-	sed -i "s/prefix=\"\/usr\/local\"/prefix=\"\/system_sec\/usr\/local\"/g" configure
-	sed -i "s/DCMAKE_INSTALL_PREFIX=\"\$prefix\"/DCMAKE_INSTALL_PREFIX=\"\$prefix\"\ -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc\ /g" configure
-	CONF_ARGS="--p $PREFIX_PATH --host=arm-linux"
-	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
-	CONF_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc "
-	echo "./configure $CONF_ARGS"
-	./configure $CONF_ARGS
-	make distro && make install
-}
+#compile_yajl()
+#{
+	#VER=""
+	#NAME="lloyd-yajl-2.1.0-0-ga0ecdde"
+	#echo "Compileing lloyd-yajl-2.1.0-0-ga0ecdde"
+	#cd $TOP_DIR
+	#rm -rf ./lloyd-yajl-66cb08c
+	#tar zxf lloyd-yajl-2.1.0-0-ga0ecdde.tar.gz
+	#cd ./lloyd-yajl-66cb08c
+	#if [ "$(pwd)" == "$TOP_DIR" ]
+	#then
+		#echo "!!!! Still in Top Dir !!!!"
+		#exit
+	#fi
+	#echo "Enter $(pwd)"
+	#sed -i "s/prefix=\"\/usr\/local\"/prefix=\"\/system_sec\/usr\/local\"/g" configure
+	#sed -i "s/DCMAKE_INSTALL_PREFIX=\"\$prefix\"/DCMAKE_INSTALL_PREFIX=\"\$prefix\"\ -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc\ /g" configure
+	#CONF_ARGS="--p $PREFIX_PATH --host=arm-linux"
+	#CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+	#CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
+	#CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	#CONF_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc "
+	#echo "./configure $CONF_ARGS"
+	#./configure $CONF_ARGS
+	#make distro && make install
+#}
 
 
 compile_libvirt()
@@ -302,7 +302,7 @@ compile_glibc()
 		#CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		#LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 
-	../configure --prefix=$PREFIX_PATH --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  CFLAGS="-I/system_sec/include -I/system_sec/include/elfutils " LDFLAGS="-L/system_sec/lib/elfutils -L/system_sec/lib"
+	../configure --prefix=$PREFIX_PATH --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  \
 
 	make -j4 && make install
 }
@@ -407,7 +407,7 @@ compile_mysql()
 	#if [ "$arch" == "ARM" ]
 	#then
 		#echo "build mysql for arm!"
-		#CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/system_sec "
+		#CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH "
 		#CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-gnueabi-g++ "
 		##CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
 		##CMAKE_ARGS+=" -DWITH_READLINE=1 "
@@ -416,10 +416,10 @@ compile_mysql()
 		##CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
 		##CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
 		#CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
-		#CMAKE_ARGS+=" -DCUSTOM_C_FLAGS=-I/system_sec/include "
+		#CMAKE_ARGS+=" -DCUSTOM_C_FLAGS=-I$PREFIX_PATH/include "
 		#cmake $CMAKE_ARGS
 	#else
-		#cmake -DCMAKE_INSTALL_PREFIX=/system_sec -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
+		#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX_PATH -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
 	#fi
 
 	#sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system_sec\/include\ -I\/system_sec\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
@@ -624,22 +624,24 @@ compile_nginx()
 	#sed -i "s/user\ nobody\ nogroup;/user\ root\ root;/g" conf/nginx.conf
 	###########################################################
 
-
-
-
 	sed -i "/ngx_open_file_cache\.c/a\src/core/ngx_regex.c\\" auto/sources
 
 		CONF_ARGS=" --with-ipv6 "
 		CONF_ARGS+=" --without-http_rewrite_module "
-		CONF_ARGS+=" --prefix=/usr "
+		CONF_ARGS+=" --prefix=$PREFIX_PATH "
 		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
 		CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
 		CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
 		#CONF_ARGS+=" --with-pcre-opt= "
 	if [ "$arch" == "ARM" ]
 	then
+		###########################################################################################################
 		sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
 		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
+		###########################################################################################################
+		#sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
+		#sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
+		###########################################################################################################
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
 		CONF_ARGS+=" --with-http_stub_status_module "
@@ -649,7 +651,7 @@ compile_nginx()
 		echo "compile for host"
 	fi
 		./configure $CONF_ARGS \
-			#--with-pcre-opt="--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I/system_sec/lib " 
+			#--with-pcre-opt="--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " 
 			#--with-openssl-opt=""
 
 
@@ -664,7 +666,6 @@ compile_nginx()
 	#--http-proxy-temp-path=/var/lib/nginx/proxy \
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
 
-	sed -i '5 a\DESTDIR=\/system_sec' objs/Makefile
 
 	make -j4 && make install
 	##############
