@@ -235,11 +235,21 @@ compile_common()
 		exit
 	fi
 
+	#############################################################################
 	if [ "$NAME" == "libiconv" ]
 	then
 		cp $TOP_DIR/patches/$NAME/*.patch ./
 		patch -p1 < 001-fix-compile-error.patch
 	fi
+	#############################################################################
+
+	#############################################################################
+	if [ "$NAME" == "libmcrypt" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+	#############################################################################
 
 
 	echo "Enter $(pwd)"
@@ -897,8 +907,8 @@ fi
 
 if [ "$1" == "mcrypt" ]
 then
-	compile_common "libmcrypt" "2.5.8" "tar.bz2"
-	#compile_common "mcrypt" "2.6.8" "tar.gz"
+	#compile_common "libmcrypt" "2.5.8" "tar.bz2"
+	compile_common "mcrypt" "2.6.8" "tar.gz"
 fi
 
 #if [ "$1" == "uclibc" ]
