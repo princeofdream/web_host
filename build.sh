@@ -9,8 +9,8 @@ OPENSSL_NAME=openssl
 OPENSSL_VER=1.0.2d
 
 arch=ARM
-PREFIX_PATH=/system_sec
-#PREFIX_PATH=/share/lijin/system_sec
+#PREFIX_PATH=/system_sec
+PREFIX_PATH=/share/lijin/system_sec
 
 
 ## prepare env ##
@@ -160,7 +160,7 @@ compile_php5()
 		echo "compile for host"
 	fi
 	CONF_ARGS+=" --enable-static=yes --enable-fpm --enable-inline-optimization "
-	CONF_ARGS+=" --with-openssl-dir=$PREFIX_PATH/usr/local/ssl "
+	CONF_ARGS+=" --with-openssl-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-jpeg-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-png-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-gd --with-zlib "
@@ -169,7 +169,9 @@ compile_php5()
 	CONF_ARGS+=" --enable-sockets --enable-wddx "
 	CONF_ARGS+=" --enable-zip --enable-calendar "
 	CONF_ARGS+=" --enable-bcmath --enable-soap "
-	CONF_ARGS+=" --with-iconv --with-xmlrpc --enable-mbstring "
+	#CONF_ARGS+=" --with-iconv "
+	CONF_ARGS+=" --with-iconv-dir=$PREFIX_PATH "
+	CONF_ARGS+=" --with-xmlrpc --enable-mbstring "
 	CONF_ARGS+=" --without-sqlite "
 	#CONF_ARGS+=" --enable-ftp "
 	#CONF_ARGS+=" --with-mcrypt "
@@ -180,13 +182,13 @@ compile_php5()
 	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-fileinfo "
 
 	echo "./configure $CONF_ARGS \
-		CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include\" \
-		LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib \"
-		EXTRA_LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib\""
+		CFLAGS=\"-I$PREFIX_PATH/include \" \
+		LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib \"
+		EXTRA_LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib \""
 	./configure $CONF_ARGS \
-		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include" \
-		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib "
-		EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib"
+		CFLAGS="-I$PREFIX_PATH/include " \
+		LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib "
+		EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib "
 
 	sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
 	sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
@@ -231,6 +233,14 @@ compile_common()
 		echo "!!!! Still in Top Dir !!!!"
 		exit
 	fi
+
+	if [ "$NAME" == "libiconv" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+
+
 	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
@@ -238,11 +248,10 @@ compile_common()
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS \
-		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
-		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
-		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -I$PREFIX_PATH/usr/local/ssl " \
-		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils \
-		-L$PREFIX_PATH/usr/local/ssl/lib -Wl,-rpath=$PREFIX_PATH/usr/local/ssl/lib "
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils "
 	make -j4 && make install
 }
 
@@ -538,21 +547,22 @@ compile_openssl()
 	echo "Enter $(pwd)"
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS="android-armv7 "
+		#CONF_ARGS="android-armv7 "
+		#CONF_ARGS="linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' "
 		CONF_ARGS+=" --prefix=$PREFIX_PATH "
 		#CONF_ARGS+=" no-asm shared "
-		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
-		CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld CPP=arm-openwrt-linux-gnueabi-cpp "
-		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+		#CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
+		#CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld CPP=arm-openwrt-linux-gnueabi-cpp "
+		#CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 		echo "./Configure $CONF_ARGS"
-		./Configure $CONF_ARGS
-		sed -i 's/CC=\ gcc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
-		sed -i 's/CC=\ cc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
-		sed -i 's/\-mandroid//g' Makefile
-		sed -i 's/LD_LIBRARY_PATH=/#LD_LIBRARY_PATH=/g' Makefile
-		sed -i 's/\/usr/\/system\/usr/g' tools/c_rehash
-		find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
-		sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
+		./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
+		#sed -i 's/CC=\ gcc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
+		#sed -i 's/CC=\ cc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
+		#sed -i 's/\-mandroid//g' Makefile
+		#sed -i 's/LD_LIBRARY_PATH=/#LD_LIBRARY_PATH=/g' Makefile
+		#sed -i 's/\/usr/\/system\/usr/g' tools/c_rehash
+		#find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
+		#sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
 	else
 		./config --prefix=$PREFIX_PATH
 	fi
@@ -583,8 +593,8 @@ compile_openssh()
 	fi
 	echo "./configure $CONF_ARGS "
 	./configure $CONF_ARGS \
-		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/ssl/include " \
-		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/usr/local/ssl/lib "
+		CFLAGS="-I$PREFIX_PATH/include " \
+		LDFLAGS="-L$PREFIX_PATH/lib "
 
 
 	##########################################################################
@@ -667,11 +677,11 @@ compile_nginx()
 	if [ "$arch" == "ARM" ]
 	then
 		###########################################################################################################
-		sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
-		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
+		#sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
+		#sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
 		###########################################################################################################
-		#sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
-		#sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
+		sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
+		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
 		###########################################################################################################
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
@@ -750,6 +760,14 @@ then
 	#check_compile_status "systap"
 	compile_common "curl" "7.44.0" "tar.bz2"
 	check_compile_status "curl 7.44.0"
+	compile_common "freetype" "2.4.12" "tar.bz2"
+	check_compile_status "freetype 2.4.12"
+	compile_common "libiconv" "1.14" "tar.gz"
+	check_compile_status "libiconv 1.14"
+
+
+
+
 	compile_php5
 	check_compile_status "php 5"
 	compile_nginx
@@ -865,6 +883,11 @@ then
 	#compile_common "harfbuzz" "1.0.2" "tar.bz2"
 	#compile_common "harfbuzz" "0.9.42" "tar.bz2"
 	compile_common "harfbuzz" "0.9.26" "tar.bz2"
+fi
+
+if [ "$1" == "iconv" ]
+then
+	compile_common "libiconv" "1.14" "tar.gz"
 fi
 
 #if [ "$1" == "uclibc" ]

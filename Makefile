@@ -76,6 +76,9 @@ nginx:
 sql:
 	./build.sh sql
 
+iconv:
+	./build.sh iconv
+
 ncurses:
 	./build.sh ncurses
 
