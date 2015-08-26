@@ -169,12 +169,12 @@ compile_php5()
 	CONF_ARGS+=" --enable-sockets --enable-wddx "
 	CONF_ARGS+=" --enable-zip --enable-calendar "
 	CONF_ARGS+=" --enable-bcmath --enable-soap "
-	#CONF_ARGS+=" --with-iconv "
+	CONF_ARGS+=" --with-iconv "
 	CONF_ARGS+=" --with-iconv-dir=$PREFIX_PATH "
 	CONF_ARGS+=" --with-xmlrpc --enable-mbstring "
 	CONF_ARGS+=" --without-sqlite "
-	#CONF_ARGS+=" --enable-ftp "
-	#CONF_ARGS+=" --with-mcrypt "
+	CONF_ARGS+=" --enable-ftp "
+	CONF_ARGS+=" --with-mcrypt "
 	CONF_ARGS+=" --with-curl "
 	CONF_ARGS+=" --with-freetype-dir=$PREFIX_PATH "
 	#CONF_ARGS+=" --disable-safe-mode "
@@ -246,7 +246,8 @@ compile_common()
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
+	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar STRIP=arm-openwrt-linux-gnueabi-strip "
+	CONF_ARGS+=" RANLIB=arm-openwrt-linux-gnueabi-ranlib "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
@@ -336,7 +337,7 @@ compile_glibc()
 	cd for_arm
 	echo "Enter $(pwd)"
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --enable-static=yes"
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -892,6 +893,12 @@ fi
 if [ "$1" == "iconv" ]
 then
 	compile_common "libiconv" "1.14" "tar.gz"
+fi
+
+if [ "$1" == "mcrypt" ]
+then
+	compile_common "libmcrypt" "2.5.8" "tar.bz2"
+	#compile_common "mcrypt" "2.6.8" "tar.gz"
 fi
 
 #if [ "$1" == "uclibc" ]
