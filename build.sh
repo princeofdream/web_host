@@ -678,11 +678,14 @@ compile_nginx()
 	if [ "$arch" == "ARM" ]
 	then
 		###########################################################################################################
-		#sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
-		#sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
-		###########################################################################################################
-		sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
-		sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
+		if [ "$PREFIX_PATH" == "/system_sec" ]
+		then
+			sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
+			sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
+		else
+			sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
+			sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
+		fi
 		###########################################################################################################
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
