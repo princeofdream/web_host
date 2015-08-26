@@ -136,23 +136,34 @@ compile_libxml2()
 
 compile_php5()
 {
+	#VER=5.6.12
 	VER=5.4.27
-	echo "Compileing php-$VER"
+	NAME=php
+	echo "Compileing $NAME-$VER"
 	cd $TOP_DIR
-	rm -rf ./php-$VER
-	tar jxf php-$VER.tar.bz2
-	cd ./php-$VER
+	rm -rf ./$NAME-$VER
+	tar jxf $NAME-$VER.tar.bz2
+	cd ./$NAME-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		echo "!!!! Still in Top Dir !!!!"
 		exit
 	fi
 	echo "Enter $(pwd)"
+	
+	#############################################################################
+	if [ "$NAME" == "php" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+	#############################################################################
+	
+	
 	CONF_ARGS="--prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
 		CONF_ARGS+=" --host=arm-linux --enable-static=yes "
-		#CONF_ARGS+=" --host=arm-linux --enable-static=yes "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
 		CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 		CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
@@ -178,7 +189,6 @@ compile_php5()
 	CONF_ARGS+=" --with-curl "
 	CONF_ARGS+=" --with-freetype-dir=$PREFIX_PATH "
 	#CONF_ARGS+=" --disable-safe-mode "
-	#CONF_ARGS+=" --enable-fastcgi "
 	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-fileinfo "
 
 	echo "./configure $CONF_ARGS \
@@ -687,6 +697,8 @@ compile_nginx()
 
 		CONF_ARGS=" --with-ipv6 "
 		CONF_ARGS+=" --without-http_rewrite_module "
+		CONF_ARGS+=" --with-http_stub_status_module "
+		CONF_ARGS+=" --without-http-cache "
 		CONF_ARGS+=" --prefix=$PREFIX_PATH "
 		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
 		CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
@@ -785,6 +797,13 @@ then
 	check_compile_status "freetype 2.4.12"
 	compile_common "libiconv" "1.14" "tar.gz"
 	check_compile_status "libiconv 1.14"
+
+	compile_common "mhash" "0.9.9.9" "tar.bz2"
+	check_compile_status "mhash 0.9.9.9"
+	compile_common "libmcrypt" "2.5.8" "tar.bz2"
+	check_compile_status "libmcrypt 2.5.8"
+	compile_common "mcrypt" "2.6.8" "tar.gz"
+	check_compile_status "mcrypt 2.6.8"
 
 
 
@@ -918,7 +937,7 @@ fi
 
 if [ "$1" == "mcrypt" ]
 then
-	#compile_common "libmcrypt" "2.5.8" "tar.bz2"
+	compile_common "libmcrypt" "2.5.8" "tar.bz2"
 	compile_common "mcrypt" "2.6.8" "tar.gz"
 fi
 
