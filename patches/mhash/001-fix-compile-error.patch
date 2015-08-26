@@ -1,0 +1,13 @@
+diff --git a/include/mutils/mhash_config.h.in b/include/mutils/mhash_config.h.in
+index ed22aa5..83b1a66 100644
+--- a/include/mutils/mhash_config.h.in
++++ b/include/mutils/mhash_config.h.in
+@@ -253,7 +253,7 @@
+ #endif
+ 
+ /* Define to rpl_malloc if the replacement function should be used. */
+-#undef malloc
++//#undef malloc
+ 
+ /* Define to `unsigned int' if <sys/types.h> does not define. */
+ #undef size_t

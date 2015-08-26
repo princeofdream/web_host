@@ -251,6 +251,21 @@ compile_common()
 	fi
 	#############################################################################
 
+	#############################################################################
+	if [ "$NAME" == "mcrypt" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+	#############################################################################
+
+	#############################################################################
+	if [ "$NAME" == "mhash" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+	#############################################################################
 
 	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-linux"
@@ -894,6 +909,11 @@ fi
 if [ "$1" == "iconv" ]
 then
 	compile_common "libiconv" "1.14" "tar.gz"
+fi
+
+if [ "$1" == "mhash" ]
+then
+	compile_common "mhash" "0.9.9.9" "tar.bz2"
 fi
 
 if [ "$1" == "mcrypt" ]

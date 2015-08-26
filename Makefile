@@ -79,6 +79,9 @@ sql:
 iconv:
 	./build.sh iconv
 
+mhash:
+	./build.sh mhash
+
 mcrypt:
 	./build.sh mcrypt
 

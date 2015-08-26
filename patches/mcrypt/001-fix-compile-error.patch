@@ -1,0 +1,40 @@
+diff --git a/configure b/configure
+index e9109f0..2af448c 100755
+--- a/configure
++++ b/configure
+@@ -11740,11 +11740,12 @@ echo $ECHO_N "checking for libmcrypt - version >= $min_libmcrypt_version... $ECH
+   no_libmcrypt=""
+   if test "$LIBMCRYPT_CONFIG" = "no" ; then
+       if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++		  echo "In cross compile, can not run program by JamesL, This may cause a bug. "
++  #{ { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++   #{ (exit 1); exit 1; }; }
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+@@ -12096,7 +12097,7 @@ if test "${ac_cv_lib_mhash_mhash_keygen+set}" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lmhash  $LIBS"
++LIBS="-lmhash  $LIBS -lmcrypt"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -12152,7 +12153,7 @@ fi
+ { echo "$as_me:$LINENO: result: $ac_cv_lib_mhash_mhash_keygen" >&5
+ echo "${ECHO_T}$ac_cv_lib_mhash_mhash_keygen" >&6; }
+ if test $ac_cv_lib_mhash_mhash_keygen = yes; then
+-  LIBS="${LIBS} -lmhash"
++  LIBS="${LIBS} -lmhash -lmcrypt"
+ else
+   { { echo "$as_me:$LINENO: error: \"You need at least libmhash 0.8.15 to compile this program. http://mhash.sf.net/\"" >&5
+ echo "$as_me: error: \"You need at least libmhash 0.8.15 to compile this program. http://mhash.sf.net/\"" >&2;}
