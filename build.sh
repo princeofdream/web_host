@@ -263,7 +263,7 @@ compile_common()
 		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils "
+		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils "
 	make -j4 && make install
 }
 
@@ -352,12 +352,6 @@ compile_glibc()
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
-
-	#../configure $CONF_ARGS \
-		#CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		#CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		#CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		#LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 
 	../configure --prefix=$PREFIX_PATH --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  \
 
@@ -496,9 +490,6 @@ compile_mysql()
 	CONF_ARGS+=" CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	CONF_ARGS+=" --enable-shared=no --enable-static=yes"
-	#CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include "
-	#CONF_ARGS+=" CPPFLAGS=-I$PREFIX_PATH/include "
-	#CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include/atomic_ops -I$PREFIX_PATH/include"
 
 
