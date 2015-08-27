@@ -13,6 +13,20 @@ arch=ARM
 PREFIX_PATH=/share/lijin/system_sec
 
 
+############# caclcate cpu number ################
+CPU_INFO=`cat /proc/cpuinfo |grep processor | cut -f 2 -d ' ' `
+CPU_NUMBER=0
+
+for i0 in $CPU_INFO ;
+do
+	CPU_NUMBER=$[$i0+1]
+done
+
+MAKE_THREAD=-j$CPU_NUMBER
+#echo "--->$MAKE_THREAD<---"
+#################################################
+
+
 ## prepare env ##
 
 compile_zlib()
@@ -33,7 +47,7 @@ compile_zlib()
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
 	sed -i "s/gcc/$DEF_GCC/g" Makefile
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 #compile_lzma()
@@ -72,7 +86,7 @@ compile_libpng()
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS
 	sed -i "s/SYMBOL_CFLAGS\ =\ /SYMBOL_CFLAGS\ =\ \${CFLAGS} /g" Makefile
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_libjpeg()
@@ -96,7 +110,7 @@ compile_libjpeg()
 	CONF_ARGS+=" --enable-static=yes "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_libxml2()
@@ -130,7 +144,7 @@ compile_libxml2()
 	sed -i "s/PYTHON_TESTS\ =/#PYTHON_TESTS\ =/g" Makefile
 	sed -i "s/PYTHON_VERSION\ =/#PYTHON_VERSION\ =/g" Makefile
 
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 
@@ -216,7 +230,7 @@ compile_php5()
 
 
 
-	make -j4 && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
+	make $MAKE_THREAD && cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar && make install
 }
 
 compile_common()
@@ -289,7 +303,7 @@ compile_common()
 		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils "
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 #compile_yajl()
@@ -340,7 +354,7 @@ compile_libvirt()
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 
@@ -380,7 +394,7 @@ compile_glibc()
 
 	../configure --prefix=$PREFIX_PATH --host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++  CPP=arm-openwrt-linux-gnueabi-cpp LD=arm-openwrt-linux-gnueabi-ld  AR=arm-openwrt-linux-gnueabi-ar  \
 
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_systemtap()
@@ -407,7 +421,7 @@ compile_systemtap()
 		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
 		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_elfutils()
@@ -435,7 +449,7 @@ compile_elfutils()
 	CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_ncurses()
@@ -459,7 +473,7 @@ compile_ncurses()
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
 	sed -i "s/samples//g" Ada95/Makefile
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 compile_mysql()
@@ -520,9 +534,9 @@ compile_mysql()
 
 	./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
 
-	make -j4
+	make $MAKE_THREAD
 	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 	#}
 
 
@@ -555,7 +569,7 @@ compile_pcre()
 	CONF_ARGS+=" --enable-jit --enable-utf8 -enable-unicode-properties "
 	CONF_ARGS+=" --enable-pcregrep-libz "
 	./configure $CONF_ARGS
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 }
 
 
@@ -590,7 +604,8 @@ compile_openssl()
 	else
 		./config --prefix=$PREFIX_PATH
 	fi
-	make -j4 && make install
+	make $MAKE_THREAD && make install
+
 }
 
 compile_openssh()
@@ -733,7 +748,7 @@ compile_nginx()
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
 
 
-	make -j4 && make install
+	make $MAKE_THREAD && make install
 	##############
 	echo "!!!!!!!!!!!!!! remember change nginx.conf php config /script to \$document_root !!!!!!!!!!!"
 }
@@ -757,6 +772,8 @@ echo "using $DEF_GCC"
 
 if [ "$1" == "ok" ]
 then
+	compile_openssl
+	check_compile_status "openssl"
 	compile_zlib
 	check_compile_status "zlib"
 	compile_libpng
@@ -767,8 +784,6 @@ then
 	check_compile_status "libxml2"
 	compile_atomic_ops
 	check_compile_status "libatomic_ops"
-	compile_openssl
-	check_compile_status "openssl"
 	compile_pcre
 	check_compile_status "pcre"
 	compile_ncurses
