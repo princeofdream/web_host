@@ -1,0 +1,31 @@
+diff --git a/auto/lib/openssl/make b/auto/lib/openssl/make
+index 765cd06..bde668b 100644
+--- a/auto/lib/openssl/make
++++ b/auto/lib/openssl/make
+@@ -51,10 +51,12 @@ END
+ $OPENSSL/.openssl/include/openssl/ssl.h:	$NGX_MAKEFILE
+ 	cd $OPENSSL \\
+ 	&& if [ -f Makefile ]; then \$(MAKE) clean; fi \\
+-	&& ./config --prefix=$ngx_prefix no-shared $OPENSSL_OPT \\
++	&& ./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$ngx_prefix no-shared \\
+ 	&& \$(MAKE) \\
+ 	&& \$(MAKE) install LIBDIR=lib
+ 
++	#&& ./config --prefix=$ngx_prefix no-shared $OPENSSL_OPT \\
++	#
+ END
+ 
+     ;;
+diff --git a/auto/options b/auto/options
+index e70d1a0..dfddec5 100644
+--- a/auto/options
++++ b/auto/options
+@@ -309,7 +309,7 @@ use the \"--with-mail_ssl_module\" option instead"
+         --without-pcre)                  USE_PCRE=DISABLED          ;;
+         --with-pcre)                     USE_PCRE=YES               ;;
+         --with-pcre=*)                   PCRE="$value"              ;;
+-        --with-pcre-opt=*)               PCRE_OPT="$value"          ;;
++        --with-pcre-opt=*)               PCRE_CONF_OPT="$value"          ;;
+         --with-pcre-jit)                 PCRE_JIT=YES               ;;
+ 
+         --with-openssl=*)                OPENSSL="$value"           ;;

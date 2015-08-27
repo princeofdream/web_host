@@ -578,10 +578,6 @@ compile_openssl()
 		#CONF_ARGS="android-armv7 "
 		#CONF_ARGS="linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' "
 		CONF_ARGS+=" --prefix=$PREFIX_PATH "
-		#CONF_ARGS+=" no-asm shared "
-		#CONF_ARGS+=" CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ "
-		#CONF_ARGS+=" LD=arm-openwrt-linux-gnueabi-ld CPP=arm-openwrt-linux-gnueabi-cpp "
-		#CONF_ARGS+=" AR=arm-openwrt-linux-gnueabi-ar "
 		echo "./Configure $CONF_ARGS"
 		./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
 		#sed -i 's/CC=\ gcc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
@@ -680,6 +676,7 @@ compile_nginx()
 	cp $TOP_DIR/patches/nginx/patches/* ./nginx-$VER
 	cd ./nginx-$VER
 	patch -p1 < 001-enable-php-option-by-default.patch
+	patch -p1 < 002-fix-pcre-cross-compile-error.patch
 	patch -p1 < 101-feature_test_fix.patch
 	patch -p1 < 102-sizeof_test_fix.patch
 	patch -p1 < 103-sys_nerr.patch
@@ -693,44 +690,35 @@ compile_nginx()
 		patch -p1 < 401-nginx-1.4.0-syslog.patch
 	fi
 
-	sed -i "/ngx_open_file_cache\.c/a\src/core/ngx_regex.c\\" auto/sources
-
-		CONF_ARGS=" --with-ipv6 "
-		CONF_ARGS+=" --without-http_rewrite_module "
-		CONF_ARGS+=" --with-http_stub_status_module "
-		CONF_ARGS+=" --without-http-cache "
-		CONF_ARGS+=" --prefix=$PREFIX_PATH "
-		CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
-		CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
-		CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
-		#CONF_ARGS+=" --with-pcre-opt= "
+	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		###########################################################################################################
-		if [ "$PREFIX_PATH" == "/system_sec" ]
-		then
-			sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/system_sec\/include\ \"/g" auto/lib/pcre/make
-			sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/system_sec\/lib\ /g" auto/lib/pcre/make
-		else
-			sed -i "s/\"\$PCRE_OPT\"/\"\$PCRE_OPT\ -I\/share\/lijin\/system_sec\/include\ \"/g" auto/lib/pcre/make
-			sed -i "s/disable-shared/disable-shared\ --host=arm-linux\ CC=arm-openwrt-linux-gnueabi-gcc\ CXX=arm-openwrt-linux-gnueabi-g++\\ --enable-static=yes\ --enable-pcre16\ --enable-pcre32\ --enable-jit --enable-utf8\ --enable-unicode-properties\ --enable-pcregrep-libz\ LDFLAGS=-L\/share\/lijin\/system_sec\/lib\ /g" auto/lib/pcre/make
-		fi
-		###########################################################################################################
 		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gnueabi-gcc "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
-		CONF_ARGS+=" --with-http_stub_status_module "
-		#CONF_ARGS+=" --with-http_ssl_module "
-		#CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
 	else
 		echo "compile for host"
 	fi
+	CONF_ARGS+=" --with-ipv6 "
+	CONF_ARGS+=" --with-http_stub_status_module "
+	CONF_ARGS+=" --without-http-cache "
+	CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
+	CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
+	CONF_ARGS+=" --with-http_gzip_static_module "
 
-		echo "./configure $CONF_ARGS --with-pcre-opt=--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " 
+	#CONF_ARGS+=" --without-http_rewrite_module "
+	CONF_ARGS+=" --with-http_ssl_module "
+	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
+	CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
 
 
-		./configure $CONF_ARGS \
-			#--with-pcre-opt="--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties --enable-pcregrep-libz LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " 
-			#--with-openssl-opt=""
+	echo "./configure $CONF_ARGS --with-pcre-opt=\"--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include \" \
+	--with-openssl-opt=\"linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$PREFIX_PATH \""
+
+
+
+	./configure $CONF_ARGS \
+		--with-pcre-opt="--host=arm-linux CC=arm-openwrt-linux-gnueabi-gcc CXX=arm-openwrt-linux-gnueabi-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " \
+		--with-openssl-opt="linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$PREFIX_PATH "
 
 
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
