@@ -10,6 +10,15 @@ build:
 ok:
 	./build.sh ok
 
+pcap:
+	./build.sh pcap
+
+iptables:
+	./build.sh iptables
+
+nmap:
+	./build.sh nmap
+
 xdr:
 	./build.sh xdr
 
