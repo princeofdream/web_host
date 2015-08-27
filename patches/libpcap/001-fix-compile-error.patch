@@ -1,0 +1,17 @@
+diff --git a/configure b/configure
+index 2b69b6d..02a9e7f 100755
+--- a/configure
++++ b/configure
+@@ -5251,9 +5251,9 @@ $as_echo "$as_me: Enabling SITA ACN support" >&6;}
+ 
+ else
+ 
+-if test -z "$with_pcap" && test "$cross_compiling" = yes; then
+-	as_fn_error $? "pcap type not determined when cross-compiling; use --with-pcap=..." "$LINENO" 5
+-fi
++#if test -z "$with_pcap" && test "$cross_compiling" = yes; then
++	#as_fn_error $? "pcap type not determined when cross-compiling; use --with-pcap=..." "$LINENO" 5
++#fi
+ 
+ # Check whether --with-pcap was given.
+ if test "${with_pcap+set}" = set; then :
