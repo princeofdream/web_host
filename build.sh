@@ -81,7 +81,8 @@ compile_libpng()
 	CONF_ARGS+=" --host=arm-openwrt-linux "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	CONF_ARGS+=" --enable-static=yes "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS
@@ -131,7 +132,8 @@ compile_libxml2()
 	CONF_ARGS+="--host=arm-openwrt-linux "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	CONF_ARGS+="--enable-static=yes"
 	./configure $CONF_ARGS
 	sed -i "s/\-llzma//g" Makefile
@@ -170,6 +172,10 @@ compile_php5()
 	then
 		cp $TOP_DIR/patches/$NAME/*.patch ./
 		patch -p1 < 001-fix-compile-error.patch
+		if [ "$VER" == "5.6.12" ]
+		then
+			patch -p1 < 002-fix-php-5.6-compile-error.patch
+		fi
 	fi
 	#############################################################################
 	
@@ -180,7 +186,8 @@ compile_php5()
 		CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-		CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	else
 		echo "compile for host"
 	fi
@@ -208,9 +215,11 @@ compile_php5()
 	#CONF_ARGS+=" --disable-safe-mode "
 	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-fileinfo "
 
+
 	echo "./configure $CONF_ARGS \
 		CFLAGS=\"-I$PREFIX_PATH/include \" \
 		LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib \"
+		EXTRA_LIBS=\" -liconv \" \
 		EXTRA_LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib \""
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include " \
@@ -218,18 +227,21 @@ compile_php5()
 		EXTRA_LIBS=" -liconv " \
 		EXTRA_LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib "
 
-	sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
-	sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
-	sed -i "s/\$(top_builddir)\/sapi\/cli\/php/\$(top_builddir)\/..\/host_php_ext\/sapi\/cli\/php/g" Makefile
-	sed -i "s/\$(top_builddir)\/\$(SAPI_CLI_PATH)/\$(top_builddir)\/..\/host_php_ext\/\$(SAPI_CLI_PATH)/g" Makefile
+	if [ "$VER" == "5.4.27" ]
+	then
+		sed -i "s/CFLAGS_CLEAN\ =\ -I\/usr\/include/CFLAGS_CLEAN\ =\ /g" Makefile
+		sed -i "s/\$(LDFLAGS)/\$(LDFLAGS)\ \$(EXTRA_LDFLAGS)/g" Makefile
+		sed -i "s/\$(top_builddir)\/sapi\/cli\/php/\$(top_builddir)\/..\/host_php_ext\/sapi\/cli\/php/g" Makefile
+		sed -i "s/\$(top_builddir)\/\$(SAPI_CLI_PATH)/\$(top_builddir)\/..\/host_php_ext\/\$(SAPI_CLI_PATH)/g" Makefile
 
-	############################### Fix "include <ext/mysqlnd/php_mysqlnd_config.h>" ###########################################
-	cd ext/mysqlnd/
-	mv config9.m4 config.m4
-	sed -ie "s{ext/mysqlnd/php_mysqlnd_config.h{config.h{" mysqlnd_portability.h
-	#phpize
-	cd ../../
-	##########################################################################
+		############################### Fix "include <ext/mysqlnd/php_mysqlnd_config.h>" ###########################################
+		cd ext/mysqlnd/
+		mv config9.m4 config.m4
+		sed -ie "s{ext/mysqlnd/php_mysqlnd_config.h{config.h{" mysqlnd_portability.h
+		#phpize
+		cd ../../
+		##########################################################################
+	fi
 
 
 
@@ -375,7 +387,8 @@ compile_libvirt()
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	make $MAKE_THREAD && make install
@@ -633,8 +646,8 @@ compile_openssl()
 
 compile_openssh()
 {
+	NAME=openssh
 	VER=7.0p1
-	echo "Compileing openssh-$VER   ------------NOT READY YET---------"
 	cd $TOP_DIR
 	rm -rf ./ssh
 	tar zxf  openssh-$VER.tar.gz
@@ -644,6 +657,16 @@ compile_openssh()
 		echo "!!!! Still in Top Dir !!!!"
 		exit
 	fi
+
+	#############################################################################
+	if [ "$NAME" == "openssh" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 001-fix-compile-error.patch
+	fi
+	#############################################################################
+
+
 	echo "Enter $(pwd)"
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
@@ -651,13 +674,15 @@ compile_openssh()
 		CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-		CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	fi
 	echo "./configure $CONF_ARGS "
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include " \
 		LDFLAGS="-L$PREFIX_PATH/lib "
 
+	make $MAKE_THREAD && make install
 
 	##########################################################################
 	# add below cmd to /etc/passwd first
@@ -743,7 +768,6 @@ compile_nginx()
 	CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
 	CONF_ARGS+=" --with-http_gzip_static_module "
 
-	#CONF_ARGS+=" --without-http_rewrite_module "
 	CONF_ARGS+=" --with-http_ssl_module "
 	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
 	CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
