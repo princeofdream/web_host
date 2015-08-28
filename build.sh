@@ -9,8 +9,25 @@ OPENSSL_NAME=openssl
 OPENSSL_VER=1.0.2d
 
 arch=ARM
-#PREFIX_PATH=/system_sec
-PREFIX_PATH=/share/lijin/system_sec
+
+PREFIX_PATH=/system_sec
+#PREFIX_PATH=/share/lijin/system_sec
+
+if [ -d "/system_sec" ];
+then
+	echo "use /system_sec as prefix!"
+	PREFIX_PATH=/system_sec
+else
+   	if [ -d "/share/lijin/system_sec" ];
+	then
+		echo "use /share/lijin/system_sec as prefix!"
+		PREFIX_PATH=/share/lijin/system_sec
+	else
+		echo "do not have any suitable dirs"
+	fi
+fi
+
+
 
 
 ############# caclcate cpu number ################
@@ -647,9 +664,11 @@ compile_openssl()
 compile_openssh()
 {
 	NAME=openssh
-	VER=7.0p1
+	#VER=7.0p1
+	#VER=5.9p1
+	VER=6.6p1
 	cd $TOP_DIR
-	rm -rf ./ssh
+	rm -rf ./openssh-$VER
 	tar zxf  openssh-$VER.tar.gz
 	cd ./openssh-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
@@ -663,6 +682,7 @@ compile_openssh()
 	then
 		cp $TOP_DIR/patches/$NAME/*.patch ./
 		patch -p1 < 001-fix-compile-error.patch
+		patch -p1 < 002-fix-cross-compile-can-not-run-ssh-keygen.patch
 	fi
 	#############################################################################
 
@@ -677,10 +697,13 @@ compile_openssh()
 		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
 		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	fi
+
+	CONF_ARGS+=" --with-privsep-path=$PREFIX_PATH/var/empty "
+	CONF_ARGS+=" --enable-strip=no "
 	echo "./configure $CONF_ARGS "
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include " \
-		LDFLAGS="-L$PREFIX_PATH/lib "
+		LDFLAGS="-L$PREFIX_PATH/lib -O2 -ffree-form -shared "
 
 	make $MAKE_THREAD && make install
 
@@ -866,8 +889,13 @@ then
 	check_compile_status "mysql"
 
 	compile_common "libpcap" "1.7.4" "tar.gz"
+	check_compile_status "libpcap 1.7.4"
 	compile_common "nmap" "6.47" "tar.bz2"
+	check_compile_status "nmap 6.47"
 	compile_common "iptables" "1.4.19.1" "tar.bz2"
+	check_compile_status "iptables 1.4.19.1"
+	compile_openssh
+	check_compile_status "openssh 6.6p1"
 
 fi
 

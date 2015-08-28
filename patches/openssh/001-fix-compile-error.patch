@@ -1,0 +1,154 @@
+diff --git a/Makefile.in b/Makefile.in
+index 28a8ec4..c3e2a17 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -29,6 +29,7 @@ SSH_PKCS11_HELPER=$(libexecdir)/ssh-pkcs11-helper
+ PRIVSEP_PATH=@PRIVSEP_PATH@
+ SSH_PRIVSEP_USER=@SSH_PRIVSEP_USER@
+ STRIP_OPT=@STRIP_OPT@
++STRIP=@STRIP@
+ 
+ PATHS= -DSSHDIR=\"$(sysconfdir)\" \
+ 	-D_PATH_SSH_PROGRAM=\"$(SSH_PROGRAM)\" \
+diff --git a/configure b/configure
+index d690393..9c32f28 100755
+--- a/configure
++++ b/configure
+@@ -650,6 +650,7 @@ INSTALL_DATA
+ INSTALL_SCRIPT
+ INSTALL_PROGRAM
+ RANLIB
++STRIP
+ AWK
+ EGREP
+ GREP
+@@ -4365,9 +4366,11 @@ $as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2
+ ac_tool_warned=yes ;;
+ esac
+     RANLIB=$ac_ct_RANLIB
++    STRIP=$STRIP
+   fi
+ else
+   RANLIB="$ac_cv_prog_RANLIB"
++    STRIP=$STRIP
+ fi
+ 
+ # Find a good install program.  We prefer a C program (faster),
+@@ -8971,11 +8974,11 @@ rm -f core conftest.err conftest.$ac_objext \
+   break
+ fi
+ done
+-if ${ac_cv_search_fmt_scaled+:} false; then :
++#if ${ac_cv_search_fmt_scaled+:} false; then :
+ 
+-else
++#else
+   ac_cv_search_fmt_scaled=no
+-fi
++#fi
+ rm conftest.$ac_ext
+ LIBS=$ac_func_search_save_LIBS
+ fi
+@@ -9027,11 +9030,11 @@ rm -f core conftest.err conftest.$ac_objext \
+   break
+ fi
+ done
+-if ${ac_cv_search_scan_scaled+:} false; then :
++#if ${ac_cv_search_scan_scaled+:} false; then :
+ 
+-else
++#else
+   ac_cv_search_scan_scaled=no
+-fi
++#fi
+ rm conftest.$ac_ext
+ LIBS=$ac_func_search_save_LIBS
+ fi
+@@ -9323,7 +9326,7 @@ if test "$ac_res" != no; then :
+ 
+ fi
+ 
+-for ac_func in fmt_scaled scan_scaled login logout openpty updwtmp logwtmp
++for ac_func in login logout openpty updwtmp logwtmp
+ do :
+   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
+@@ -10404,7 +10407,6 @@ for ac_func in  \
+ 	poll \
+ 	prctl \
+ 	pstat \
+-	readpassphrase \
+ 	realpath \
+ 	recvmsg \
+ 	rresvport_af \
+@@ -10437,7 +10439,6 @@ for ac_func in  \
+ 	strlcpy \
+ 	strmode \
+ 	strnlen \
+-	strnvis \
+ 	strptime \
+ 	strtonum \
+ 	strtoll \
+@@ -11111,16 +11112,16 @@ _ACEOF
+ fi
+ done
+ 
+-for ac_func in getlastlogxbyname
+-do :
+-  ac_fn_c_check_func "$LINENO" "getlastlogxbyname" "ac_cv_func_getlastlogxbyname"
+-if test "x$ac_cv_func_getlastlogxbyname" = xyes; then :
+-  cat >>confdefs.h <<_ACEOF
+-#define HAVE_GETLASTLOGXBYNAME 1
+-_ACEOF
++#for ac_func in getlastlogxbyname
++#do :
++  #ac_fn_c_check_func "$LINENO" "getlastlogxbyname" "ac_cv_func_getlastlogxbyname"
++#if test "x$ac_cv_func_getlastlogxbyname" = xyes; then :
++  #cat >>confdefs.h <<_ACEOF
++##define HAVE_GETLASTLOGXBYNAME 1
++#_ACEOF
+ 
+-fi
+-done
++#fi
++#done
+ 
+ 
+ ac_fn_c_check_func "$LINENO" "daemon" "ac_cv_func_daemon"
+@@ -16204,7 +16205,7 @@ ac_res=$ac_cv_search_getrrsetbyname
+ if test "$ac_res" != no; then :
+   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+ 
+-$as_echo "#define HAVE_GETRRSETBYNAME 1" >>confdefs.h
++#$as_echo "#define HAVE_GETRRSETBYNAME 1" >>confdefs.h
+ 
+ else
+ 
+diff --git a/configure.ac b/configure.ac
+index 7c6ce08..0f4f5c1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -28,6 +28,7 @@ AC_C_BIGENDIAN
+ AC_PROG_AWK
+ AC_PROG_CPP
+ AC_PROG_RANLIB
++AC_PROG_STRIP
+ AC_PROG_INSTALL
+ AC_PROG_EGREP
+ AC_PATH_PROG([AR], [ar])
+@@ -1687,7 +1688,6 @@ AC_CHECK_FUNCS([ \
+ 	poll \
+ 	prctl \
+ 	pstat \
+-	readpassphrase \
+ 	realpath \
+ 	recvmsg \
+ 	rresvport_af \
+@@ -1720,7 +1720,6 @@ AC_CHECK_FUNCS([ \
+ 	strlcpy \
+ 	strmode \
+ 	strnlen \
+-	strnvis \
+ 	strptime \
+ 	strtonum \
+ 	strtoll \

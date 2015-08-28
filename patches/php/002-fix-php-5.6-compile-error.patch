@@ -1,0 +1,122 @@
+diff --git a/configure b/configure
+index d069df5..7453fd2 100755
+--- a/configure
++++ b/configure
+@@ -66543,10 +66543,12 @@ flock_type=unknown
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking \"whether flock struct is linux ordered\"" >&5
+ $as_echo_n "checking \"whether flock struct is linux ordered\"... " >&6; }
+ if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
++	echo "skip cross compile may causea bug By JamesL"
++	flock_type=linux
++  #{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++#as_fn_error $? "cannot run test program while cross compiling
++#See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+@@ -66561,7 +66563,7 @@ else
+   }
+ 
+ _ACEOF
+-if ac_fn_c_try_run "$LINENO"; then :
++#if ac_fn_c_try_run "$LINENO"; then :
+ 
+ 	flock_type=linux
+ 
+@@ -66570,10 +66572,10 @@ $as_echo "#define HAVE_FLOCK_LINUX /**/" >>confdefs.h
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: \"yes\"" >&5
+ $as_echo "\"yes\"" >&6; }
+ 
+-else
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: \"no\"" >&5
+-$as_echo "\"no\"" >&6; }
+-fi
++#else
++  #{ $as_echo "$as_me:${as_lineno-$LINENO}: result: \"no\"" >&5
++#$as_echo "\"no\"" >&6; }
++#fi
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+   conftest.$ac_objext conftest.beam conftest.$ac_ext
+ fi
+@@ -66581,41 +66583,41 @@ fi
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking \"whether flock struct is BSD ordered\"" >&5
+ $as_echo_n "checking \"whether flock struct is BSD ordered\"... " >&6; }
+-if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
+-else
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-  #include <fcntl.h>
+-  struct flock lock = { 1, 2, 3, 4, 5 };
+-  int main() {
+-    if(lock.l_start == 1 && lock.l_len == 2 && lock.l_type == 4 && lock.l_whence == 5) {
+-		return 0;
+-    }
+-    return 1;
+-  }
+-
+-_ACEOF
+-if ac_fn_c_try_run "$LINENO"; then :
+-
+-	flock_type=bsd
+-
+-$as_echo "#define HAVE_FLOCK_BSD /**/" >>confdefs.h
+-
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: \"yes\"" >&5
+-$as_echo "\"yes\"" >&6; }
+-
+-else
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: \"no\"" >&5
+-$as_echo "\"no\"" >&6; }
+-fi
+-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+-  conftest.$ac_objext conftest.beam conftest.$ac_ext
+-fi
++#if test "$cross_compiling" = yes; then :
++  #{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++#as_fn_error $? "cannot run test program while cross compiling
++#See \`config.log' for more details" "$LINENO" 5 ; }
++#else
++  #cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++#/* end confdefs.h.  */
++
++  ##include <fcntl.h>
++  #struct flock lock = { 1, 2, 3, 4, 5 };
++  #int main() {
++    #if(lock.l_start == 1 && lock.l_len == 2 && lock.l_type == 4 && lock.l_whence == 5) {
++		#return 0;
++    #}
++    #return 1;
++  #}
++
++#_ACEOF
++##if ac_fn_c_try_run "$LINENO"; then :
++
++	##flock_type=bsd
++
++##$as_echo "#define HAVE_FLOCK_BSD /**/" >>confdefs.h
++
++    ##{ $as_echo "$as_me:${as_lineno-$LINENO}: result: \"yes\"" >&5
++##$as_echo "\"yes\"" >&6; }
++
++##else
++  ##{ $as_echo "$as_me:${as_lineno-$LINENO}: result: \"no\"" >&5
++##$as_echo "\"no\"" >&6; }
++##fi
++#rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
++  #conftest.$ac_objext conftest.beam conftest.$ac_ext
++#fi
+ 
+ 
+ if test "$flock_type" == "unknown"; then
