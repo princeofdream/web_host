@@ -682,7 +682,7 @@ compile_openssh()
 	then
 		cp $TOP_DIR/patches/$NAME/*.patch ./
 		patch -p1 < 001-fix-compile-error.patch
-		patch -p1 < 002-fix-cross-compile-can-not-run-ssh-keygen.patch
+		#patch -p1 < 002-fix-cross-compile-can-not-run-ssh-keygen.patch
 	fi
 	#############################################################################
 
@@ -691,7 +691,7 @@ compile_openssh()
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
+		CONF_ARGS+=" --host=arm-openwrt-linux "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
@@ -699,11 +699,14 @@ compile_openssh()
 	fi
 
 	CONF_ARGS+=" --with-privsep-path=$PREFIX_PATH/var/empty "
-	CONF_ARGS+=" --enable-strip=no "
+	#CONF_ARGS+=" --enable-static=yes "
+	#CONF_ARGS+=" --enable-strip=no "
+	CONF_ARGS+=" --enable-shared --disable-static --disable-debug --disable-strip  --disable-etc-default-login --disable-lastlog "
+	CONF_ARGS+=" --disable-utmp  --disable-utmpx --disable-wtmp --disable-wtmpx  --without-bsd-auth  --without-kerberos5  --without-x --with-ssl-engine  --without-stackprotect "
 	echo "./configure $CONF_ARGS "
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include " \
-		LDFLAGS="-L$PREFIX_PATH/lib -O2 -ffree-form -shared "
+		LDFLAGS="-L$PREFIX_PATH/lib -O2 -ffree-form -shared  -lpthread "
 
 	make $MAKE_THREAD && make install
 
@@ -894,8 +897,8 @@ then
 	check_compile_status "nmap 6.47"
 	compile_common "iptables" "1.4.19.1" "tar.bz2"
 	check_compile_status "iptables 1.4.19.1"
-	compile_openssh
-	check_compile_status "openssh 6.6p1"
+	#compile_openssh
+	#check_compile_status "openssh 6.6p1"
 
 fi
 
@@ -1055,7 +1058,8 @@ fi
 # 6. link sh to /bin/sh, link hostname to /bin/hostname
 # 7. needs to run "mysql_install_db --user=root" to create db and then run mysqld_safe to run daemon
 # 8. place my.cnf to $PREFIX_PATH/etc
-# 9. /bin/mysqld_safe --user=root && mysql_upgrade && /system_sec/bin/mysql_secure_installation
+# 9. mysqld_safe --user=root &
+# 10. mysql_upgrade && mysql_secure_installation
 
 
 
