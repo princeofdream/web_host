@@ -1,0 +1,230 @@
+2015-06-26 08:27:22	update cky_print_list set is_print = 1,print_time=1435307242 where id=67 and is_print=0
+2015-06-26 08:27:26	update cky_print_list set is_print = 1,print_time=1435307246 where id=68 and is_print=0
+2015-06-26 10:14:37	update cky_print_list set is_print = 1,print_time=1435313677 where id=69 and is_print=0
+2015-06-26 10:14:43	update cky_print_list set is_print = 1,print_time=1435313683 where id=70 and is_print=0
+2015-06-26 10:15:24	update cky_print_list set is_print = 1,print_time=1435313724 where id=71 and is_print=0
+2015-06-26 10:18:11	��ʼ��MYSQL����
+2015-06-26 10:18:11	MYSQL���ӳɹ�
+2015-06-26 10:18:24	update cky_print_list set is_print = 1,print_time=1435313904 where id=72 and is_print=0
+2015-06-26 10:18:29	update cky_print_list set is_print = 1,print_time=1435313909 where id=73 and is_print=0
+2015-06-26 11:34:47	update cky_print_list set is_print = 1,print_time=1435318487 where id=74 and is_print=0
+2015-06-26 11:34:50	update cky_print_list set is_print = 1,print_time=1435318490 where id=75 and is_print=0
+2015-06-26 11:34:53	update cky_print_list set is_print = 1,print_time=1435318493 where id=76 and is_print=0
+2015-06-26 11:34:56	update cky_print_list set is_print = 1,print_time=1435318496 where id=77 and is_print=0
+2015-06-26 11:34:59	update cky_print_list set is_print = 1,print_time=1435318499 where id=78 and is_print=0
+2015-06-26 11:42:05	update cky_print_list set is_print = 1,print_time=1435318925 where id=79 and is_print=0
+2015-06-26 12:09:30	��ʼ��MYSQL����
+2015-06-26 12:09:30	MYSQL���ӳɹ�
+2015-06-26 12:10:18	update cky_print_list set is_print = 1,print_time=1435320618 where id=80 and is_print=0
+2015-06-26 14:41:21	��ʼ��MYSQL����
+2015-06-26 14:41:21	MYSQL���ӳɹ�
+2015-06-26 14:41:53	update cky_print_list set is_print = 1,print_time=1435329713 where id=81 and is_print=0
+2015-06-26 14:41:56	update cky_print_list set is_print = 1,print_time=1435329716 where id=82 and is_print=0
+2015-06-26 14:42:03	update cky_print_list set is_print = 1,print_time=1435329723 where id=83 and is_print=0
+2015-06-26 15:41:09	��ʼ��MYSQL����
+2015-06-26 15:41:09	MYSQL���ӳɹ�
+2015-06-26 15:41:18	update cky_print_list set is_print = 1,print_time=1435333278 where id=84 and is_print=0
+2015-06-26 15:41:22	update cky_print_list set is_print = 1,print_time=1435333282 where id=85 and is_print=0
+2015-06-26 15:47:22	��ʼ��MYSQL����
+2015-06-26 15:47:22	MYSQL���ӳɹ�
+2015-06-26 15:50:28	��ʼ��MYSQL����
+2015-06-26 15:50:28	MYSQL���ӳɹ�
+2015-06-26 15:51:46	初始化MYSQL连接
+2015-06-26 15:51:46	MYSQL连接成功
+2015-06-26 15:53:27	初始化MYSQL连接
+2015-06-26 15:53:27	MYSQL连接成功
+2015-06-26 15:53:29	update cky_print_list set is_print = 1,print_time=1435334009 where id=87 and is_print=0
+2015-06-26 15:59:43	初始化MYSQL连接
+2015-06-26 15:59:43	MYSQL连接成功
+2015-06-26 16:00:23	update cky_print_list set is_print = 1,print_time=1435334423 where id=87 and is_print=0
+2015-06-26 16:01:38	初始化MYSQL连接
+2015-06-26 16:01:38	MYSQL连接成功
+2015-06-26 16:01:40	update cky_print_list set is_print = 1,print_time=1435334500 where id=87 and is_print=0
+2015-06-26 16:12:26	初始化MYSQL连接
+2015-06-26 16:12:26	MYSQL连接成功
+2015-06-26 16:12:31	update cky_print_list set is_print = 1,print_time=1435335151 where id=87 and is_print=0
+2015-06-26 16:19:13	初始化MYSQL连接
+2015-06-26 16:19:13	MYSQL连接成功
+2015-06-26 16:19:14	Commands out of sync; you can't run this command now
+2015-06-26 16:19:15	update cky_print_list set is_print = 1,print_time=1435335555 where id=87 and is_print=0
+2015-06-26 16:19:15	Commands out of sync; you can't run this command now
+2015-06-26 16:19:16	Commands out of sync; you can't run this command now
+2015-06-26 16:19:17	Commands out of sync; you can't run this command now
+2015-06-26 16:19:18	Commands out of sync; you can't run this command now
+2015-06-26 16:19:19	Commands out of sync; you can't run this command now
+2015-06-26 16:19:20	Commands out of sync; you can't run this command now
+2015-06-26 16:19:21	Commands out of sync; you can't run this command now
+2015-06-26 16:19:22	Commands out of sync; you can't run this command now
+2015-06-26 16:19:23	Commands out of sync; you can't run this command now
+2015-06-26 16:19:24	Commands out of sync; you can't run this command now
+2015-06-26 16:19:25	Commands out of sync; you can't run this command now
+2015-06-26 16:19:26	Commands out of sync; you can't run this command now
+2015-06-26 16:19:27	Commands out of sync; you can't run this command now
+2015-06-26 16:19:28	Commands out of sync; you can't run this command now
+2015-06-26 16:19:29	Commands out of sync; you can't run this command now
+2015-06-26 16:19:30	Commands out of sync; you can't run this command now
+2015-06-26 16:19:31	Commands out of sync; you can't run this command now
+2015-06-26 16:19:32	Commands out of sync; you can't run this command now
+2015-06-26 16:19:33	Commands out of sync; you can't run this command now
+2015-06-26 16:50:42	初始化MYSQL连接
+2015-06-26 16:50:42	MYSQL连接成功
+2015-06-26 16:50:43	Commands out of sync; you can't run this command now
+2015-06-26 16:50:44	update cky_print_list set is_print = 1,print_time=1435337444 where id=87 and is_print=0
+2015-06-26 16:50:44	Commands out of sync; you can't run this command now
+2015-06-26 16:50:45	Commands out of sync; you can't run this command now
+2015-06-26 16:50:46	Commands out of sync; you can't run this command now
+2015-06-26 16:50:47	Commands out of sync; you can't run this command now
+2015-06-26 16:50:48	Commands out of sync; you can't run this command now
+2015-06-26 16:50:49	Commands out of sync; you can't run this command now
+2015-06-26 16:50:50	Commands out of sync; you can't run this command now
+2015-06-26 16:50:51	Commands out of sync; you can't run this command now
+2015-06-26 16:50:52	Commands out of sync; you can't run this command now
+2015-06-26 16:50:53	Commands out of sync; you can't run this command now
+2015-06-26 16:50:54	Commands out of sync; you can't run this command now
+2015-06-26 16:50:55	Commands out of sync; you can't run this command now
+2015-06-26 16:50:56	Commands out of sync; you can't run this command now
+2015-06-26 16:51:24	初始化MYSQL连接
+2015-06-26 16:51:24	MYSQL连接成功
+2015-06-26 16:51:25	Commands out of sync; you can't run this command now
+2015-06-26 16:51:26	Commands out of sync; you can't run this command now
+2015-06-26 16:51:27	Commands out of sync; you can't run this command now
+2015-06-26 16:51:28	Commands out of sync; you can't run this command now
+2015-06-26 16:51:29	Commands out of sync; you can't run this command now
+2015-06-26 16:51:30	Commands out of sync; you can't run this command now
+2015-06-26 16:51:31	Commands out of sync; you can't run this command now
+2015-06-26 16:51:32	Commands out of sync; you can't run this command now
+2015-06-26 16:51:33	Commands out of sync; you can't run this command now
+2015-06-26 16:51:34	Commands out of sync; you can't run this command now
+2015-06-26 16:51:35	Commands out of sync; you can't run this command now
+2015-06-26 16:51:36	Commands out of sync; you can't run this command now
+2015-06-26 16:51:37	Commands out of sync; you can't run this command now
+2015-06-26 16:51:38	Commands out of sync; you can't run this command now
+2015-06-26 16:51:39	Commands out of sync; you can't run this command now
+2015-06-26 16:51:40	Commands out of sync; you can't run this command now
+2015-06-26 16:51:41	Commands out of sync; you can't run this command now
+2015-06-26 16:51:42	Commands out of sync; you can't run this command now
+2015-06-26 16:51:43	Commands out of sync; you can't run this command now
+2015-06-26 16:51:44	Commands out of sync; you can't run this command now
+2015-06-26 16:51:45	Commands out of sync; you can't run this command now
+2015-06-26 16:51:46	Commands out of sync; you can't run this command now
+2015-06-26 16:51:47	Commands out of sync; you can't run this command now
+2015-06-26 16:51:48	Commands out of sync; you can't run this command now
+2015-06-26 16:51:49	Commands out of sync; you can't run this command now
+2015-06-26 16:51:50	Commands out of sync; you can't run this command now
+2015-06-26 16:51:51	Commands out of sync; you can't run this command now
+2015-06-26 16:51:52	Commands out of sync; you can't run this command now
+2015-06-26 16:51:53	Commands out of sync; you can't run this command now
+2015-06-26 16:51:54	Commands out of sync; you can't run this command now
+2015-06-26 16:51:55	Commands out of sync; you can't run this command now
+2015-06-26 16:52:05	初始化MYSQL连接
+2015-06-26 16:52:05	MYSQL连接成功
+2015-06-26 16:52:27	update cky_print_list set is_print = 1,print_time=1435337547 where id=87 and is_print=0
+2015-06-26 16:58:06	初始化MYSQL连接
+2015-06-26 16:58:06	MYSQL连接成功
+2015-06-26 16:58:21	update cky_print_list set is_print = 1,print_time=1435337901 where id=87 and is_print=0
+2015-06-26 17:02:02	初始化MYSQL连接
+2015-06-26 17:02:02	MYSQL连接成功
+2015-06-26 17:02:13	update cky_print_list set is_print = 1,print_time=1435338133 where id=87 and is_print=0
+2015-06-26 17:10:47	初始化MYSQL连接
+2015-06-26 17:10:47	MYSQL连接成功
+2015-06-26 17:10:49	update cky_print_list set is_print = 1,print_time=1435338649 where id=87 and is_print=0
+2015-06-26 17:11:31	初始化MYSQL连接
+2015-06-26 17:11:31	MYSQL连接成功
+2015-06-26 17:11:33	update cky_print_list set is_print = 1,print_time=1435338693 where id=87 and is_print=0
+2015-06-26 17:14:19	初始化MYSQL连接
+2015-06-26 17:14:19	MYSQL连接成功
+2015-06-26 17:15:06	初始化MYSQL连接
+2015-06-26 17:15:06	MYSQL连接成功
+2015-06-26 17:15:08	update cky_print_list set is_print = 1,print_time=1435338908 where id=87 and is_print=0
+2015-06-26 17:16:44	初始化MYSQL连接
+2015-06-26 17:16:44	MYSQL连接成功
+2015-06-26 17:17:00	update cky_print_list set is_print = 1,print_time=1435339020 where id=89 and is_print=0
+2015-06-26 17:17:09	update cky_print_list set is_print = 1,print_time=1435339029 where id=90 and is_print=0
+2015-06-26 17:17:32	update cky_print_list set is_print = 1,print_time=1435339052 where id=91 and is_print=0
+2015-06-26 17:18:11	初始化MYSQL连接
+2015-06-26 17:18:11	MYSQL连接成功
+2015-06-26 17:18:24	update cky_print_list set is_print = 1,print_time=1435339104 where id=92 and is_print=0
+2015-06-26 17:19:47	初始化MYSQL连接
+2015-06-26 17:19:47	MYSQL连接成功
+2015-06-26 17:19:55	update cky_print_list set is_print = 1,print_time=1435339195 where id=93 and is_print=0
+2015-06-26 17:20:06	update cky_print_list set is_print = 1,print_time=1435339206 where id=94 and is_print=0
+2015-06-26 17:20:23	update cky_print_list set is_print = 1,print_time=1435339223 where id=95 and is_print=0
+2015-06-26 17:20:27	update cky_print_list set is_print = 1,print_time=1435339227 where id=96 and is_print=0
+2015-06-26 17:20:38	update cky_print_list set is_print = 1,print_time=1435339238 where id=97 and is_print=0
+2015-06-26 17:21:15	MySQL server has gone away
+2015-06-26 17:21:15	MySQL server has gone away
+2015-06-26 17:22:31	初始化MYSQL连接
+2015-06-26 17:22:31	MYSQL连接成功
+2015-06-26 17:22:43	update cky_print_list set is_print = 1,print_time=1435339363 where id=98 and is_print=0
+2015-06-26 17:23:12	update cky_print_list set is_print = 1,print_time=1435339392 where id=99 and is_print=0
+2015-06-26 17:27:08	初始化MYSQL连接
+2015-06-26 17:27:08	MYSQL连接成功
+2015-06-26 17:32:58	初始化MYSQL连接
+2015-06-26 17:32:58	MYSQL连接成功
+2015-06-26 17:33:14	MySQL server has gone away
+2015-06-26 17:33:14	MySQL server has gone away
+2015-06-26 17:33:15	初始化MYSQL连接
+2015-06-26 17:33:15	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:15	MYSQL连接失败
+2015-06-26 17:33:16	初始化MYSQL连接
+2015-06-26 17:33:16	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:16	MYSQL连接失败
+2015-06-26 17:33:17	初始化MYSQL连接
+2015-06-26 17:33:17	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:17	MYSQL连接失败
+2015-06-26 17:33:18	初始化MYSQL连接
+2015-06-26 17:33:18	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:18	MYSQL连接失败
+2015-06-26 17:33:19	初始化MYSQL连接
+2015-06-26 17:33:19	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:19	MYSQL连接失败
+2015-06-26 17:33:20	初始化MYSQL连接
+2015-06-26 17:33:20	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:20	MYSQL连接失败
+2015-06-26 17:33:21	初始化MYSQL连接
+2015-06-26 17:33:21	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:21	MYSQL连接失败
+2015-06-26 17:33:22	初始化MYSQL连接
+2015-06-26 17:33:22	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:33:22	MYSQL连接失败
+2015-06-26 17:33:23	初始化MYSQL连接
+2015-06-26 17:33:23	MYSQL连接成功
+2015-06-26 17:39:01	MySQL server has gone away
+2015-06-26 17:39:01	�ySQL ser@� ^
+2015-06-26 17:39:02	初始化MYSQL连接
+2015-06-26 17:39:02	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:02	MYSQL连接失败
+2015-06-26 17:39:03	初始化MYSQL连接
+2015-06-26 17:39:03	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:03	MYSQL连接失败
+2015-06-26 17:39:04	初始化MYSQL连接
+2015-06-26 17:39:04	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:04	MYSQL连接失败
+2015-06-26 17:39:05	初始化MYSQL连接
+2015-06-26 17:39:05	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:05	MYSQL连接失败
+2015-06-26 17:39:06	初始化MYSQL连接
+2015-06-26 17:39:06	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:06	MYSQL连接失败
+2015-06-26 17:39:07	初始化MYSQL连接
+2015-06-26 17:39:07	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:07	MYSQL连接失败
+2015-06-26 17:39:08	初始化MYSQL连接
+2015-06-26 17:39:08	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:08	MYSQL连接失败
+2015-06-26 17:39:09	初始化MYSQL连接
+2015-06-26 17:39:09	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:09	MYSQL连接失败
+2015-06-26 17:39:10	初始化MYSQL连接
+2015-06-26 17:39:10	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:11	MYSQL连接失败
+2015-06-26 17:39:12	初始化MYSQL连接
+2015-06-26 17:39:12	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:12	MYSQL连接失败
+2015-06-26 17:39:13	初始化MYSQL连接
+2015-06-26 17:39:13	Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+2015-06-26 17:39:13	MYSQL连接失败
+2015-06-26 17:39:14	初始化MYSQL连接
+2015-06-26 17:39:14	MYSQL连接成功
+2015-06-26 22:10:57	初始化MYSQL连接
+2015-06-26 22:10:57	MYSQL连接成功

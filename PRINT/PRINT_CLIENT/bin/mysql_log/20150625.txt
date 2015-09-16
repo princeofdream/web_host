@@ -1,0 +1,203 @@
+2015-06-25 22:08:10	初始化MYSQL连接
+2015-06-25 22:08:10	MYSQL连接成功
+2015-06-25 22:13:45	初始化MYSQL连接
+2015-06-25 22:13:45	MYSQL连接成功
+2015-06-25 22:14:02	初始化MYSQL连接
+2015-06-25 22:14:02	MYSQL连接成功
+2015-06-25 22:14:29	初始化MYSQL连接
+2015-06-25 22:14:29	MYSQL连接成功
+2015-06-25 22:14:53	初始化MYSQL连接
+2015-06-25 22:14:53	MYSQL连接成功
+2015-06-25 22:15:44	初始化MYSQL连接
+2015-06-25 22:15:44	MYSQL连接成功
+2015-06-25 22:16:43	初始化MYSQL连接
+2015-06-25 22:16:43	MYSQL连接成功
+2015-06-25 22:18:06	初始化MYSQL连接
+2015-06-25 22:18:06	MYSQL连接成功
+2015-06-25 22:18:07	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:19:06	初始化MYSQL连接
+2015-06-25 22:19:06	MYSQL连接成功
+2015-06-25 22:19:07	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:19:34	初始化MYSQL连接
+2015-06-25 22:19:34	MYSQL连接成功
+2015-06-25 22:19:35	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:19:51	初始化MYSQL连接
+2015-06-25 22:19:51	MYSQL连接成功
+2015-06-25 22:19:52	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:20:45	初始化MYSQL连接
+2015-06-25 22:20:45	MYSQL连接成功
+2015-06-25 22:21:16	初始化MYSQL连接
+2015-06-25 22:21:16	MYSQL连接成功
+2015-06-25 22:21:17	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:21:30	初始化MYSQL连接
+2015-06-25 22:21:30	MYSQL连接成功
+2015-06-25 22:21:57	初始化MYSQL连接
+2015-06-25 22:21:57	MYSQL连接成功
+2015-06-25 22:23:02	初始化MYSQL连接
+2015-06-25 22:23:02	MYSQL连接成功
+2015-06-25 22:23:03	ERROR
+2015-06-25 22:26:59	初始化MYSQL连接
+2015-06-25 22:26:59	MYSQL连接成功
+2015-06-25 22:27:00	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:00	ERROR
+2015-06-25 22:27:01	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:01	ERROR
+2015-06-25 22:27:02	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:02	ERROR
+2015-06-25 22:27:03	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:03	ERROR
+2015-06-25 22:27:04	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:04	ERROR
+2015-06-25 22:27:05	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:05	ERROR
+2015-06-25 22:27:45	初始化MYSQL连接
+2015-06-25 22:27:45	MYSQL连接成功
+2015-06-25 22:27:46	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:46	ERROR
+2015-06-25 22:27:47	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:47	ERROR
+2015-06-25 22:27:48	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:48	ERROR
+2015-06-25 22:27:49	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:49	ERROR
+2015-06-25 22:27:50	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:50	ERROR
+2015-06-25 22:27:51	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:51	ERROR
+2015-06-25 22:27:52	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:52	ERROR
+2015-06-25 22:27:53	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 1id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:27:53	ERROR
+2015-06-25 22:37:01	初始化MYSQL连接
+2015-06-25 22:37:01	MYSQL连接成功
+2015-06-25 22:37:02	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:37:02	ERROR
+2015-06-25 22:37:16	初始化MYSQL连接
+2015-06-25 22:37:16	MYSQL连接成功
+2015-06-25 22:37:17	You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1 id,contents,type,add_time from cky_print_list where is_print=0' at line 1
+2015-06-25 22:37:17	ERROR
+2015-06-25 22:39:35	初始化MYSQL连接
+2015-06-25 22:39:35	MYSQL连接成功
+2015-06-25 22:39:36	共1个记录，每个记录4字段
+
+2015-06-25 22:39:37	共1个记录，每个记录4字段
+
+2015-06-25 22:39:38	共1个记录，每个记录4字段
+
+2015-06-25 22:40:15	初始化MYSQL连接
+2015-06-25 22:40:15	MYSQL连接成功
+2015-06-25 22:40:16	共1个记录，每个记录4字段
+
+2015-06-25 22:40:17	共1个记录，每个记录4字段
+
+2015-06-25 22:40:18	共1个记录，每个记录4字段
+
+2015-06-25 22:40:40	初始化MYSQL连接
+2015-06-25 22:40:40	MYSQL连接成功
+2015-06-25 22:43:56	初始化MYSQL连接
+2015-06-25 22:43:56	MYSQL连接成功
+2015-06-25 23:00:15	初始化MYSQL连接
+2015-06-25 23:00:15	MYSQL连接成功
+2015-06-25 23:04:42	初始化MYSQL连接
+2015-06-25 23:04:42	MYSQL连接成功
+2015-06-25 23:05:45	初始化MYSQL连接
+2015-06-25 23:05:45	MYSQL连接成功
+2015-06-25 23:08:08	初始化MYSQL连接
+2015-06-25 23:08:08	MYSQL连接成功
+2015-06-25 23:09:29	初始化MYSQL连接
+2015-06-25 23:09:29	MYSQL连接成功
+2015-06-25 23:09:59	初始化MYSQL连接
+2015-06-25 23:09:59	MYSQL连接成功
+2015-06-25 23:11:52	初始化MYSQL连接
+2015-06-25 23:11:52	MYSQL连接成功
+2015-06-25 23:12:25	初始化MYSQL连接
+2015-06-25 23:12:25	MYSQL连接成功
+2015-06-25 23:21:02	初始化MYSQL连接
+2015-06-25 23:21:02	MYSQL连接成功
+2015-06-25 23:21:04	update cky_print_list set is_print = 1,print_time=1435274464 where id=1 and is_print=0
+2015-06-25 23:21:44	初始化MYSQL连接
+2015-06-25 23:21:44	MYSQL连接成功
+2015-06-25 23:22:47	初始化MYSQL连接
+2015-06-25 23:22:47	MYSQL连接成功
+2015-06-25 23:30:11	初始化MYSQL连接
+2015-06-25 23:30:11	MYSQL连接成功
+2015-06-25 23:30:13	update cky_print_list set is_print = 1,print_time=1435275013 where id=2 and is_print=0
+2015-06-25 23:31:11	update cky_print_list set is_print = 1,print_time=1435275071 where id=3 and is_print=0
+2015-06-25 23:31:17	update cky_print_list set is_print = 1,print_time=1435275077 where id=4 and is_print=0
+2015-06-25 23:31:23	update cky_print_list set is_print = 1,print_time=1435275083 where id=5 and is_print=0
+2015-06-25 23:31:28	update cky_print_list set is_print = 1,print_time=1435275088 where id=6 and is_print=0
+2015-06-25 23:32:10	初始化MYSQL连接
+2015-06-25 23:32:10	MYSQL连接成功
+2015-06-25 23:32:20	update cky_print_list set is_print = 1,print_time=1435275140 where id=7 and is_print=0
+2015-06-25 23:32:24	update cky_print_list set is_print = 1,print_time=1435275144 where id=8 and is_print=0
+2015-06-25 23:32:29	update cky_print_list set is_print = 1,print_time=1435275149 where id=9 and is_print=0
+2015-06-25 23:32:30	update cky_print_list set is_print = 1,print_time=1435275150 where id=9 and is_print=0
+2015-06-25 23:35:40	初始化MYSQL连接
+2015-06-25 23:35:40	MYSQL连接成功
+2015-06-25 23:37:53	初始化MYSQL连接
+2015-06-25 23:37:53	MYSQL连接成功
+2015-06-25 23:37:55	update cky_print_list set is_print = 1,print_time=1435275475 where id=10 and is_print=0
+2015-06-25 23:37:56	update cky_print_list set is_print = 1,print_time=1435275476 where id=11 and is_print=0
+2015-06-25 23:39:30	初始化MYSQL连接
+2015-06-25 23:39:30	MYSQL连接成功
+2015-06-25 23:39:32	update cky_print_list set is_print = 1,print_time=1435275572 where id=12 and is_print=0
+2015-06-25 23:39:33	update cky_print_list set is_print = 1,print_time=1435275573 where id=13 and is_print=0
+2015-06-25 23:39:34	update cky_print_list set is_print = 1,print_time=1435275574 where id=14 and is_print=0
+2015-06-25 23:40:40	初始化MYSQL连接
+2015-06-25 23:40:40	MYSQL连接成功
+2015-06-25 23:40:42	update cky_print_list set is_print = 1,print_time=1435275642 where id=15 and is_print=0
+2015-06-25 23:40:52	update cky_print_list set is_print = 1,print_time=1435275652 where id=16 and is_print=0
+2015-06-25 23:41:03	update cky_print_list set is_print = 1,print_time=1435275663 where id=17 and is_print=0
+2015-06-25 23:41:07	update cky_print_list set is_print = 1,print_time=1435275667 where id=18 and is_print=0
+2015-06-25 23:41:15	update cky_print_list set is_print = 1,print_time=1435275675 where id=19 and is_print=0
+2015-06-25 23:41:20	update cky_print_list set is_print = 1,print_time=1435275680 where id=20 and is_print=0
+2015-06-25 23:41:23	update cky_print_list set is_print = 1,print_time=1435275683 where id=21 and is_print=0
+2015-06-25 23:41:57	update cky_print_list set is_print = 1,print_time=1435275717 where id=22 and is_print=0
+2015-06-25 23:42:06	update cky_print_list set is_print = 1,print_time=1435275726 where id=23 and is_print=0
+2015-06-25 23:42:08	update cky_print_list set is_print = 1,print_time=1435275728 where id=24 and is_print=0
+2015-06-25 23:42:11	update cky_print_list set is_print = 1,print_time=1435275731 where id=25 and is_print=0
+2015-06-25 23:42:13	update cky_print_list set is_print = 1,print_time=1435275733 where id=26 and is_print=0
+2015-06-25 23:42:15	update cky_print_list set is_print = 1,print_time=1435275735 where id=27 and is_print=0
+2015-06-25 23:42:21	update cky_print_list set is_print = 1,print_time=1435275741 where id=28 and is_print=0
+2015-06-25 23:42:23	update cky_print_list set is_print = 1,print_time=1435275743 where id=29 and is_print=0
+2015-06-25 23:42:25	update cky_print_list set is_print = 1,print_time=1435275745 where id=30 and is_print=0
+2015-06-25 23:42:28	update cky_print_list set is_print = 1,print_time=1435275748 where id=31 and is_print=0
+2015-06-25 23:42:32	update cky_print_list set is_print = 1,print_time=1435275752 where id=32 and is_print=0
+2015-06-25 23:42:34	update cky_print_list set is_print = 1,print_time=1435275754 where id=33 and is_print=0
+2015-06-25 23:42:37	update cky_print_list set is_print = 1,print_time=1435275757 where id=34 and is_print=0
+2015-06-25 23:43:36	初始化MYSQL连接
+2015-06-25 23:43:36	MYSQL连接成功
+2015-06-25 23:44:13	update cky_print_list set is_print = 1,print_time=1435275853 where id=35 and is_print=0
+2015-06-25 23:44:17	update cky_print_list set is_print = 1,print_time=1435275857 where id=36 and is_print=0
+2015-06-25 23:44:20	update cky_print_list set is_print = 1,print_time=1435275860 where id=37 and is_print=0
+2015-06-25 23:44:23	update cky_print_list set is_print = 1,print_time=1435275863 where id=38 and is_print=0
+2015-06-25 23:44:26	update cky_print_list set is_print = 1,print_time=1435275866 where id=39 and is_print=0
+2015-06-25 23:45:33	初始化MYSQL连接
+2015-06-25 23:45:33	MYSQL连接成功
+2015-06-25 23:45:35	update cky_print_list set is_print = 1,print_time=1435275935 where id=40 and is_print=0
+2015-06-25 23:45:36	update cky_print_list set is_print = 1,print_time=1435275936 where id=41 and is_print=0
+2015-06-25 23:45:37	update cky_print_list set is_print = 1,print_time=1435275937 where id=42 and is_print=0
+2015-06-25 23:45:41	update cky_print_list set is_print = 1,print_time=1435275941 where id=43 and is_print=0
+2015-06-25 23:45:43	update cky_print_list set is_print = 1,print_time=1435275943 where id=44 and is_print=0
+2015-06-25 23:45:45	update cky_print_list set is_print = 1,print_time=1435275945 where id=45 and is_print=0
+2015-06-25 23:45:47	update cky_print_list set is_print = 1,print_time=1435275947 where id=46 and is_print=0
+2015-06-25 23:45:49	update cky_print_list set is_print = 1,print_time=1435275949 where id=47 and is_print=0
+2015-06-25 23:45:51	update cky_print_list set is_print = 1,print_time=1435275951 where id=48 and is_print=0
+2015-06-25 23:45:53	update cky_print_list set is_print = 1,print_time=1435275953 where id=49 and is_print=0
+2015-06-25 23:45:56	update cky_print_list set is_print = 1,print_time=1435275956 where id=50 and is_print=0
+2015-06-25 23:45:58	update cky_print_list set is_print = 1,print_time=1435275958 where id=51 and is_print=0
+2015-06-25 23:46:00	update cky_print_list set is_print = 1,print_time=1435275960 where id=52 and is_print=0
+2015-06-25 23:46:02	update cky_print_list set is_print = 1,print_time=1435275962 where id=53 and is_print=0
+2015-06-25 23:46:04	update cky_print_list set is_print = 1,print_time=1435275964 where id=54 and is_print=0
+2015-06-25 23:46:06	update cky_print_list set is_print = 1,print_time=1435275966 where id=55 and is_print=0
+2015-06-25 23:46:08	update cky_print_list set is_print = 1,print_time=1435275968 where id=56 and is_print=0
+2015-06-25 23:46:10	update cky_print_list set is_print = 1,print_time=1435275970 where id=57 and is_print=0
+2015-06-25 23:46:12	update cky_print_list set is_print = 1,print_time=1435275972 where id=58 and is_print=0
+2015-06-25 23:46:14	update cky_print_list set is_print = 1,print_time=1435275974 where id=59 and is_print=0
+2015-06-25 23:46:18	update cky_print_list set is_print = 1,print_time=1435275978 where id=60 and is_print=0
+2015-06-25 23:46:29	update cky_print_list set is_print = 1,print_time=1435275989 where id=61 and is_print=0
+2015-06-25 23:46:31	update cky_print_list set is_print = 1,print_time=1435275991 where id=62 and is_print=0
+2015-06-25 23:49:36	update cky_print_list set is_print = 1,print_time=1435276176 where id=63 and is_print=0
+2015-06-25 23:49:38	update cky_print_list set is_print = 1,print_time=1435276178 where id=64 and is_print=0
+2015-06-25 23:49:41	update cky_print_list set is_print = 1,print_time=1435276181 where id=65 and is_print=0
+2015-06-25 23:49:43	update cky_print_list set is_print = 1,print_time=1435276183 where id=66 and is_print=0

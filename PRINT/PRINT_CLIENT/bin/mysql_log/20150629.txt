@@ -1,0 +1,36 @@
+2015-06-29 10:25:30	初始化MYSQL连接
+2015-06-29 10:25:30	MYSQL连接成功
+2015-06-29 11:05:30	初始化MYSQL连接
+2015-06-29 11:05:30	MYSQL连接成功
+2015-06-29 11:07:54	update cky_print_list set is_print = 1,print_time=1435576073 where id=103 and is_print=0
+2015-06-29 13:15:35	初始化MYSQL连接
+2015-06-29 13:15:35	MYSQL连接成功
+2015-06-29 13:17:32	初始化MYSQL连接
+2015-06-29 13:17:32	MYSQL连接成功
+2015-06-29 13:32:23	初始化MYSQL连接
+2015-06-29 13:32:23	MYSQL连接成功
+2015-06-29 13:34:23	初始化MYSQL连接
+2015-06-29 13:34:23	MYSQL连接成功
+2015-06-29 13:37:19	初始化MYSQL连接
+2015-06-29 13:37:19	MYSQL连接成功
+2015-06-29 13:45:26	update cky_print_list set is_print = 1,print_time=1435585526 where id=104 and is_print=0
+2015-06-29 13:45:29	update cky_print_list set is_print = 1,print_time=1435585529 where id=105 and is_print=0
+2015-06-29 13:45:30	update cky_print_list set is_print = 1,print_time=1435585530 where id=106 and is_print=0
+2015-06-29 13:45:36	update cky_print_list set is_print = 1,print_time=1435585536 where id=107 and is_print=0
+2015-06-29 13:45:38	update cky_print_list set is_print = 1,print_time=1435585538 where id=108 and is_print=0
+2015-06-29 13:48:34	初始化MYSQL连接
+2015-06-29 13:48:34	MYSQL连接成功
+2015-06-29 13:49:32	初始化MYSQL连接
+2015-06-29 13:49:32	MYSQL连接成功
+2015-06-29 13:49:35	update cky_print_list set is_print = 1,print_time=1435585775 where id=109 and is_print=0
+2015-06-29 13:49:36	update cky_print_list set is_print = 1,print_time=1435585776 where id=110 and is_print=0
+2015-06-29 13:58:38	MYSQL连接成功
+2015-06-29 13:58:41	update cky_print_list set is_print = 1,print_time=1435586321 where id=111 and is_print=0
+2015-06-29 13:59:54	update cky_print_list set is_print = 1,print_time=1435586394 where id=112 and is_print=0
+2015-06-29 14:00:04	update cky_print_list set is_print = 1,print_time=1435586404 where id=113 and is_print=0
+2015-06-29 14:07:18	MYSQL连接成功
+2015-06-29 16:20:15	初始化MYSQL连接
+2015-06-29 16:20:15	MYSQL连接成功
+2015-06-29 17:01:16	create client socket...
+2015-06-29 17:01:16	初始化MYSQL连接
+2015-06-29 17:01:16	MYSQL连接成功
