@@ -13,12 +13,13 @@ PRE_PATH = /share/lijin/system_sec
 
 CFLAGS  = -I$(INC)
 CFLAGS	+= -I$(PRE_PATH)/include
-CFLAGS	+= -static
+CFLAGS	+= -I$(PRE_PATH)/lib/ld-linux-armhf.so.3
+#CFLAGS	+= -static
 LDFLAGS = -L$(PRE_PATH)/lib
 LDFLAGS += -L$(PRE_PATH)/lib/mysql
 
 LDFLAGS += -lpthread -lmysqlclient -liconv -lc
-LDFLAGS += -static
+#LDFLAGS += -static
 ################ End of arm compile ####################
 ############### This is for generic compile ####################
 #CC 		= gcc
@@ -43,8 +44,8 @@ SRC_DIR=./src
 
 all:
 	$(MAKE) -C $(SRC_DIR)
-	$(LD) -o $(BIN)/printer $(OBJS) $(LDFLAGS)
-	@echo '$(LD) -o $(BIN)/printer $(OBJS) $(LDFLAGS)'
+	$(LD) -o $(BIN)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)
+	@echo '$(LD) -o $(BIN)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)'
 
 
 .PHONY: clean
