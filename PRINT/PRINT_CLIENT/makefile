@@ -1,56 +1,49 @@
-PWD 	= $(shell pwd)
-INC 	= $(PWD)/inc
-SRC 	= $(PWD)/src
-OBJ	= $(PWD)/obj
-BIN	= $(PWD)/bin
+
+BIN_DIR		= ./bin
+SRC_DIR=./src
 
 
 ############## This is for arm compile ####################
-CC 		= arm-openwrt-linux-gcc
-CXX		= arm-openwrt-linux-g++
-LD		= arm-openwrt-linux-ld
-PRE_PATH = /share/lijin/system_sec
+#CC 		= arm-openwrt-linux-gcc
+#CXX		= arm-openwrt-linux-g++
+#LD		= arm-openwrt-linux-gcc
+#PRE_PATH = /share/lijin/system_sec
 
-CFLAGS  = -I$(INC)
-CFLAGS	+= -I$(PRE_PATH)/include
-CFLAGS	+= -I$(PRE_PATH)/lib/ld-linux-armhf.so.3
-#CFLAGS	+= -static
-LDFLAGS = -L$(PRE_PATH)/lib
-LDFLAGS += -L$(PRE_PATH)/lib/mysql
+#CFLAGS	= -I$(PRE_PATH)/include
+#LDFLAGS = -L$(PRE_PATH)/lib
+#LDFLAGS += -L$(PRE_PATH)/lib/mysql
 
-LDFLAGS += -lpthread -lmysqlclient -liconv -lc
-#LDFLAGS += -static
+#LDFLAGS += -lpthread -liconv -lc -lmysqlclient 
 ################ End of arm compile ####################
+
 ############### This is for generic compile ####################
-#CC 		= gcc
-#CXX		= g++
-#LD		= ld
-#PRE_PATH = /usr
+CC 		= gcc
+CXX		= g++
+LD		= ld
+PRE_PATH = /usr
 
-#CFLAGS  = -I$(INC)
-#CFLAGS	+= -I$(PRE_PATH)/include
-#LDFLAGS = -L$(PRE_PATH)/lib64 -L$(PRE_PATH)/lib
-#LDFLAGS += -L$(PRE_PATH)/lib64/mysql -L$(PRE_PATH)/lib/mysql
+CFLAGS	= -I$(PRE_PATH)/include
+#LDFLAGS = -L$(PRE_PATH)/lib64
+LDFLAGS += -L$(PRE_PATH)/lib64/mysql
 
-#LDFLAGS += -lpthread -lmysqlclient -liconv -lc
-################ End of generic compile ####################
+LDFLAGS += -lpthread -lmysqlclient -lc -liconv
+############### End of generic compile ####################
 
 
 SRCS = src/client.c  src/config.c  src/main.c  src/mysqlc.c  src/nmap.c  src/system.c  src/wrap.c
 OBJS = src/client.o  src/config.o  src/main.o  src/mysqlc.o  src/nmap.o  src/system.o  src/wrap.o
 
-SRC_DIR=./src
 
 
 all:
 	$(MAKE) -C $(SRC_DIR)
-	$(LD) -o $(BIN)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)
-	@echo '$(LD) -o $(BIN)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)'
+	$(LD) -o $(BIN_DIR)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)
+	@echo '$(LD) -o $(BIN_DIR)/printer $(OBJS)  $(CFLAGS) $(LDFLAGS)'
 
 
 .PHONY: clean
 clean:
-	rm -rf $(SRC)/*.~ $(SRC)/*.c~ $(SRC)/*.h~ $(BIN)/pos $(OBJS)
+	rm -rf $(SRC)/*.~ $(SRC)/*.c~ $(SRC)/*.h~ $(BIN_DIR)/printer $(OBJS)
 	$(MAKE) clean -C $(SRC_DIR)
 
 
