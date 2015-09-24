@@ -10,18 +10,19 @@ OPENSSL_VER=1.0.2d
 
 arch=ARM
 
-PREFIX_PATH=/system_sec
-#PREFIX_PATH=/share/lijin/system_sec
+PREFIX_PATH=/system/usr
+#PREFIX_PATH=/share/lijin/system/usr
 
-if [ -d "/system_sec" ];
+if [ -d "/system/usr" ];
 then
-	echo "use /system_sec as prefix!"
-	PREFIX_PATH=/system_sec
+	echo "use /system/usr as prefix!"
+	PREFIX_PATH=/system/usr
 else
-   	if [ -d "/share/lijin/system_sec" ];
+   	if [ -d "/share/lijin/system/usr" ];
 	then
-		echo "use /share/lijin/system_sec as prefix!"
-		PREFIX_PATH=/share/lijin/system_sec
+		echo "use /share/lijin/system/usr as prefix!"
+		PREFIX_PATH=/share/lijin/system/usr
+		mkdir -p /share/lijin/system/usr
 	else
 		echo "do not have any suitable dirs"
 	fi
@@ -346,6 +347,10 @@ compile_common()
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
 	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 
+	if [ "$NAME" == "libiconv" ]
+	then
+		CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
+	fi
 	#############################################################################
 	if [ "$NAME" == "nmap" ]
 	then
@@ -353,6 +358,13 @@ compile_common()
 	fi
 	#############################################################################
 
+	#############################################################################
+	if [ "$NAME" == "iptables" ]
+	then
+		CONF_ARGS+=" --sysconfdir=/system/usr/etc "
+		CONF_ARGS+=" --with-sysroot=/system/usr "
+	fi
+	#############################################################################
 
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS \
@@ -430,9 +442,51 @@ compile_glibc()
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
 	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
 
 	../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar  \
+
+	make $MAKE_THREAD
+	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+	make install
+	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+}
+
+compile_binutils()
+{
+	VER=2.24
+	NAME=binutils
+	FORMAT="tar.bz2"
+	echo "Compileing $NAME-$VER.$FORMAT"
+	cd $TOP_DIR
+	rm -rf ./$NAME-$VER
+	if [ "$FORMAT" == "tar.bz2" ]
+	then
+		echo "uncompress $NAME-$VER.$FORMAT"
+		tar jxf $NAME-$VER.$FORMAT
+	else
+		echo "uncompress $NAME-$VER.$FORMAT"
+	fi
+
+	cd ./$NAME-$VER
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		echo "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+
+	echo "Enter $(pwd)"
+
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static=yes "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
+	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
+
+	./configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar
 
 	make $MAKE_THREAD
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
@@ -583,7 +637,10 @@ compile_mysql()
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
-	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
+	CONF_ARGS+=" --enable-shared=yes --enable-static=yes "
+	CONF_ARGS+=" --with-extra-charsets=complex "
+	CONF_ARGS+=" --enable-assembler "
+	CONF_ARGS+="  --with-ssl "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
 
 
@@ -713,7 +770,7 @@ compile_openssh()
 	fi
 
 	CONF_ARGS+=" --with-privsep-path=$PREFIX_PATH/var/empty "
-	#CONF_ARGS+=" --enable-static=yes "
+	CONF_ARGS+=" --enable-static=yes "
 	#CONF_ARGS+=" --enable-strip=no "
 	CONF_ARGS+=" --enable-shared --disable-static --disable-debug --disable-strip  --disable-etc-default-login --disable-lastlog "
 	CONF_ARGS+=" --disable-utmp  --disable-utmpx --disable-wtmp --disable-wtmpx  --without-bsd-auth  --without-kerberos5  --without-x --with-ssl-engine  --without-stackprotect "
@@ -722,6 +779,7 @@ compile_openssh()
 		CFLAGS="-I$PREFIX_PATH/include " \
 		LDFLAGS="-L$PREFIX_PATH/lib -O2 -ffree-form -shared  -lpthread "
 
+	sed -i "s/\.\/ssh-keygen/ssh-keygen/g" Makefile
 	make $MAKE_THREAD
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	make install
@@ -819,6 +877,16 @@ compile_nginx()
 	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
 	CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
 
+	CONF_ARGS+=" --pid-path=/data/var/lib/nginx/nginx.pid "
+	CONF_ARGS+=" --lock-path=/data/var/lock/nginx.lock "
+	CONF_ARGS+=" --error-log-path=/data/var/log/nginx/error.log  "
+	CONF_ARGS+=" --http-log-path=/data/var/log/nginx/access.log "
+	CONF_ARGS+=" --http-client-body-temp-path=/data/var/lib/nginx/body  "
+	CONF_ARGS+=" --http-proxy-temp-path=/data/var/lib/nginx/proxy "
+	CONF_ARGS+=" --http-fastcgi-temp-path=/data/var/lib/nginx/fastcgi "
+	CONF_ARGS+=" --http-uwsgi-temp-path=/data/var/lib/nginx/uwsgi "
+	CONF_ARGS+=" --http-scgi-temp-path=/data/var/lib/nginx/scgi "
+
 
 	echo "./configure $CONF_ARGS --with-pcre-opt=\"--host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include \" \
 	--with-openssl-opt=\"linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$PREFIX_PATH \""
@@ -833,13 +901,7 @@ compile_nginx()
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
 	#--with-http_flv_module  \
 	#--with-http_dav_module \
-	#--error-log-path=/var/log/nginx/error.log  \
 	#--conf-path=/etc/nginx/nginx.conf  \
-	#--lock-path=/var/lock/nginx.lock \
-	#--http-log-path=/var/log/nginx/access.log \
-	#--http-client-body-temp-path=/var/lib/nginx/body  \
-	#--http-proxy-temp-path=/var/lib/nginx/proxy \
-	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
 
 
 	make $MAKE_THREAD
@@ -1066,6 +1128,11 @@ fi
 if [ "$1" == "iptables" ]
 then
 	compile_common "iptables" "1.4.19.1" "tar.bz2"
+fi
+
+if [ "$1" == "binutils" ]
+then
+	compile_binutils
 fi
 
 #if [ "$1" == "uclibc" ]

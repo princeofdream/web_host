@@ -34,6 +34,9 @@ harfbuzz:
 freetype:
 	./build.sh freetype
 
+binutils:
+	./build.sh binutils
+
 glibc:
 	./build.sh glibc
 
