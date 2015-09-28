@@ -1149,9 +1149,9 @@ fi
 # 4. add adduser addgroup to bin and passwd group to /etc
 # 5. create dir /tmp and mount tmpfs to it
 # 6. link sh to /bin/sh, link hostname to /bin/hostname
-# 7. needs to run "mysql_install_db --user=root" to create db and then run mysqld_safe to run daemon
+# 7. needs to run "mysql_install_db --user=root --datadir=/data/var/mysql " to create db and then run mysqld_safe to run daemon
 # 8. place my.cnf to $PREFIX_PATH/etc
-# 9. mysqld_safe --user=root &
+# 9. mysqld_safe --user=root --datadir=/data/var/mysql &
 # 10. mysql_upgrade && mysql_secure_installation
 
 
