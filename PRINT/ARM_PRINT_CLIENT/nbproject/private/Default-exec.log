@@ -1,0 +1,15 @@
+called: /usr/bin/gcc
+	/home/pay_46/Documents/dev/ARM_PRINT_CLIENT/src
+	gcc
+	-I/usr/include
+	-lpthread
+	-liconv
+	-lmysqlclient
+	-c
+	-L/usr/lib64/mysql
+	-lpthread
+	-lmysqlclient
+	-lc
+	-liconv
+	client.c
+

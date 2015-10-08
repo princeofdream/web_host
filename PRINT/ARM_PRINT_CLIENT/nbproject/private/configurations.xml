@@ -1,0 +1,1530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="bin">
+        <df name="client_log">
+        </df>
+        <df name="mysql_log">
+        </df>
+        <df name="server_log">
+        </df>
+      </df>
+      <df name="inc">
+      </df>
+      <df name="obj">
+      </df>
+      <df name="share">
+        <df name="lijin">
+          <df name="system_sec">
+            <df name="bin">
+            </df>
+            <df name="client_body_temp">
+            </df>
+            <df name="conf">
+            </df>
+            <df name="etc">
+            </df>
+            <df name="fastcgi_temp">
+              <df name="1">
+                <df name="00">
+                </df>
+              </df>
+            </df>
+            <df name="html">
+            </df>
+            <df name="include">
+              <df name="atomic_ops">
+                <df name="sysdeps">
+                  <df name="armcc">
+                    <in>arm_v6.h</in>
+                  </df>
+                  <df name="gcc">
+                    <in>aarch64.h</in>
+                    <in>alpha.h</in>
+                    <in>arm.h</in>
+                    <in>avr32.h</in>
+                    <in>cris.h</in>
+                    <in>generic-arithm.h</in>
+                    <in>generic-small.h</in>
+                    <in>generic.h</in>
+                    <in>hexagon.h</in>
+                    <in>hppa.h</in>
+                    <in>ia64.h</in>
+                    <in>m68k.h</in>
+                    <in>mips.h</in>
+                    <in>powerpc.h</in>
+                    <in>s390.h</in>
+                    <in>sh.h</in>
+                    <in>sparc.h</in>
+                    <in>x86.h</in>
+                  </df>
+                  <df name="hpc">
+                    <in>hppa.h</in>
+                    <in>ia64.h</in>
+                  </df>
+                  <df name="ibmc">
+                    <in>powerpc.h</in>
+                  </df>
+                  <df name="icc">
+                    <in>ia64.h</in>
+                  </df>
+                  <df name="loadstore">
+                    <in>acquire_release_volatile.h</in>
+                    <in>atomic_load.h</in>
+                    <in>atomic_store.h</in>
+                    <in>char_acquire_release_volatile.h</in>
+                    <in>char_atomic_load.h</in>
+                    <in>char_atomic_store.h</in>
+                    <in>double_atomic_load_store.h</in>
+                    <in>int_acquire_release_volatile.h</in>
+                    <in>int_atomic_load.h</in>
+                    <in>int_atomic_store.h</in>
+                    <in>ordered_loads_only.h</in>
+                    <in>ordered_stores_only.h</in>
+                    <in>short_acquire_release_volatile.h</in>
+                    <in>short_atomic_load.h</in>
+                    <in>short_atomic_store.h</in>
+                  </df>
+                  <df name="msftc">
+                    <in>arm.h</in>
+                    <in>common32_defs.h</in>
+                    <in>x86.h</in>
+                    <in>x86_64.h</in>
+                  </df>
+                  <df name="sunc">
+                    <in>sparc.h</in>
+                    <in>x86.h</in>
+                  </df>
+                  <in>all_acquire_release_volatile.h</in>
+                  <in>all_aligned_atomic_load_store.h</in>
+                  <in>all_atomic_load_store.h</in>
+                  <in>all_atomic_only_load.h</in>
+                  <in>ao_t_is_int.h</in>
+                  <in>emul_cas.h</in>
+                  <in>generic_pthread.h</in>
+                  <in>ordered.h</in>
+                  <in>ordered_except_wr.h</in>
+                  <in>read_ordered.h</in>
+                  <in>standard_ao_double_t.h</in>
+                  <in>test_and_set_t_is_ao_t.h</in>
+                  <in>test_and_set_t_is_char.h</in>
+                </df>
+                <in>ao_version.h</in>
+                <in>generalize-arithm.h</in>
+                <in>generalize-small.h</in>
+                <in>generalize.h</in>
+              </df>
+              <df name="curl">
+                <in>curl.h</in>
+                <in>curlbuild.h</in>
+                <in>curlrules.h</in>
+                <in>curlver.h</in>
+                <in>easy.h</in>
+                <in>mprintf.h</in>
+                <in>multi.h</in>
+                <in>stdcheaders.h</in>
+                <in>typecheck-gcc.h</in>
+              </df>
+              <df name="elfutils">
+                <in>elf-knowledge.h</in>
+                <in>known-dwarf.h</in>
+                <in>libasm.h</in>
+                <in>libdw.h</in>
+                <in>libdwelf.h</in>
+                <in>libdwfl.h</in>
+                <in>libebl.h</in>
+                <in>version.h</in>
+              </df>
+              <df name="freetype2">
+                <df name="freetype">
+                  <df name="config">
+                    <in>ftconfig.h</in>
+                    <in>ftheader.h</in>
+                    <in>ftmodule.h</in>
+                    <in>ftoption.h</in>
+                    <in>ftstdlib.h</in>
+                  </df>
+                  <in>freetype.h</in>
+                  <in>ftadvanc.h</in>
+                  <in>ftautoh.h</in>
+                  <in>ftbbox.h</in>
+                  <in>ftbdf.h</in>
+                  <in>ftbitmap.h</in>
+                  <in>ftbzip2.h</in>
+                  <in>ftcache.h</in>
+                  <in>ftcffdrv.h</in>
+                  <in>ftchapters.h</in>
+                  <in>ftcid.h</in>
+                  <in>fterrdef.h</in>
+                  <in>fterrors.h</in>
+                  <in>ftgasp.h</in>
+                  <in>ftglyph.h</in>
+                  <in>ftgxval.h</in>
+                  <in>ftgzip.h</in>
+                  <in>ftimage.h</in>
+                  <in>ftincrem.h</in>
+                  <in>ftlcdfil.h</in>
+                  <in>ftlist.h</in>
+                  <in>ftlzw.h</in>
+                  <in>ftmac.h</in>
+                  <in>ftmm.h</in>
+                  <in>ftmodapi.h</in>
+                  <in>ftmoderr.h</in>
+                  <in>ftotval.h</in>
+                  <in>ftoutln.h</in>
+                  <in>ftpfr.h</in>
+                  <in>ftrender.h</in>
+                  <in>ftsizes.h</in>
+                  <in>ftsnames.h</in>
+                  <in>ftstroke.h</in>
+                  <in>ftsynth.h</in>
+                  <in>ftsystem.h</in>
+                  <in>fttrigon.h</in>
+                  <in>fttypes.h</in>
+                  <in>ftwinfnt.h</in>
+                  <in>ftxf86.h</in>
+                  <in>t1tables.h</in>
+                  <in>ttnameid.h</in>
+                  <in>tttables.h</in>
+                  <in>tttags.h</in>
+                  <in>ttunpat.h</in>
+                </df>
+              </df>
+              <df name="libiptc">
+                <in>ipt_kernel_headers.h</in>
+                <in>libip6tc.h</in>
+                <in>libiptc.h</in>
+                <in>libxtc.h</in>
+                <in>xtcshared.h</in>
+              </df>
+              <df name="libpng16">
+                <in>png.h</in>
+                <in>pngconf.h</in>
+                <in>pnglibconf.h</in>
+              </df>
+              <df name="libxml2">
+                <df name="libxml">
+                  <in>DOCBparser.h</in>
+                  <in>HTMLparser.h</in>
+                  <in>HTMLtree.h</in>
+                  <in>SAX.h</in>
+                  <in>SAX2.h</in>
+                  <in>c14n.h</in>
+                  <in>catalog.h</in>
+                  <in>chvalid.h</in>
+                  <in>debugXML.h</in>
+                  <in>dict.h</in>
+                  <in>encoding.h</in>
+                  <in>entities.h</in>
+                  <in>globals.h</in>
+                  <in>hash.h</in>
+                  <in>list.h</in>
+                  <in>nanoftp.h</in>
+                  <in>nanohttp.h</in>
+                  <in>parser.h</in>
+                  <in>parserInternals.h</in>
+                  <in>pattern.h</in>
+                  <in>relaxng.h</in>
+                  <in>schemasInternals.h</in>
+                  <in>schematron.h</in>
+                  <in>threads.h</in>
+                  <in>tree.h</in>
+                  <in>uri.h</in>
+                  <in>valid.h</in>
+                  <in>xinclude.h</in>
+                  <in>xlink.h</in>
+                  <in>xmlIO.h</in>
+                  <in>xmlautomata.h</in>
+                  <in>xmlerror.h</in>
+                  <in>xmlexports.h</in>
+                  <in>xmlmemory.h</in>
+                  <in>xmlmodule.h</in>
+                  <in>xmlreader.h</in>
+                  <in>xmlregexp.h</in>
+                  <in>xmlsave.h</in>
+                  <in>xmlschemas.h</in>
+                  <in>xmlschemastypes.h</in>
+                  <in>xmlstring.h</in>
+                  <in>xmlunicode.h</in>
+                  <in>xmlversion.h</in>
+                  <in>xmlwriter.h</in>
+                  <in>xpath.h</in>
+                  <in>xpathInternals.h</in>
+                  <in>xpointer.h</in>
+                </df>
+              </df>
+              <df name="mutils">
+                <in>mcrypt.h</in>
+                <in>mglobal.h</in>
+                <in>mhash.h</in>
+                <in>mhash_config.h</in>
+                <in>mincludes.h</in>
+                <in>mtypes.h</in>
+                <in>mutils.h</in>
+              </df>
+              <df name="mysql">
+                <in>decimal.h</in>
+                <in>errmsg.h</in>
+                <in>keycache.h</in>
+                <in>m_ctype.h</in>
+                <in>m_string.h</in>
+                <in>my_alloc.h</in>
+                <in>my_attribute.h</in>
+                <in>my_compiler.h</in>
+                <in>my_config.h</in>
+                <in>my_dbug.h</in>
+                <in>my_dir.h</in>
+                <in>my_getopt.h</in>
+                <in>my_global.h</in>
+                <in>my_list.h</in>
+                <in>my_net.h</in>
+                <in>my_no_pthread.h</in>
+                <in>my_pthread.h</in>
+                <in>my_sys.h</in>
+                <in>my_xml.h</in>
+                <in>mysql.h</in>
+                <in>mysql_com.h</in>
+                <in>mysql_embed.h</in>
+                <in>mysql_time.h</in>
+                <in>mysql_version.h</in>
+                <in>mysqld_ername.h</in>
+                <in>mysqld_error.h</in>
+                <in>plugin.h</in>
+                <in>readline.h</in>
+                <in>sql_common.h</in>
+                <in>sql_state.h</in>
+                <in>sslopt-case.h</in>
+                <in>sslopt-longopts.h</in>
+                <in>sslopt-vars.h</in>
+                <in>typelib.h</in>
+              </df>
+              <df name="ncurses">
+                <in>curses.h</in>
+                <in>cursesapp.h</in>
+                <in>cursesf.h</in>
+                <in>cursesm.h</in>
+                <in>cursesp.h</in>
+                <in>cursesw.h</in>
+                <in>cursslk.h</in>
+                <in>eti.h</in>
+                <in>etip.h</in>
+                <in>form.h</in>
+                <in>menu.h</in>
+                <in>nc_tparm.h</in>
+                <in>ncurses.h</in>
+                <in>ncurses_dll.h</in>
+                <in>panel.h</in>
+                <in>term.h</in>
+                <in>term_entry.h</in>
+                <in>termcap.h</in>
+                <in>tic.h</in>
+                <in>unctrl.h</in>
+              </df>
+              <df name="openssl">
+                <in>aes.h</in>
+                <in>asn1.h</in>
+                <in>asn1_mac.h</in>
+                <in>asn1t.h</in>
+                <in>bio.h</in>
+                <in>blowfish.h</in>
+                <in>bn.h</in>
+                <in>buffer.h</in>
+                <in>camellia.h</in>
+                <in>cast.h</in>
+                <in>cmac.h</in>
+                <in>cms.h</in>
+                <in>comp.h</in>
+                <in>conf.h</in>
+                <in>conf_api.h</in>
+                <in>crypto.h</in>
+                <in>des.h</in>
+                <in>des_old.h</in>
+                <in>dh.h</in>
+                <in>dsa.h</in>
+                <in>dso.h</in>
+                <in>dtls1.h</in>
+                <in>e_os2.h</in>
+                <in>ebcdic.h</in>
+                <in>ec.h</in>
+                <in>ecdh.h</in>
+                <in>ecdsa.h</in>
+                <in>engine.h</in>
+                <in>err.h</in>
+                <in>evp.h</in>
+                <in>hmac.h</in>
+                <in>idea.h</in>
+                <in>krb5_asn.h</in>
+                <in>kssl.h</in>
+                <in>lhash.h</in>
+                <in>md4.h</in>
+                <in>md5.h</in>
+                <in>mdc2.h</in>
+                <in>modes.h</in>
+                <in>obj_mac.h</in>
+                <in>objects.h</in>
+                <in>ocsp.h</in>
+                <in>opensslconf.h</in>
+                <in>opensslv.h</in>
+                <in>ossl_typ.h</in>
+                <in>pem.h</in>
+                <in>pem2.h</in>
+                <in>pkcs12.h</in>
+                <in>pkcs7.h</in>
+                <in>pqueue.h</in>
+                <in>rand.h</in>
+                <in>rc2.h</in>
+                <in>rc4.h</in>
+                <in>ripemd.h</in>
+                <in>rsa.h</in>
+                <in>safestack.h</in>
+                <in>seed.h</in>
+                <in>sha.h</in>
+                <in>srp.h</in>
+                <in>srtp.h</in>
+                <in>ssl.h</in>
+                <in>ssl2.h</in>
+                <in>ssl23.h</in>
+                <in>ssl3.h</in>
+                <in>stack.h</in>
+                <in>symhacks.h</in>
+                <in>tls1.h</in>
+                <in>ts.h</in>
+                <in>txt_db.h</in>
+                <in>ui.h</in>
+                <in>ui_compat.h</in>
+                <in>whrlpool.h</in>
+                <in>x509.h</in>
+                <in>x509_vfy.h</in>
+                <in>x509v3.h</in>
+              </df>
+              <df name="pcap">
+                <in>bluetooth.h</in>
+                <in>bpf.h</in>
+                <in>ipnet.h</in>
+                <in>namedb.h</in>
+                <in>nflog.h</in>
+                <in>pcap.h</in>
+                <in>sll.h</in>
+                <in>usb.h</in>
+                <in>vlan.h</in>
+              </df>
+              <df name="php">
+                <df name="ext">
+                  <df name="date">
+                    <df name="lib">
+                      <in>timelib.h</in>
+                      <in>timelib_config.h</in>
+                      <in>timelib_structs.h</in>
+                    </df>
+                    <in>php_date.h</in>
+                  </df>
+                  <df name="dom">
+                    <in>xml_common.h</in>
+                  </df>
+                  <df name="ereg">
+                    <df name="regex">
+                      <in>cclass.h</in>
+                      <in>cname.h</in>
+                      <in>regex.h</in>
+                      <in>regex2.h</in>
+                      <in>utils.h</in>
+                    </df>
+                    <in>php_ereg.h</in>
+                    <in>php_regex.h</in>
+                  </df>
+                  <df name="filter">
+                    <in>php_filter.h</in>
+                  </df>
+                  <df name="gd">
+                    <df name="libgd">
+                      <in>gd.h</in>
+                      <in>gd_compat.h</in>
+                      <in>gd_intern.h</in>
+                      <in>gd_io.h</in>
+                      <in>gdcache.h</in>
+                      <in>gdfontg.h</in>
+                      <in>gdfontl.h</in>
+                      <in>gdfontmb.h</in>
+                      <in>gdfonts.h</in>
+                      <in>gdfontt.h</in>
+                      <in>gdhelpers.h</in>
+                      <in>jisx0208.h</in>
+                      <in>wbmp.h</in>
+                      <in>webpimg.h</in>
+                    </df>
+                    <in>gdcache.h</in>
+                    <in>php_gd.h</in>
+                  </df>
+                  <df name="hash">
+                    <in>php_hash.h</in>
+                    <in>php_hash_adler32.h</in>
+                    <in>php_hash_crc32.h</in>
+                    <in>php_hash_fnv.h</in>
+                    <in>php_hash_gost.h</in>
+                    <in>php_hash_haval.h</in>
+                    <in>php_hash_joaat.h</in>
+                    <in>php_hash_md.h</in>
+                    <in>php_hash_ripemd.h</in>
+                    <in>php_hash_sha.h</in>
+                    <in>php_hash_snefru.h</in>
+                    <in>php_hash_tiger.h</in>
+                    <in>php_hash_types.h</in>
+                    <in>php_hash_whirlpool.h</in>
+                  </df>
+                  <df name="iconv">
+                    <in>php_have_bsd_iconv.h</in>
+                    <in>php_have_glibc_iconv.h</in>
+                    <in>php_have_ibm_iconv.h</in>
+                    <in>php_have_iconv.h</in>
+                    <in>php_have_libiconv.h</in>
+                    <in>php_iconv.h</in>
+                    <in>php_iconv_aliased_libiconv.h</in>
+                    <in>php_iconv_supports_errno.h</in>
+                    <in>php_php_iconv_h_path.h</in>
+                    <in>php_php_iconv_impl.h</in>
+                  </df>
+                  <df name="json">
+                    <in>php_json.h</in>
+                  </df>
+                  <df name="libxml">
+                    <in>php_libxml.h</in>
+                  </df>
+                  <df name="mbstring">
+                    <df name="libmbfl">
+                      <df name="mbfl">
+                        <in>eaw_table.h</in>
+                        <in>mbfilter.h</in>
+                        <in>mbfilter_8bit.h</in>
+                        <in>mbfilter_pass.h</in>
+                        <in>mbfilter_wchar.h</in>
+                        <in>mbfl_allocators.h</in>
+                        <in>mbfl_consts.h</in>
+                        <in>mbfl_convert.h</in>
+                        <in>mbfl_defs.h</in>
+                        <in>mbfl_encoding.h</in>
+                        <in>mbfl_filter_output.h</in>
+                        <in>mbfl_ident.h</in>
+                        <in>mbfl_language.h</in>
+                        <in>mbfl_memory_device.h</in>
+                        <in>mbfl_string.h</in>
+                      </df>
+                      <in>config.h</in>
+                    </df>
+                    <df name="oniguruma">
+                      <in>oniguruma.h</in>
+                    </df>
+                    <in>mbstring.h</in>
+                    <in>php_mbregex.h</in>
+                    <in>php_onig_compat.h</in>
+                  </df>
+                  <df name="mysqli">
+                    <in>mysqli_mysqlnd.h</in>
+                    <in>php_mysqli_structs.h</in>
+                  </df>
+                  <df name="mysqlnd">
+                    <in>config-win.h</in>
+                    <in>mysqlnd.h</in>
+                    <in>mysqlnd_alloc.h</in>
+                    <in>mysqlnd_block_alloc.h</in>
+                    <in>mysqlnd_charset.h</in>
+                    <in>mysqlnd_debug.h</in>
+                    <in>mysqlnd_enum_n_def.h</in>
+                    <in>mysqlnd_ext_plugin.h</in>
+                    <in>mysqlnd_libmysql_compat.h</in>
+                    <in>mysqlnd_net.h</in>
+                    <in>mysqlnd_portability.h</in>
+                    <in>mysqlnd_priv.h</in>
+                    <in>mysqlnd_result.h</in>
+                    <in>mysqlnd_result_meta.h</in>
+                    <in>mysqlnd_reverse_api.h</in>
+                    <in>mysqlnd_statistics.h</in>
+                    <in>mysqlnd_structs.h</in>
+                    <in>mysqlnd_wireprotocol.h</in>
+                    <in>php_mysqlnd.h</in>
+                  </df>
+                  <df name="pcre">
+                    <df name="pcrelib">
+                      <in>config.h</in>
+                      <in>pcre.h</in>
+                      <in>pcre_internal.h</in>
+                      <in>pcreposix.h</in>
+                      <in>ucp.h</in>
+                    </df>
+                    <in>php_pcre.h</in>
+                  </df>
+                  <df name="pdo">
+                    <in>php_pdo.h</in>
+                    <in>php_pdo_driver.h</in>
+                  </df>
+                  <df name="session">
+                    <in>mod_files.h</in>
+                    <in>mod_user.h</in>
+                    <in>php_session.h</in>
+                  </df>
+                  <df name="sockets">
+                    <in>php_sockets.h</in>
+                  </df>
+                  <df name="spl">
+                    <in>php_spl.h</in>
+                    <in>spl_array.h</in>
+                    <in>spl_directory.h</in>
+                    <in>spl_dllist.h</in>
+                    <in>spl_engine.h</in>
+                    <in>spl_exceptions.h</in>
+                    <in>spl_fixedarray.h</in>
+                    <in>spl_functions.h</in>
+                    <in>spl_heap.h</in>
+                    <in>spl_iterators.h</in>
+                    <in>spl_observer.h</in>
+                  </df>
+                  <df name="sqlite3">
+                    <df name="libsqlite">
+                      <in>sqlite3.h</in>
+                    </df>
+                  </df>
+                  <df name="standard">
+                    <in>base64.h</in>
+                    <in>basic_functions.h</in>
+                    <in>crc32.h</in>
+                    <in>credits.h</in>
+                    <in>credits_ext.h</in>
+                    <in>credits_sapi.h</in>
+                    <in>crypt_blowfish.h</in>
+                    <in>crypt_freesec.h</in>
+                    <in>css.h</in>
+                    <in>cyr_convert.h</in>
+                    <in>datetime.h</in>
+                    <in>dl.h</in>
+                    <in>exec.h</in>
+                    <in>file.h</in>
+                    <in>flock_compat.h</in>
+                    <in>fsock.h</in>
+                    <in>head.h</in>
+                    <in>html.h</in>
+                    <in>html_tables.h</in>
+                    <in>info.h</in>
+                    <in>md5.h</in>
+                    <in>microtime.h</in>
+                    <in>pack.h</in>
+                    <in>pageinfo.h</in>
+                    <in>php_array.h</in>
+                    <in>php_assert.h</in>
+                    <in>php_browscap.h</in>
+                    <in>php_crypt.h</in>
+                    <in>php_crypt_r.h</in>
+                    <in>php_dir.h</in>
+                    <in>php_dns.h</in>
+                    <in>php_ext_syslog.h</in>
+                    <in>php_filestat.h</in>
+                    <in>php_fopen_wrappers.h</in>
+                    <in>php_ftok.h</in>
+                    <in>php_http.h</in>
+                    <in>php_image.h</in>
+                    <in>php_incomplete_class.h</in>
+                    <in>php_iptc.h</in>
+                    <in>php_lcg.h</in>
+                    <in>php_link.h</in>
+                    <in>php_mail.h</in>
+                    <in>php_math.h</in>
+                    <in>php_metaphone.h</in>
+                    <in>php_rand.h</in>
+                    <in>php_smart_str.h</in>
+                    <in>php_smart_str_public.h</in>
+                    <in>php_standard.h</in>
+                    <in>php_string.h</in>
+                    <in>php_type.h</in>
+                    <in>php_uuencode.h</in>
+                    <in>php_var.h</in>
+                    <in>php_versioning.h</in>
+                    <in>proc_open.h</in>
+                    <in>quot_print.h</in>
+                    <in>scanf.h</in>
+                    <in>sha1.h</in>
+                    <in>streamsfuncs.h</in>
+                    <in>uniqid.h</in>
+                    <in>url.h</in>
+                    <in>url_scanner_ex.h</in>
+                    <in>winver.h</in>
+                  </df>
+                  <df name="xml">
+                    <in>expat_compat.h</in>
+                    <in>php_xml.h</in>
+                  </df>
+                </df>
+                <df name="main">
+                  <df name="streams">
+                    <in>php_stream_context.h</in>
+                    <in>php_stream_filter_api.h</in>
+                    <in>php_stream_glob_wrapper.h</in>
+                    <in>php_stream_mmap.h</in>
+                    <in>php_stream_plain_wrapper.h</in>
+                    <in>php_stream_transport.h</in>
+                    <in>php_stream_userspace.h</in>
+                    <in>php_streams_int.h</in>
+                  </df>
+                  <in>SAPI.h</in>
+                  <in>build-defs.h</in>
+                  <in>fopen_wrappers.h</in>
+                  <in>logos.h</in>
+                  <in>php.h</in>
+                  <in>php_compat.h</in>
+                  <in>php_config.h</in>
+                  <in>php_content_types.h</in>
+                  <in>php_getopt.h</in>
+                  <in>php_globals.h</in>
+                  <in>php_ini.h</in>
+                  <in>php_logos.h</in>
+                  <in>php_main.h</in>
+                  <in>php_memory_streams.h</in>
+                  <in>php_network.h</in>
+                  <in>php_open_temporary_file.h</in>
+                  <in>php_output.h</in>
+                  <in>php_reentrancy.h</in>
+                  <in>php_scandir.h</in>
+                  <in>php_streams.h</in>
+                  <in>php_syslog.h</in>
+                  <in>php_ticks.h</in>
+                  <in>php_variables.h</in>
+                  <in>php_version.h</in>
+                  <in>rfc1867.h</in>
+                  <in>snprintf.h</in>
+                  <in>spprintf.h</in>
+                  <in>win32_internal_function_disabled.h</in>
+                  <in>win95nt.h</in>
+                </df>
+                <df name="sapi">
+                  <df name="cli">
+                    <in>cli.h</in>
+                  </df>
+                </df>
+                <df name="TSRM">
+                  <in>TSRM.h</in>
+                  <in>readdir.h</in>
+                  <in>tsrm_config.h</in>
+                  <in>tsrm_config.w32.h</in>
+                  <in>tsrm_config_common.h</in>
+                  <in>tsrm_nw.h</in>
+                  <in>tsrm_strtok_r.h</in>
+                  <in>tsrm_virtual_cwd.h</in>
+                  <in>tsrm_win32.h</in>
+                </df>
+                <df name="Zend">
+                  <in>zend.h</in>
+                  <in>zend_API.h</in>
+                  <in>zend_alloc.h</in>
+                  <in>zend_build.h</in>
+                  <in>zend_builtin_functions.h</in>
+                  <in>zend_closures.h</in>
+                  <in>zend_compile.h</in>
+                  <in>zend_config.h</in>
+                  <in>zend_config.nw.h</in>
+                  <in>zend_config.w32.h</in>
+                  <in>zend_constants.h</in>
+                  <in>zend_dtrace.h</in>
+                  <in>zend_dynamic_array.h</in>
+                  <in>zend_errors.h</in>
+                  <in>zend_exceptions.h</in>
+                  <in>zend_execute.h</in>
+                  <in>zend_extensions.h</in>
+                  <in>zend_float.h</in>
+                  <in>zend_gc.h</in>
+                  <in>zend_globals.h</in>
+                  <in>zend_globals_macros.h</in>
+                  <in>zend_hash.h</in>
+                  <in>zend_highlight.h</in>
+                  <in>zend_indent.h</in>
+                  <in>zend_ini.h</in>
+                  <in>zend_ini_parser.h</in>
+                  <in>zend_ini_scanner.h</in>
+                  <in>zend_ini_scanner_defs.h</in>
+                  <in>zend_interfaces.h</in>
+                  <in>zend_istdiostream.h</in>
+                  <in>zend_iterators.h</in>
+                  <in>zend_language_parser.h</in>
+                  <in>zend_language_scanner.h</in>
+                  <in>zend_language_scanner_defs.h</in>
+                  <in>zend_list.h</in>
+                  <in>zend_llist.h</in>
+                  <in>zend_modules.h</in>
+                  <in>zend_multibyte.h</in>
+                  <in>zend_multiply.h</in>
+                  <in>zend_object_handlers.h</in>
+                  <in>zend_objects.h</in>
+                  <in>zend_objects_API.h</in>
+                  <in>zend_operators.h</in>
+                  <in>zend_ptr_stack.h</in>
+                  <in>zend_qsort.h</in>
+                  <in>zend_signal.h</in>
+                  <in>zend_stack.h</in>
+                  <in>zend_static_allocator.h</in>
+                  <in>zend_stream.h</in>
+                  <in>zend_string.h</in>
+                  <in>zend_strtod.h</in>
+                  <in>zend_ts_hash.h</in>
+                  <in>zend_types.h</in>
+                  <in>zend_variables.h</in>
+                  <in>zend_vm.h</in>
+                  <in>zend_vm_def.h</in>
+                  <in>zend_vm_execute.h</in>
+                  <in>zend_vm_opcodes.h</in>
+                </df>
+              </df>
+              <in>atomic_ops.h</in>
+              <in>atomic_ops_malloc.h</in>
+              <in>atomic_ops_stack.h</in>
+              <in>dwarf.h</in>
+              <in>ft2build.h</in>
+              <in>gelf.h</in>
+              <in>iconv.h</in>
+              <in>jconfig.h</in>
+              <in>jerror.h</in>
+              <in>jmorecfg.h</in>
+              <in>jpeglib.h</in>
+              <in>libcharset.h</in>
+              <in>libelf.h</in>
+              <in>localcharset.h</in>
+              <in>mcrypt.h</in>
+              <in>mhash.h</in>
+              <in>nlist.h</in>
+              <in>pcap-bpf.h</in>
+              <in>pcap-namedb.h</in>
+              <in>pcap.h</in>
+              <in>pcre.h</in>
+              <in>pcre_scanner.h</in>
+              <in>pcre_stringpiece.h</in>
+              <in>pcrecpp.h</in>
+              <in>pcrecpparg.h</in>
+              <in>pcreposix.h</in>
+              <in>png.h</in>
+              <in>pngconf.h</in>
+              <in>pnglibconf.h</in>
+              <in>xtables-version.h</in>
+              <in>xtables.h</in>
+              <in>zconf.h</in>
+              <in>zlib.h</in>
+            </df>
+            <df name="lib">
+              <df name="cmake">
+                <df name="libxml2">
+                </df>
+              </df>
+              <df name="config">
+              </df>
+              <df name="elfutils">
+              </df>
+              <df name="iptables">
+              </df>
+              <df name="mysql">
+                <df name="plugin">
+                </df>
+              </df>
+              <df name="network">
+              </df>
+              <df name="php">
+                <df name="Archive">
+                </df>
+                <df name="build">
+                </df>
+                <df name="Console">
+                </df>
+                <df name="data">
+                  <df name="PEAR">
+                  </df>
+                  <df name="Structures_Graph">
+                  </df>
+                </df>
+                <df name="doc">
+                  <df name="Archive_Tar">
+                    <df name="docs">
+                    </df>
+                  </df>
+                  <df name="PEAR">
+                  </df>
+                  <df name="Structures_Graph">
+                    <df name="docs">
+                      <df name="html">
+                        <df name="media">
+                        </df>
+                        <df name="Structures_Graph">
+                        </df>
+                      </df>
+                      <df name="tutorials">
+                        <df name="Structures_Graph">
+                        </df>
+                      </df>
+                    </df>
+                  </df>
+                  <df name="XML_Util">
+                    <df name="examples">
+                    </df>
+                  </df>
+                </df>
+                <df name="OS">
+                </df>
+                <df name="PEAR">
+                  <df name="ChannelFile">
+                  </df>
+                  <df name="Command">
+                  </df>
+                  <df name="Downloader">
+                  </df>
+                  <df name="Frontend">
+                  </df>
+                  <df name="Installer">
+                    <df name="Role">
+                    </df>
+                  </df>
+                  <df name="PackageFile">
+                    <df name="Generator">
+                    </df>
+                    <df name="Parser">
+                    </df>
+                    <df name="v2">
+                    </df>
+                  </df>
+                  <df name="REST">
+                  </df>
+                  <df name="Task">
+                    <df name="Postinstallscript">
+                    </df>
+                    <df name="Replace">
+                    </df>
+                    <df name="Unixeol">
+                    </df>
+                    <df name="Windowseol">
+                    </df>
+                  </df>
+                  <df name="Validator">
+                  </df>
+                </df>
+                <df name="Structures">
+                  <df name="Graph">
+                    <df name="Manipulator">
+                    </df>
+                  </df>
+                </df>
+                <df name="test">
+                  <df name="Structures_Graph">
+                    <df name="tests">
+                      <df name="testCase">
+                      </df>
+                    </df>
+                  </df>
+                  <df name="XML_Util">
+                    <df name="tests">
+                    </df>
+                  </df>
+                </df>
+                <df name="XML">
+                </df>
+              </df>
+              <df name="pkgconfig">
+              </df>
+              <df name="preinit">
+              </df>
+              <df name="terminfo">
+                <df name="1">
+                </df>
+                <df name="2">
+                </df>
+                <df name="3">
+                </df>
+                <df name="4">
+                </df>
+                <df name="5">
+                </df>
+                <df name="6">
+                </df>
+                <df name="7">
+                </df>
+                <df name="8">
+                </df>
+                <df name="9">
+                </df>
+                <df name="A">
+                </df>
+                <df name="a">
+                </df>
+                <df name="b">
+                </df>
+                <df name="c">
+                </df>
+                <df name="d">
+                </df>
+                <df name="E">
+                </df>
+                <df name="e">
+                </df>
+                <df name="f">
+                </df>
+                <df name="g">
+                </df>
+                <df name="h">
+                </df>
+                <df name="i">
+                </df>
+                <df name="j">
+                </df>
+                <df name="k">
+                </df>
+                <df name="L">
+                </df>
+                <df name="l">
+                </df>
+                <df name="M">
+                </df>
+                <df name="m">
+                </df>
+                <df name="N">
+                </df>
+                <df name="n">
+                </df>
+                <df name="o">
+                </df>
+                <df name="P">
+                </df>
+                <df name="p">
+                </df>
+                <df name="Q">
+                </df>
+                <df name="q">
+                </df>
+                <df name="r">
+                </df>
+                <df name="s">
+                </df>
+                <df name="t">
+                </df>
+                <df name="u">
+                </df>
+                <df name="v">
+                </df>
+                <df name="w">
+                </df>
+                <df name="x">
+                </df>
+                <df name="X">
+                </df>
+                <df name="z">
+                </df>
+              </df>
+              <df name="xtables">
+              </df>
+            </df>
+            <df name="libexec">
+            </df>
+            <df name="logs">
+            </df>
+            <df name="php">
+              <df name="fpm">
+              </df>
+            </df>
+            <df name="proxy_temp">
+            </df>
+            <df name="sbin">
+            </df>
+            <df name="scgi_temp">
+            </df>
+            <df name="share">
+              <df name="aclocal">
+              </df>
+              <df name="applications">
+              </df>
+              <df name="doc">
+                <df name="libiconv">
+                </df>
+                <df name="libxml2-2.9.2">
+                  <df name="examples">
+                    <in>testHTML.c</in>
+                    <in>testSAX.c</in>
+                    <in>testXPath.c</in>
+                    <in>xmllint.c</in>
+                  </df>
+                  <df name="html">
+                    <df name="html">
+                    </df>
+                    <df name="tutorial">
+                      <df name="images">
+                        <df name="callouts">
+                        </df>
+                      </df>
+                      <in>includeaddattribute.c</in>
+                      <in>includeaddkeyword.c</in>
+                      <in>includeconvert.c</in>
+                      <in>includegetattribute.c</in>
+                      <in>includekeyword.c</in>
+                      <in>includexpath.c</in>
+                    </df>
+                    <in>io1.c</in>
+                    <in>io2.c</in>
+                    <in>parse1.c</in>
+                    <in>parse2.c</in>
+                    <in>parse3.c</in>
+                    <in>parse4.c</in>
+                    <in>reader1.c</in>
+                    <in>reader2.c</in>
+                    <in>reader3.c</in>
+                    <in>reader4.c</in>
+                    <in>testWriter.c</in>
+                    <in>tree1.c</in>
+                    <in>tree2.c</in>
+                    <in>xpath1.c</in>
+                    <in>xpath2.c</in>
+                  </df>
+                </df>
+                <df name="pcre">
+                  <df name="html">
+                  </df>
+                </df>
+              </df>
+              <df name="gtk-doc">
+                <df name="html">
+                  <df name="libxml2">
+                  </df>
+                </df>
+              </df>
+              <df name="info">
+              </df>
+              <df name="locale">
+                <df name="af">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="bg">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="ca">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="cs">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="da">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="de">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="el">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="en@boldquot">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="en@quot">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="eo">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="es">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="es_AR">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="et">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="fi">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="fr">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="ga">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="gl">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="hr">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="hu">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="id">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="it">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="ja">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="nl">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="pl">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="pt_BR">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="rm">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="ro">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="ru">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="sk">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="sl">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="sq">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="sr">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="sv">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="tr">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="uk">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="vi">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="wa">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="zh_CN">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+                <df name="zh_TW">
+                  <df name="LC_MESSAGES">
+                  </df>
+                </df>
+              </df>
+              <df name="mysql">
+                <df name="charsets">
+                </df>
+                <df name="czech">
+                </df>
+                <df name="danish">
+                </df>
+                <df name="dutch">
+                </df>
+                <df name="english">
+                </df>
+                <df name="estonian">
+                </df>
+                <df name="french">
+                </df>
+                <df name="german">
+                </df>
+                <df name="greek">
+                </df>
+                <df name="hungarian">
+                </df>
+                <df name="italian">
+                </df>
+                <df name="japanese">
+                </df>
+                <df name="korean">
+                </df>
+                <df name="norwegian">
+                </df>
+                <df name="norwegian-ny">
+                </df>
+                <df name="polish">
+                </df>
+                <df name="portuguese">
+                </df>
+                <df name="romanian">
+                </df>
+                <df name="russian">
+                </df>
+                <df name="serbian">
+                </df>
+                <df name="slovak">
+                </df>
+                <df name="spanish">
+                </df>
+                <df name="swedish">
+                </df>
+                <df name="ukrainian">
+                </df>
+              </df>
+              <df name="ncat">
+              </df>
+              <df name="nmap">
+              </df>
+              <df name="tabset">
+              </df>
+              <df name="terminfo">
+                <df name="1">
+                </df>
+                <df name="2">
+                </df>
+                <df name="3">
+                </df>
+                <df name="4">
+                </df>
+                <df name="5">
+                </df>
+                <df name="6">
+                </df>
+                <df name="7">
+                </df>
+                <df name="8">
+                </df>
+                <df name="9">
+                </df>
+                <df name="A">
+                </df>
+                <df name="a">
+                </df>
+                <df name="b">
+                </df>
+                <df name="c">
+                </df>
+                <df name="d">
+                </df>
+                <df name="E">
+                </df>
+                <df name="e">
+                </df>
+                <df name="f">
+                </df>
+                <df name="g">
+                </df>
+                <df name="h">
+                </df>
+                <df name="i">
+                </df>
+                <df name="j">
+                </df>
+                <df name="k">
+                </df>
+                <df name="L">
+                </df>
+                <df name="l">
+                </df>
+                <df name="m">
+                </df>
+                <df name="M">
+                </df>
+                <df name="n">
+                </df>
+                <df name="N">
+                </df>
+                <df name="o">
+                </df>
+                <df name="p">
+                </df>
+                <df name="P">
+                </df>
+                <df name="q">
+                </df>
+                <df name="Q">
+                </df>
+                <df name="r">
+                </df>
+                <df name="s">
+                </df>
+                <df name="t">
+                </df>
+                <df name="u">
+                </df>
+                <df name="v">
+                </df>
+                <df name="w">
+                </df>
+                <df name="x">
+                </df>
+                <df name="X">
+                </df>
+                <df name="z">
+                </df>
+              </df>
+              <df name="zenmap">
+                <df name="config">
+                </df>
+                <df name="docs">
+                </df>
+                <df name="locale">
+                  <df name="de">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="fr">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="hr">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="it">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="ja">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="pl">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="pt_BR">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                  <df name="ru">
+                    <df name="LC_MESSAGES">
+                    </df>
+                  </df>
+                </df>
+                <df name="misc">
+                </df>
+                <df name="pixmaps">
+                  <df name="radialnet">
+                  </df>
+                </df>
+              </df>
+            </df>
+            <df name="sql-bench">
+              <df name="Comments">
+              </df>
+              <df name="Data">
+                <df name="ATIS">
+                </df>
+                <df name="Wisconsin">
+                </df>
+              </df>
+              <df name="limits">
+              </df>
+            </df>
+            <df name="ssl">
+              <df name="misc">
+              </df>
+            </df>
+            <df name="uwsgi_temp">
+            </df>
+            <df name="var">
+              <df name="mysql">
+              </df>
+              <df name="test">
+              </df>
+            </df>
+          </df>
+        </df>
+      </df>
+      <df name="src">
+        <in>client.c</in>
+        <in>client.h</in>
+        <in>config.c</in>
+        <in>inc.h</in>
+        <in>main.c</in>
+        <in>mysqlc.c</in>
+        <in>nmap.c</in>
+        <in>system.c</in>
+        <in>system.h</in>
+        <in>wrap.c</in>
+        <in>wrap.h</in>
+      </df>
+      <df name="tmp">
+        <in>1.c</in>
+      </df>
+      <in>iconv.h</in>
+    </df>
+  </logicalFolder>
+  <projectmakefile>makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

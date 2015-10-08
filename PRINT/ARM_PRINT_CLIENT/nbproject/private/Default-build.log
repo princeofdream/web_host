@@ -1,0 +1,16 @@
+/usr/bin/gmake -C ./src
+gmake[1]: 进入目录“/home/pay_46/Documents/dev/ARM_PRINT_CLIENT/src”
+=======================================================
+CC is gcc .
+CXX is g++ .
+CFLAGS is -I/usr/include .
+LDFLAGS is -L/usr/lib64/mysql -lpthread -lmysqlclient -lc -liconv .
+=======================================================
+set -e;for i in client.c  config.c  main.c  mysqlc.c  nmap.c  system.c  wrap.c; do gcc -I/usr/include -lpthread -liconv -lmysqlclient -c -L/usr/lib64/mysql -lpthread -lmysqlclient -lc -liconv $i;done
+client.c:4:25: 致命错误：mysql/mysql.h：没有那个文件或目录
+ #include <mysql/mysql.h>
+                         ^
+编译中断。
+gmake[1]: *** [all] 错误 1
+gmake[1]: 离开目录“/home/pay_46/Documents/dev/ARM_PRINT_CLIENT/src”
+gmake: *** [all] 错误 2
