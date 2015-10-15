@@ -6,9 +6,9 @@
 extern char *getfilename(char *path);
 
 char *PrinterStateCHS[]={
-	"³õÊ¼»¯ÖÐ...",
-	"Á¬½Ó³É¹¦,»ñÈ¡´òÓ¡»ú±êÊ¶...",
-	"´òÓ¡»ú¾ÍÐ÷",
+	"åˆå§‹åŒ–ä¸­...",
+	"è¿žæŽ¥æˆåŠŸ,èŽ·å–æ‰“å°æœºæ ‡è¯†...",
+	"æ‰“å°æœºå°±ç»ª",
 };
 
 
@@ -124,7 +124,7 @@ int Client_GetSocket_State(int sockfd)
 	return GetSocketState(sockfd);
 }
 
- /* ³õÊ¼»¯»º³åÇø½á¹¹ */
+ /* åˆå§‹åŒ–ç¼“å†²åŒºç»“æž„ */
 void PrintData_init(TPrintData *b)
 {
 	pthread_mutex_init(&b->lock, NULL);
@@ -138,14 +138,14 @@ int PrintData_put(TPrintData *b, TPrintBuf *data)
 {
 	int i;
 	pthread_mutex_lock(&b->lock);
-	/* µÈ´ý»º³åÇøÎ´Âú*/
+	/* ç­‰å¾…ç¼“å†²åŒºæœªæ»¡*/
 	if ((b->writepos + 1) % BUFFER_SIZE == b->readpos)
 	{
 		pthread_mutex_unlock(&b->lock);
 		return 0;
 		//pthread_cond_wait(&b->notfull, &b->lock);
 	}
-	/* Ð´Êý¾Ý,²¢ÒÆ¶¯Ö¸Õë */
+	/* å†™æ•°æ®,å¹¶ç§»åŠ¨æŒ‡é’ˆ */
 	//b->buffer[b->writepos] = *data;
 	for (i=0;i<BUFFER_SIZE;i++)
 	{
@@ -160,18 +160,18 @@ int PrintData_put(TPrintData *b, TPrintBuf *data)
 	b->writepos++;
 	if (b->writepos >= BUFFER_SIZE)
 	b->writepos = 0;
-	/* ÉèÖÃ»º³åÇø·Ç¿ÕµÄÌõ¼þ±äÁ¿*/
+	/* è®¾ç½®ç¼“å†²åŒºéžç©ºçš„æ¡ä»¶å˜é‡*/
 	pthread_cond_signal(&b->notempty);
 	pthread_mutex_unlock(&b->lock);
 	printf("PUT OVER\n");
 	return 1;
 }
 
-/* ´Ó»º³åÇøÖÐÈ¡³öÕûÊý*/
+/* ä»Žç¼“å†²åŒºä¸­å–å‡ºæ•´æ•°*/
 int PrintData_get(TPrintData *b, TPrintBuf *data)
 {
 	pthread_mutex_lock(&b->lock);
-	/* µÈ´ý»º³åÇø·Ç¿Õ*/
+	/* ç­‰å¾…ç¼“å†²åŒºéžç©º*/
 	if (b->writepos == b->readpos)
 	{
 		pthread_mutex_unlock(&b->lock);
@@ -179,13 +179,13 @@ int PrintData_get(TPrintData *b, TPrintBuf *data)
 		//pthread_cond_wait(&b->notempty, &b->lock);
 	}
 	//printf("GET....\n");
-	/* ¶ÁÊý¾Ý,ÒÆ¶¯¶ÁÖ¸Õë*/
+	/* è¯»æ•°æ®,ç§»åŠ¨è¯»æŒ‡é’ˆ*/
 	//data = b->buffer[b->readpos];	
 	memcpy(data,&b->buffer[b->readpos],sizeof(TPrintBuf));
 	//printf("%s\n",data->buffer);
 	b->readpos++;
 	if (b->readpos >= BUFFER_SIZE) b->readpos = 0;
-	/* ÉèÖÃ»º³åÇøÎ´ÂúµÄÌõ¼þ±äÁ¿*/
+	/* è®¾ç½®ç¼“å†²åŒºæœªæ»¡çš„æ¡ä»¶å˜é‡*/
 	pthread_cond_signal(&b->notfull);
 	pthread_mutex_unlock(&b->lock);
 	return TRUE;
@@ -287,7 +287,7 @@ void PrintClientVar(int sockfd,TPrinter* Printer)
 	char recvbuf[1024];
 	int recvlen,ret;
 	memset(buffer,0,sizeof(buffer));
-	sprintf(buffer,"\r\r********************************ÖÕ¶ËÁ¬½Ó³É¹¦,ÒÔÏÂÎªÖÕ¶Ë²ÎÊý:\r--------------------------------IPµØÖ·    :%s\r¶Ë¿Ú      :%d\rMAC       :%s\r´òÓ¡»úÀàÐÍ:%s\rSOCKETID  :%d\r´òÓ¡»ú×´Ì¬:%s\r********************************\r\r\r\r\r\r\r",
+	sprintf(buffer,"\r\r********************************ç»ˆç«¯è¿žæŽ¥æˆåŠŸ,ä»¥ä¸‹ä¸ºç»ˆç«¯å‚æ•°:\r--------------------------------IPåœ°å€    :%s\rç«¯å£      :%d\rMAC       :%s\ræ‰“å°æœºç±»åž‹:%s\rSOCKETID  :%d\ræ‰“å°æœºçŠ¶æ€:%s\r********************************\r\r\r\r\r\r\r",
 			Printer->ip,Printer->port,Printer->mac,Printer->type,sockfd,PrinterStateCHS[Printer->state]);
 	
 	//write(sockfd,buffer,strlen(buffer));
@@ -317,9 +317,9 @@ void DisconnectClient(int sockfd,TPrinter* Printer)
 
 int update_record(char *id)
 {
-	MYSQL *g_conn; 			// mysql Á¬½Ó
-	MYSQL_RES *g_res; 		// mysql ¼ÇÂ¼¼¯
-	MYSQL_ROW g_row; 		// ×Ö·û´®Êý×é£¬mysql ¼ÇÂ¼ÐÐ
+	MYSQL *g_conn; 			// mysql è¿žæŽ¥
+	MYSQL_RES *g_res; 		// mysql è®°å½•é›†
+	MYSQL_ROW g_row; 		// å­—ç¬¦ä¸²æ•°ç»„ï¼Œmysql è®°å½•è¡Œ
 	int ret;
 	char sql[1024];
 	
@@ -331,20 +331,20 @@ int update_record(char *id)
 	//printf("conn mysql ok\n");
 	memset(sql,0,sizeof(sql));
 	sprintf(sql,"set names gbk");
-    if (ret = mysql_real_query(g_conn, sql, strlen(sql))) // Èç¹ûÊ§°Ü
+    if (ret = mysql_real_query(g_conn, sql, strlen(sql))) // å¦‚æžœå¤±è´¥
 	{
-        return -1; // ±íÊ¾Ê§°Ü
+        return -1; // è¡¨ç¤ºå¤±è´¥
 	}
 	//printf("test mysql ok\n");
 	
 	memset(sql,0,sizeof(sql));
 	sprintf(sql,"update cky_print_list set is_print = 1,print_time=%lu where id=%s and is_print=0",time((time_t *)NULL),id);
 	
-    if (ret = mysql_real_query(g_conn, sql, strlen(sql))) // Èç¹ûÊ§°Ü
+    if (ret = mysql_real_query(g_conn, sql, strlen(sql))) // å¦‚æžœå¤±è´¥
 	{
-        return -1; // ±íÊ¾Ê§°Ü
+        return -1; // è¡¨ç¤ºå¤±è´¥
 	}	
-	mysql_close(g_conn); 					// ¹Ø±ÕÁ´½Ó	
+	mysql_close(g_conn); 					// å…³é—­é“¾æŽ¥	
 	printf("exec ok\n");
 }
 
@@ -373,7 +373,7 @@ void* ClientThread(void* arg)
 				break;
 			case CLIENT_STATE_CONNOK:
 				
-				//»ñÈ¡´òÓ¡»úµÄ±êÊ¶				
+				//èŽ·å–æ‰“å°æœºçš„æ ‡è¯†				
 				if (GetPrintType(sockfd,Printer->type))
 				{
 					Printer->state = CLIENT_STATE_READY;	

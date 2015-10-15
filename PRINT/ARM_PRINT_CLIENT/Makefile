@@ -11,8 +11,14 @@ LD		= arm-openwrt-linux-gcc
 PRE_PATH = /system/usr
 
 CFLAGS	= -I$(PRE_PATH)/include
+CFLAGS	+= -I/usr/include
 LDFLAGS = -L$(PRE_PATH)/lib
 LDFLAGS += -L$(PRE_PATH)/lib/mysql
+LDFLAGS += -L/usr/lib/mysql
+LDFLAGS += -L/usr/lib/mysql
+LDFLAGS += -L. -L..
+LDFLAGS += -Wl,-rpath=. -Wl,-rpath=$(PRE_PATH)/lib -Wl,-rpath=$(PRE_PATH)/lib/mysql
+LDFLAGS += -Wl,-rpath=/usr/lib -Wl,-rpath=/usr/lib/mysql
 
 LDFLAGS += -lpthread -lmysqlclient -lc -liconv
 ################ End of arm compile ####################
