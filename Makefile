@@ -100,6 +100,9 @@ mcrypt:
 ncurses:
 	./build.sh ncurses
 
+swoole:
+	./build.sh swoole
+
 install:
 	echo "not ready yet"
 

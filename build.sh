@@ -62,7 +62,7 @@ compile_zlib()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=$PREFIX_PATH --static"
+	CONF_ARGS="--prefix=$PREFIX_PATH"
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS
 	sed -i "s/gcc/$DEF_GCC/g" Makefile
@@ -363,6 +363,7 @@ compile_common()
 	then
 		CONF_ARGS+=" --sysconfdir=/system/usr/etc "
 		CONF_ARGS+=" --with-sysroot=/system/usr "
+		CONF_ARGS+=" --sysconfdir=/data/etc "
 	fi
 	#############################################################################
 
@@ -373,6 +374,11 @@ compile_common()
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils "
 
+	echo "./configure $CONF_ARGS \
+		CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils \" \
+		CXXFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils \" \
+		CPPFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils \" \
+		LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils \""
 
 
 	make $MAKE_THREAD
@@ -603,60 +609,61 @@ compile_mysql()
 	echo "Enter $(pwd)"
 
 
-	#if [ "$arch" == "ARM" ]
-	#then
-		#echo "build mysql for arm!"
-		#CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH "
-		#CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-g++ "
-		##CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
-		##CMAKE_ARGS+=" -DWITH_READLINE=1 "
-		##CMAKE_ARGS+=" -DWITH_SSL=system "
-		##CMAKE_ARGS+=" -DWITH_ZLIB=system "
-		##CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
-		##CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
-		#CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
-		#cmake $CMAKE_ARGS -DCUSTOM_C_FLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/atomic_ops"
-	#else
-		#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX_PATH -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
-	#fi
-
-	#sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system_sec\/include\ -I\/system_sec\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
-
-
-
-	# for 5.1.73
-	#{
-
-	cp $TOP_DIR/patches/mysql-5.1.73/*.patch ./
-	patch -p1 < fix-cross-compile.patch
-	patch -p1 < fix_define_in_arm.patch
-	patch -p1 < fix_my_fast_mutexattr.patch
-	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
-	CONF_ARGS=" --prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
-	CONF_ARGS+=" --enable-shared=yes --enable-static=yes "
-	CONF_ARGS+=" --with-extra-charsets=complex "
-	CONF_ARGS+=" --enable-assembler "
-	CONF_ARGS+="  --with-ssl "
-	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
+	if [ "$VER" == "5.1.73" ]
+	then
+		cp $TOP_DIR/patches/mysql-5.1.73/*.patch ./
+		patch -p1 < fix-cross-compile.patch
+		patch -p1 < fix_define_in_arm.patch
+		patch -p1 < fix_my_fast_mutexattr.patch
+		cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+		CONF_ARGS=" --prefix=$PREFIX_PATH "
+		CONF_ARGS+=" --host=arm-openwrt-linux "
+		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
+		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
+		CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+		CONF_ARGS+=" --enable-shared=yes --enable-static=yes "
+		CONF_ARGS+=" --with-extra-charsets=complex "
+		CONF_ARGS+=" --enable-assembler "
+		CONF_ARGS+=" --with-ssl "
+		#CONF_ARGS+=" --datarootdir=/data/var "
+		#CONF_ARGS+=" --datadir=/data/var/mysql "
+		echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
 
 
-	./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
+		./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
 
-	make $MAKE_THREAD
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
-	make $MAKE_THREAD
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
-	#}
+		make $MAKE_THREAD
+		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+		cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+		make $MAKE_THREAD
+		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+		make install
+		echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+	else
+		if [ "$arch" == "ARM" ]
+		then
+			echo "build mysql for arm!"
+			CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH "
+			CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-g++ "
+			#CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
+			#CMAKE_ARGS+=" -DWITH_READLINE=1 "
+			#CMAKE_ARGS+=" -DWITH_SSL=system "
+			#CMAKE_ARGS+=" -DWITH_ZLIB=system "
+			#CMAKE_ARGS+=" -DWITH_EMBEDDED_SERVER=1 "
+			#CMAKE_ARGS+=" -DENABLED_LOCAL_INFILE=1 "
+			#CMAKE_ARGS+=" -DWITH_UNIT_TESTS=no "
+			cmake $CMAKE_ARGS -DCUSTOM_C_FLAGS="-I/system/usr/include -I/system/usr/include/atomic_ops"
+		#else
+			#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX_PATH -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_UNIT_TESTS=no
+		fi
+
+		sed -i "s/C_FLAGS\ =\ /C_FLAGS\ =\ -I\/system\/usr\/include\ -I\/system\/usr\/include\/ncurses\ /g" cmd-line-utils/libedit/CMakeFiles/edit.dir/flags.make 
+		#make
+
+	fi
 
 
-	#make
+
 }
 
 compile_pcre()
@@ -708,26 +715,20 @@ compile_openssl()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	if [ "$arch" == "ARM" ]
-	then
-		#CONF_ARGS="android-armv7 "
-		#CONF_ARGS="linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' "
-		CONF_ARGS+=" --prefix=$PREFIX_PATH "
-		echo "./Configure $CONF_ARGS"
-		./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
-		#sed -i 's/CC=\ gcc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
-		#sed -i 's/CC=\ cc/CC=\ arm-none-linux-gnueabi-gcc/g' Makefile
-		#sed -i 's/\-mandroid//g' Makefile
-		#sed -i 's/LD_LIBRARY_PATH=/#LD_LIBRARY_PATH=/g' Makefile
-		#sed -i 's/\/usr/\/system\/usr/g' tools/c_rehash
-		#find -name Makefile|sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g'
-		#sed -i 's/$(INSTALL_PREFIX)/\/system_sec/g' Makefile
-	else
-		./config --prefix=$PREFIX_PATH
-	fi
-	make $MAKE_THREAD
+
+	cp $TOP_DIR/patches/$NAME/*.patch ./
+	patch -p1 < 0001-add-arm-share-library-option.patch
+
+	CONF_ARGS+=" --prefix=$PREFIX_PATH "
+	echo "./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm"
+	./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm
+	#./Configure linux-generic-arm $CONF_ARGS --openssldir=/system/usr/etc/ssl -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm
+	#./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
+
+	#make AR=arm-openwrt-linux-ar CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD
+	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install
+	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 }
@@ -769,11 +770,10 @@ compile_openssh()
 		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	fi
 
-	CONF_ARGS+=" --with-privsep-path=$PREFIX_PATH/var/empty "
-	CONF_ARGS+=" --enable-static=yes "
+	CONF_ARGS+=" --with-privsep-path=/data/var/empty "
 	#CONF_ARGS+=" --enable-strip=no "
-	CONF_ARGS+=" --enable-shared --disable-static --disable-debug --disable-strip  --disable-etc-default-login --disable-lastlog "
-	CONF_ARGS+=" --disable-utmp  --disable-utmpx --disable-wtmp --disable-wtmpx  --without-bsd-auth  --without-kerberos5  --without-x --with-ssl-engine  --without-stackprotect "
+	CONF_ARGS+=" --disable-strip  --disable-etc-default-login --disable-lastlog "
+	CONF_ARGS+=" --disable-utmp  --disable-utmpx --disable-wtmp --disable-wtmpx  --without-bsd-auth  --without-kerberos5 --with-ssl-engine  --without-stackprotect "
 	echo "./configure $CONF_ARGS "
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include " \
@@ -886,6 +886,7 @@ compile_nginx()
 	CONF_ARGS+=" --http-fastcgi-temp-path=/data/var/lib/nginx/fastcgi "
 	CONF_ARGS+=" --http-uwsgi-temp-path=/data/var/lib/nginx/uwsgi "
 	CONF_ARGS+=" --http-scgi-temp-path=/data/var/lib/nginx/scgi "
+	CONF_ARGS+=" --conf-path=/data/etc/nginx.conf "
 
 
 	echo "./configure $CONF_ARGS --with-pcre-opt=\"--host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include \" \
@@ -922,7 +923,25 @@ check_compile_status()
 	sleep 3
 }
 
-
+compile_swoole()
+{
+	rm -rf swoole-src
+	tar jxf swoole-1.7.19.tar.bz2
+	cd swoole-src
+	cmake -DCMAKE_INSTALL_PREFIX=/system/usr \
+		-DCMAKE_C_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-gcc \
+		-DCMAKE_CXX_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-g++ \
+		-DCMAKE_AR=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ar \
+		-DCMAKE_RANLIB=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ranlib \
+		-DCMAKE_LINKER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ld \
+		-DCMAKE_NM=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-nm \
+		-DCMAKE_STRIP=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-strip \
+		-DCMAKE_C_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
+		-DCMAKE_CXX_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
+		-DCMAKE_EXE_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib " \
+		-DCMAKE_SHARED_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib "
+	make -j11
+}
 
 #main
 echo "start compile ..."
@@ -1133,6 +1152,11 @@ fi
 if [ "$1" == "binutils" ]
 then
 	compile_binutils
+fi
+
+if [ "$1" == "swoole" ]
+then
+	compile_swoole
 fi
 
 #if [ "$1" == "uclibc" ]
