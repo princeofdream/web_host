@@ -13,21 +13,20 @@ arch=ARM
 PREFIX_PATH=/system/usr
 #PREFIX_PATH=/share/lijin/system/usr
 
+mkdir -p $PREFIX_PATH
 if [ -d "/system/usr" ];
 then
-	echo "use /system/usr as prefix!"
 	PREFIX_PATH=/system/usr
 else
    	if [ -d "/share/lijin/system/usr" ];
 	then
-		echo "use /share/lijin/system/usr as prefix!"
 		PREFIX_PATH=/share/lijin/system/usr
 		mkdir -p /share/lijin/system/usr
 	else
 		echo "do not have any suitable dirs"
 	fi
 fi
-echo $PREFIX_PATH
+echo "use $PREFIX_PATH as prefix!"
 
 
 
@@ -41,7 +40,7 @@ do
 done
 
 MAKE_THREAD=-j$CPU_NUMBER
-#echo "--->$MAKE_THREAD<---"
+echo "make $MAKE_THREAD"
 #################################################
 
 
@@ -235,6 +234,8 @@ compile_php5()
 	CONF_ARGS+=" --with-imap-ssl=$PREFIX_PATH "
 	#CONF_ARGS+=" --disable-safe-mode "
 	CONF_ARGS+=" --disable-ipv6 --disable-debug --disable-maintainer-zts --disable-fileinfo "
+	CONF_ARGS+=" --with-config-file-path=/data/etc/php.ini "
+	CONF_ARGS+=" --with-config-file-scan-dir==/data/etc "
 
 
 	echo "./configure $CONF_ARGS \
@@ -925,22 +926,47 @@ check_compile_status()
 
 compile_swoole()
 {
+	NAME=swoole
 	rm -rf swoole-src
 	tar jxf swoole-1.7.19.tar.bz2
 	cd swoole-src
-	cmake -DCMAKE_INSTALL_PREFIX=/system/usr \
-		-DCMAKE_C_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-gcc \
-		-DCMAKE_CXX_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-g++ \
-		-DCMAKE_AR=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ar \
-		-DCMAKE_RANLIB=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ranlib \
-		-DCMAKE_LINKER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ld \
-		-DCMAKE_NM=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-nm \
-		-DCMAKE_STRIP=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-strip \
-		-DCMAKE_C_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
-		-DCMAKE_CXX_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
-		-DCMAKE_EXE_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib " \
-		-DCMAKE_SHARED_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib "
-	make -j11
+
+	####################################################################################################################
+	###for cmake
+	#cmake -DCMAKE_INSTALL_PREFIX=/system/usr \
+		#-DCMAKE_C_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-gcc \
+		#-DCMAKE_CXX_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-g++ \
+		#-DCMAKE_AR=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ar \
+		#-DCMAKE_RANLIB=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ranlib \
+		#-DCMAKE_LINKER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ld \
+		#-DCMAKE_NM=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-nm \
+		#-DCMAKE_STRIP=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-strip \
+		#-DCMAKE_C_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
+		#-DCMAKE_CXX_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
+		#-DCMAKE_EXE_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib " \
+		#-DCMAKE_SHARED_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib "
+	#make -j11
+	#make install
+	####################################################################################################################
+
+	chmod a+x $TOP_DIR/php-5.4.27/scripts/phpize
+	$TOP_DIR/php-5.4.27/scripts/phpize
+
+	CONF_ARGS="--prefix=$PREFIX_PATH "
+	CONF_ARGS+=" --host=arm-openwrt-linux "
+	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
+	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
+	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
+	CONF_ARGS+=" --with-php-config=/system/usr/bin/php-config "
+	echo "./configure $CONF_ARGS"
+	./configure $CONF_ARGS
+	make $MAKE_THREAD
+	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+	make install
+	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+
 }
 
 #main
