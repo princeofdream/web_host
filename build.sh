@@ -775,7 +775,8 @@ compile_pcre()
 
 compile_openssl()
 {
-	VER=1.0.2d
+	# VER=1.0.2d
+	VER=1.1.0e
 	# VER=1.0.2k
 	NAME=openssl
 	echo "Compileing $NAME-$VER"
@@ -790,12 +791,26 @@ compile_openssl()
 	fi
 	echo "Enter $(pwd)"
 
-	cp $TOP_DIR/patches/$NAME/*.patch ./
-	patch -p1 < 0001-add-arm-share-library-option.patch
+	if [ "$VER" == "1.0.2d" ]
+	then
+		cp $TOP_DIR/patches/$NAME/*.patch ./
+		patch -p1 < 0001-add-arm-share-library-option.patch
+	fi
 
 	CONF_ARGS+=" --prefix=$PREFIX_PATH "
-	echo "./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	if [ "$VER" == "1.0.2d" ]
+	then
+		echo "./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	fi
+
+	if [ "$VER" == "1.1.0e" ]
+	then
+		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2"
+		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2
+	fi
+
+
 	#./Configure linux-generic-arm $CONF_ARGS --openssldir=/system/usr/etc/ssl -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	#./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
 
