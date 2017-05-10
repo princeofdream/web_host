@@ -2,12 +2,6 @@
 
 TOP_DIR=$(pwd)
 
-DEF_GCC=arm-openwrt-linux-gcc
-DEF_GXX=arm-openwrt-linux-g++
-
-OPENSSL_NAME=openssl
-OPENSSL_VER=1.0.2d
-
 arch=ARM
 
 PREFIX_PATH=/system/usr
@@ -31,6 +25,13 @@ echo "use $PREFIX_PATH as prefix!"
 echo "" > $TOP_DIR/info.log
 echo "" > $TOP_DIR/info_warn.log
 
+# export CC="arm-openwrt-linux-gcc"
+# export CXX="arm-openwrt-linux-g++"
+# export CPP="arm-openwrt-linux-cpp"
+# export LD="arm-openwrt-linux-ld"
+# export AR="arm-openwrt-linux-ar"
+# export STRIP="arm-openwrt-linux-strip"
+# export RANLIB="arm-openwrt-linux-ranlib"
 
 ############# caclcate cpu number ################
 CPU_INFO=`cat /proc/cpuinfo |grep processor | cut -f 2 -d ' ' `
@@ -48,7 +49,7 @@ echo "make $MAKE_THREAD"
 check_compile_status()
 {
 	echo "========================================================"
-	echo "Double checkout compile $1 is ok"
+	echo "Double checkout compile $1"
 	echo "========================================================"
 	# sleep 3
 	if [ -f "$1" ]
@@ -85,10 +86,9 @@ compile_zlib()
 	CONF_ARGS="--prefix=$PREFIX_PATH"
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	sed -i "s/gcc/$DEF_GCC/g" Makefile
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libz.a"
@@ -400,6 +400,14 @@ compile_common()
 		CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
 	fi
 	#############################################################################
+	if [ "$NAME" == "curl" ]
+	then
+		CONF_ARGS+=" --target=arm-openwrt-linux "
+		# CONF_ARGS+=" --build= "
+		CONF_ARGS+=" --with-ssl --with-zlib "
+	fi
+	#############################################################################
+	#############################################################################
 	if [ "$NAME" == "nmap" ]
 	then
 		CONF_ARGS+=" --without-liblua "
@@ -415,12 +423,7 @@ compile_common()
 	fi
 	#############################################################################
 
-	echo "./configure $CONF_ARGS"
-	./configure $CONF_ARGS \
-		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
-		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	# echo "./configure $CONF_ARGS"
 
 	echo "./configure $CONF_ARGS \
 		CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils \" \
@@ -428,6 +431,11 @@ compile_common()
 		CPPFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils \" \
 		LDFLAGS=\"-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils \""
 
+	./configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
+		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
@@ -471,7 +479,8 @@ compile_libvirt()
 
 compile_glibc()
 {
-	VER=2.22
+	# VER=2.22
+	VER=2.25
 	NAME=glibc
 	FORMAT="tar.xz"
 	echo "Compileing $NAME-$VER.$FORMAT"
@@ -510,11 +519,17 @@ compile_glibc()
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+
+	check_compile_status "$PREFIX_PATH/lib/libc.so"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
 }
 
 compile_binutils()
 {
-	VER=2.24
+	# VER=2.24
+	VER=2.28
 	NAME=binutils
 	FORMAT="tar.bz2"
 	echo "Compileing $NAME-$VER.$FORMAT"
@@ -551,6 +566,11 @@ compile_binutils()
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+
+	check_compile_status "$PREFIX_PATH/bin/ar"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
 }
 
 compile_systemtap()
@@ -640,7 +660,7 @@ compile_ncurses()
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
-	echo "./configure $CONF_ARGS"
+	echo "./configure $CONF_ARGS" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/samples//g" Ada95/Makefile
 	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
@@ -690,7 +710,7 @@ compile_mysql()
 		CONF_ARGS+=" --with-ssl "
 		#CONF_ARGS+=" --datarootdir=/data/var "
 		#CONF_ARGS+=" --datadir=/data/var/mysql "
-		echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib"
+		echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 
 		./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
@@ -759,7 +779,7 @@ compile_pcre()
 	CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
 	CONF_ARGS+=" --enable-pcre16 --enable-pcre32 "
 	CONF_ARGS+=" --enable-jit --enable-utf8 -enable-unicode-properties "
-	CONF_ARGS+=" --enable-pcregrep-libz "
+	CONF_ARGS+=" --enable-pcregrep-libz " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
@@ -776,8 +796,8 @@ compile_pcre()
 compile_openssl()
 {
 	# VER=1.0.2d
-	VER=1.1.0e
-	# VER=1.0.2k
+	# VER=1.1.0e
+	VER=1.0.2k
 	NAME=openssl
 	echo "Compileing $NAME-$VER"
 	cd $TOP_DIR
@@ -804,10 +824,18 @@ compile_openssl()
 		./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	fi
 
+	if [ "$VER" == "1.0.2k" ]
+	then
+		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		# CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld >> $TOP_DIR/info.log 2>> $TOP_DIR/info_warn.log
+	fi
+
 	if [ "$VER" == "1.1.0e" ]
 	then
-		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2"
-		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2
+		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	fi
 
 
@@ -977,7 +1005,7 @@ compile_nginx()
 	CONF_ARGS+=" --with-http_gzip_static_module "
 
 	CONF_ARGS+=" --with-http_ssl_module "
-	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2d "
+	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2k "
 	CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
 
 	CONF_ARGS+=" --pid-path=/data/var/lib/nginx/nginx.pid "
@@ -1071,7 +1099,6 @@ compile_swoole()
 #main
 echo "start compile ..."
 echo "TOP Dir is $TOP_DIR"
-echo "using $DEF_GCC"
 #################### OK ###################
 
 if [ "$1" == "ok" ]
@@ -1258,6 +1285,11 @@ fi
 if [ "$1" == "swoole" ]
 then
 	compile_swoole
+fi
+
+if [ "$1" == "tmux" ]
+then
+	compile_common "tmux" "2.4" "tar.bz2" "bin/tmux"
 fi
 
 #if [ "$1" == "uclibc" ]
