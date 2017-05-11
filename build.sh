@@ -66,31 +66,37 @@ check_compile_status()
 	fi
 }
 
+
+
+function DO_MAKE_ALL()
+{
+	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+}
+
+function DO_MAKE_INSTALL()
+{
+	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+}
+
+
 ## prepare env ##
 
 compile_zlib()
 {
-	VER=1.2.8
 	NAME=zlib
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd ./zlib-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	VER=1.2.8
+	EXT_NAME="tar.gz"
+
+	decompress_package $NAME $VER $EXT_NAME
+
 	CONF_ARGS="--prefix=$PREFIX_PATH"
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/gcc/arm-openwrt-linux-gcc/g" Makefile
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	# make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libz.a"
@@ -103,17 +109,11 @@ compile_libpng()
 {
 	VER=1.6.18
 	NAME=libpng
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar Jxf $NAME-$VER.tar.xz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.xz
+
+	decompress_package $NAME $VER $EXT_NAME
+
+
 	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-openwrt-linux "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -124,9 +124,9 @@ compile_libpng()
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/SYMBOL_CFLAGS\ =\ /SYMBOL_CFLAGS\ =\ \${CFLAGS} /g" Makefile
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libpng.a"
@@ -138,17 +138,11 @@ compile_libpng()
 compile_libjpeg()
 {
 	NAME=libjpeg
-	echo "Compileing libjpeg-v9a"
-	cd $TOP_DIR
-	rm -rf ./jpeg-9a
-	tar zxf jpegsrc.v9a.tar.gz
-	cd ./jpeg-9a
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	VER=v9a
+	EXT_NAME=tar.gz
+
+	decompress_package "jpegsrc" "v9a" $EXT_NAME "jpeg-9a"
+
 	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-openwrt-linux "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -157,9 +151,9 @@ compile_libjpeg()
 	CONF_ARGS+=" --enable-static=yes "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libjpeg.a"
@@ -172,17 +166,10 @@ compile_libxml2()
 {
 	VER=2.9.2
 	NAME=libxml2
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.gz
+
+	decompress_package $NAME $VER $EXT_NAME
+
 	CONF_ARGS="--prefix=$PREFIX_PATH "
 	CONF_ARGS+="--host=arm-openwrt-linux "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -201,9 +188,9 @@ compile_libxml2()
 	sed -i "s/PYTHON_TESTS\ =/#PYTHON_TESTS\ =/g" Makefile
 	sed -i "s/PYTHON_VERSION\ =/#PYTHON_VERSION\ =/g" Makefile
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libxml2.a"
@@ -213,22 +200,56 @@ compile_libxml2()
 }
 
 
+compile_openssl()
+{
+	# VER=1.1.0e
+	VER=1.0.2k
+	NAME=openssl
+	EXT_NAME="tar.gz"
+	echo "Compileing $NAME-$VER"
+
+	decompress_package $NAME $VER $EXT_NAME
+
+
+	CONF_ARGS+=" --prefix=$PREFIX_PATH "
+
+	if [ "$VER" == "1.0.2k" ]
+	then
+		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		# CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld >> $TOP_DIR/info.log 2>> $TOP_DIR/info_warn.log
+	fi
+
+	if [ "$VER" == "1.1.0e" ]
+	then
+		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	fi
+
+
+	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+
+	check_compile_status "$PREFIX_PATH/lib/libssl.a"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
+}
+
+
+
+
 compile_php5()
 {
 	#VER=5.6.12
 	VER=5.4.27
 	NAME=php
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar jxf $NAME-$VER.tar.bz2
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.bz2
+
+	decompress_package $NAME $VER $EXT_NAME
 
 	#############################################################################
 	if [ "$NAME" == "php" ]
@@ -310,10 +331,10 @@ compile_php5()
 
 
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar
-	 make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	 DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/bin/php"
@@ -332,27 +353,37 @@ function decompress_package()
 	NAME=$1
 	VER=$2
 	EXT_NAME=$3
-	OUTPUT_FILE=$4
-	logd "Decompressing $1-$VER"
+
+	REWRITE=$4
+
+	logd "Decompressing $NAME-$VER"
 	cd $TOP_DIR
-	rm -rf ./$1-$VER
+	rm -rf out/$NAME-$VER
 	if [ "$EXT_NAME" == "tar.xz" ]
 	then
-		tar Jxf $NAME-$VER.$EXT_NAME
+		tar Jxf $NAME-$VER.$EXT_NAME -C out
 	else
 		if [ "$EXT_NAME" == "tar.bz2" ]
 		then
-			tar jxf $NAME-$VER.$EXT_NAME
+			tar jxf $NAME-$VER.$EXT_NAME -C out
 		else
-			tar zxf $NAME-$VER.tar.gz
+			tar zxf $NAME-$VER.tar.gz -C out
 		fi
 	fi
-	cd ./$1-$VER
+
+	if [ "$REWRITE" == "" ]
+	then
+		cd out/$NAME-$VER
+	else
+		cd out/$REWRITE
+	fi
+
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
 		logd "!!!! Still in Top Dir !!!!"
 		exit
 	fi
+	echo "Enter $(pwd)"
 }
 
 function patch_packages()
@@ -404,13 +435,14 @@ function patch_packages()
 compile_common()
 {
 	NAME=$1
+	VER=$2
+	EXT_NAME=$3
 	OUTPUT_FILE=$4
 
-	decompress_package $NAME $2 $3 $4 $5 $6
+	decompress_package $NAME $VER $EXT_NAME
 
 	patch_packages $NAME
 
-	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
 	#CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -460,9 +492,9 @@ compile_common()
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils " \
 		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
@@ -475,17 +507,10 @@ compile_libvirt()
 {
 	VER=1.2.9
 	NAME=libvirt
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.gz
+
+	decompress_package $NAME $VER $EXT_NAME
+
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
@@ -493,9 +518,9 @@ compile_libvirt()
 	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 }
 
@@ -505,25 +530,9 @@ compile_glibc()
 	# VER=2.22
 	VER=2.25
 	NAME=glibc
-	FORMAT="tar.xz"
-	echo "Compileing $NAME-$VER.$FORMAT"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	if [ "$FORMAT" == "tar.xz" ]
-	then
-		echo "uncompress $NAME-$VER.$FORMAT"
-		tar Jxf $NAME-$VER.$FORMAT
-	else
-		echo "uncompress $NAME-$VER.$FORMAT"
-	fi
+	EXT_NAME="tar.xz"
 
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	decompress_package $NAME $VER $EXT_NAME
 
 	mkdir for_arm
 	cd for_arm
@@ -538,9 +547,9 @@ compile_glibc()
 
 	../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	cd $PREFIX_PATH/include/gnu/
@@ -550,10 +559,6 @@ compile_glibc()
 	TOOLCHAIN_PATH=/extern/lijin/extern_projects/Environment/toolchain/toolchain-arm_cortex-a7+neon_gcc-4.8-linaro_eglibc-2.19_eabi
 	cp -r $TOOLCHAIN_PATH/lib/libstdc++.so* $PREFIX_PATH/lib/
 	cp -r $TOOLCHAIN_PATH/lib/libgcc_s.so* $PREFIX_PATH/lib/
-	cd $PREFIX_PATH/lib/
-	# ln -s libc.so.6 libstdc++.so.6
-	# ln -s libc.so.6 libstdc++.so
-	cd -
 
 	check_compile_status "$PREFIX_PATH/lib/libc.so"
 	ret=$?
@@ -566,27 +571,9 @@ compile_binutils()
 	# VER=2.24
 	VER=2.28
 	NAME=binutils
-	FORMAT="tar.bz2"
-	echo "Compileing $NAME-$VER.$FORMAT"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	if [ "$FORMAT" == "tar.bz2" ]
-	then
-		echo "uncompress $NAME-$VER.$FORMAT"
-		tar jxf $NAME-$VER.$FORMAT
-	else
-		echo "uncompress $NAME-$VER.$FORMAT"
-	fi
+	EXT_NAME=tar.bz2
 
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
-
-	echo "Enter $(pwd)"
+	decompress_package $NAME $VER $EXT_NAME
 
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -597,9 +584,9 @@ compile_binutils()
 
 	./configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/bin/ar"
@@ -633,9 +620,9 @@ compile_systemtap()
 		CXXFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
 		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 }
 
@@ -643,17 +630,9 @@ compile_elfutils()
 {
 	VER=0.163
 	NAME=elfutils
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar jxf $NAME-$VER.tar.bz2
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.bz2
+
+	decompress_package $NAME $VER $EXT_NAME
 
 	#### portability patch ####
 	cp $TOP_DIR/patches/elfutils/*.patch ./
@@ -665,9 +644,9 @@ compile_elfutils()
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libelf.a"
@@ -680,17 +659,11 @@ compile_ncurses()
 {
 	VER=5.9
 	NAME=ncurses
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.gz
+
+	decompress_package $NAME $VER $EXT_NAME
+
+
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
@@ -698,9 +671,9 @@ compile_ncurses()
 	echo "./configure $CONF_ARGS" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/samples//g" Ada95/Makefile
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libncurses.a"
@@ -750,12 +723,12 @@ compile_mysql()
 
 		./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-		make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		DO_MAKE_ALL
 		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 		cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
-		make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		DO_MAKE_ALL
 		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-		make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		DO_MAKE_INSTALL
 		echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 	else
 		if [ "$arch" == "ARM" ]
@@ -793,17 +766,10 @@ compile_pcre()
 {
 	VER=8.37
 	NAME=pcre
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER/
-	tar jxf $NAME-$VER.tar.bz2
-	cd ./$NAME-$VER/
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.bz2
+
+	decompress_package $NAME $VER $EXT_NAME
+
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
 	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -816,9 +782,9 @@ compile_pcre()
 	CONF_ARGS+=" --enable-jit --enable-utf8 -enable-unicode-properties "
 	CONF_ARGS+=" --enable-pcregrep-libz " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libpcre.a"
@@ -828,82 +794,14 @@ compile_pcre()
 }
 
 
-compile_openssl()
-{
-	# VER=1.0.2d
-	# VER=1.1.0e
-	VER=1.0.2k
-	NAME=openssl
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf ./$NAME-$VER
-	tar zxf  $NAME-$VER.tar.gz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
-
-	if [ "$VER" == "1.0.2d" ]
-	then
-		cp $TOP_DIR/patches/$NAME/*.patch ./
-		patch -p1 < 0001-add-arm-share-library-option.patch
-	fi
-
-	CONF_ARGS+=" --prefix=$PREFIX_PATH "
-	if [ "$VER" == "1.0.2d" ]
-	then
-		echo "./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		./Configure linux-generic-arm $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	fi
-
-	if [ "$VER" == "1.0.2k" ]
-	then
-		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		# CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld >> $TOP_DIR/info.log 2>> $TOP_DIR/info_warn.log
-	fi
-
-	if [ "$VER" == "1.1.0e" ]
-	then
-		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	fi
-
-
-	#./Configure linux-generic-arm $CONF_ARGS --openssldir=/system/usr/etc/ssl -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-smime no-aes192 no-camellia no-ans1 no-krb5 shared no-err no-hw zlib-dynamic no-sse2 no-engines no-ec2m no-sse2 no-perlasm >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	#./Configure linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' $CONF_ARGS
-
-	#make AR=arm-openwrt-linux-ar CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
-
-	check_compile_status "$PREFIX_PATH/lib/libssl.a"
-	ret=$?
-	echo "build stat: $ret .";
-	return $ret;
-}
-
 compile_openssh()
 {
 	NAME=openssh
 	#VER=7.0p1
-	#VER=5.9p1
 	VER=6.6p1
-	cd $TOP_DIR
-	rm -rf ./openssh-$VER
-	tar zxf  openssh-$VER.tar.gz
-	cd ./openssh-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
+	EXT_NAME=tar.gz
+
+	decompress_package $NAME $VER $EXT_NAME
 
 	#############################################################################
 	if [ "$NAME" == "openssh" ]
@@ -936,9 +834,9 @@ compile_openssh()
 		LDFLAGS="-L$PREFIX_PATH/lib -O2 -ffree-form -shared  -lpthread " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	sed -i "s/\.\/ssh-keygen/ssh-keygen/g" Makefile
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	##########################################################################
@@ -963,18 +861,10 @@ compile_atomic_ops()
 {
 	VER=7.4.2
 	NAME=libatomic_ops
-	echo "Compileing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf $NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd $NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
+	EXT_NAME=tar.gz
 
-	echo "Enter $(pwd)"
+	decompress_package $NAME $VER $EXT_NAME
+
 	./autogen.sh
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
@@ -982,11 +872,11 @@ compile_atomic_ops()
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	cd src
 	ln -s .libs/$NAME.a $NAME.a
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libatomic_ops.a"
@@ -998,17 +888,15 @@ compile_atomic_ops()
 compile_nginx()
 {
 	#compile_atomic_ops
-	cd $TOP_DIR
 	#VER=1.4.7
 	VER=1.9.3
 	NAME=nginx
-	echo "Compileing $NAME-$VER"
+	EXT_NAME=tar.gz
 
-	rm -rf ./$NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
+	decompress_package $NAME $VER $EXT_NAME
 
-	cp $TOP_DIR/patches/$NAME/patches/* ./$NAME-$VER
-	cd ./$NAME-$VER
+	cp $TOP_DIR/patches/$NAME/patches/* ./
+
 	patch -p1 < 001-enable-php-option-by-default.patch
 	patch -p1 < 002-fix-pcre-cross-compile-error.patch
 	patch -p1 < 101-feature_test_fix.patch
@@ -1035,13 +923,13 @@ compile_nginx()
 	CONF_ARGS+=" --with-ipv6 "
 	CONF_ARGS+=" --with-http_stub_status_module "
 	CONF_ARGS+=" --without-http-cache "
-	CONF_ARGS+=" --with-libatomic=$TOP_DIR/libatomic_ops-7.4.2 "
-	CONF_ARGS+=" --with-zlib=$TOP_DIR/zlib-1.2.8 "
+	CONF_ARGS+=" --with-libatomic=$TOP_DIR/out/libatomic_ops-7.4.2 "
+	CONF_ARGS+=" --with-zlib=$TOP_DIR/out/zlib-1.2.8 "
 	CONF_ARGS+=" --with-http_gzip_static_module "
 
 	CONF_ARGS+=" --with-http_ssl_module "
-	CONF_ARGS+=" --with-openssl=$TOP_DIR/openssl-1.0.2k "
-	CONF_ARGS+=" --with-pcre=$TOP_DIR/pcre-8.37 "
+	CONF_ARGS+=" --with-openssl=$TOP_DIR/out/openssl-1.0.2k "
+	CONF_ARGS+=" --with-pcre=$TOP_DIR/out/pcre-8.37 "
 
 	CONF_ARGS+=" --pid-path=/data/var/lib/nginx/nginx.pid "
 	CONF_ARGS+=" --lock-path=/data/var/lock/nginx.lock "
@@ -1071,9 +959,9 @@ compile_nginx()
 	#--conf-path=/etc/nginx/nginx.conf  \
 
 
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 	##############
 	echo "!!!!!!!!!!!!!! remember change nginx.conf php config /script to \$document_root !!!!!!!!!!!"
@@ -1108,7 +996,7 @@ compile_swoole()
 		#-DCMAKE_EXE_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib " \
 		#-DCMAKE_SHARED_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib "
 	#make -j11
-	#make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	#DO_MAKE_INSTALL
 	####################################################################################################################
 
 	chmod a+x $TOP_DIR/php-5.4.27/scripts/phpize
@@ -1124,9 +1012,9 @@ compile_swoole()
 	CONF_ARGS+=" --with-php-config=/system/usr/bin/php-config "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_ALL
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	DO_MAKE_INSTALL
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 }
@@ -1149,7 +1037,7 @@ then
 	compile_atomic_ops
 	compile_pcre
 	compile_ncurses
-	#compile_glibc
+
 	compile_elfutils
 	#compile_systemtap
 	compile_common "curl" "7.44.0" "tar.bz2" "lib/libcurl.a"
