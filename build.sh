@@ -71,11 +71,13 @@ check_compile_status()
 function DO_MAKE_ALL()
 {
 	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 }
 
 function DO_MAKE_INSTALL()
 {
 	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 }
 
 
@@ -133,7 +135,6 @@ compile_zlib()
 	sed -i "s/gcc/arm-openwrt-linux-gcc/g" Makefile
 	DO_MAKE_ALL
 	# make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
@@ -163,9 +164,7 @@ compile_libpng()
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/SYMBOL_CFLAGS\ =\ /SYMBOL_CFLAGS\ =\ \${CFLAGS} /g" Makefile
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libpng.a"
 	ret=$?
@@ -190,9 +189,7 @@ compile_libjpeg()
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libjpeg.a"
 	ret=$?
@@ -227,9 +224,7 @@ compile_libxml2()
 	sed -i "s/PYTHON_VERSION\ =/#PYTHON_VERSION\ =/g" Makefile
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libxml2.a"
 	ret=$?
@@ -267,9 +262,7 @@ compile_openssl()
 
 
 	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libssl.a"
 	ret=$?
@@ -370,10 +363,8 @@ compile_php5()
 
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	cp $TOP_DIR/host_php_ext/ext/phar/phar.phar ./ext/phar/phar.phar
 	 DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/bin/php"
 	ret=$?
@@ -493,9 +484,7 @@ compile_common()
 		LDFLAGS="-L$PREFIX_PATH/lib -L$PREFIX_PATH/lib/elfutils -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
 	ret=$?
@@ -519,9 +508,7 @@ compile_libvirt()
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 }
 
 
@@ -548,9 +535,7 @@ compile_glibc()
 	../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	cd $PREFIX_PATH/include/gnu/
 	ln -s stubs-hard.h stubs-soft.h
@@ -585,9 +570,7 @@ compile_binutils()
 	./configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/bin/ar"
 	ret=$?
@@ -621,9 +604,7 @@ compile_systemtap()
 		CPPFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp " \
 		LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 }
 
 compile_elfutils()
@@ -645,9 +626,7 @@ compile_elfutils()
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libelf.a"
 	ret=$?
@@ -672,9 +651,7 @@ compile_ncurses()
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/samples//g" Ada95/Makefile
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libncurses.a"
 	ret=$?
@@ -687,26 +664,17 @@ compile_mysql()
 	#VER=5.5.37
 	VER=5.1.73
 	NAME=mysql
-	echo "Compileing mysql-$VER"
-	cd $TOP_DIR
-	rm -rf $NAME-$VER
-	tar zxf $NAME-$VER.tar.gz
-	cd ./$NAME-$VER
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		echo "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
+	EXT_NAME=tar.gz
 
+	decompress_package $NAME $VER $EXT_NAME
 
 	if [ "$VER" == "5.1.73" ]
 	then
-		cp $TOP_DIR/patches/mysql-5.1.73/*.patch ./
+		cp $TOP_DIR/patches/$NAME-$VER/*.patch ./
 		patch -p1 < fix-cross-compile.patch
 		patch -p1 < fix_define_in_arm.patch
 		patch -p1 < fix_my_fast_mutexattr.patch
-		cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+		cp $TOP_DIR/patches/$NAME-$VER/gen_lex_hash ./sql
 		CONF_ARGS=" --prefix=$PREFIX_PATH "
 		CONF_ARGS+=" --host=arm-openwrt-linux "
 		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
@@ -724,12 +692,9 @@ compile_mysql()
 		./configure $CONF_ARGS CFLAGS="-I$PREFIX_PATH/include" CPPFLAGS="-I$PREFIX_PATH/include" LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 		DO_MAKE_ALL
-		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-		cp $TOP_DIR/patches/mysql-5.1.73/gen_lex_hash ./sql
+		cp $TOP_DIR/patches/$NAME-$VER/gen_lex_hash ./sql
 		DO_MAKE_ALL
-		echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 		DO_MAKE_INSTALL
-		echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 	else
 		if [ "$arch" == "ARM" ]
 		then
@@ -783,9 +748,7 @@ compile_pcre()
 	CONF_ARGS+=" --enable-pcregrep-libz " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libpcre.a"
 	ret=$?
@@ -835,9 +798,7 @@ compile_openssh()
 
 	sed -i "s/\.\/ssh-keygen/ssh-keygen/g" Makefile
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	##########################################################################
 	# add below cmd to /etc/passwd first
@@ -873,11 +834,9 @@ compile_atomic_ops()
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	cd src
 	ln -s .libs/$NAME.a $NAME.a
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libatomic_ops.a"
 	ret=$?
@@ -960,9 +919,7 @@ compile_nginx()
 
 
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 	##############
 	echo "!!!!!!!!!!!!!! remember change nginx.conf php config /script to \$document_root !!!!!!!!!!!"
 	echo "!!!!!!!!!!!!!! remember change nginx.conf php config /script to \$document_root !!!!!!!!!!!" >> $TOP_DIR/full.log
@@ -1013,9 +970,7 @@ compile_swoole()
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
 	DO_MAKE_INSTALL
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
 }
 
