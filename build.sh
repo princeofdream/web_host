@@ -79,6 +79,44 @@ function DO_MAKE_INSTALL()
 }
 
 
+function decompress_package()
+{
+	NAME=$1
+	VER=$2
+	EXT_NAME=$3
+
+	REWRITE=$4
+
+	logd "Decompressing $NAME-$VER"
+	cd $TOP_DIR
+	rm -rf out/$NAME-$VER
+	if [ "$EXT_NAME" == "tar.xz" ]
+	then
+		tar Jxf dl/$NAME-$VER.$EXT_NAME -C out
+	else
+		if [ "$EXT_NAME" == "tar.bz2" ]
+		then
+			tar jxf dl/$NAME-$VER.$EXT_NAME -C out
+		else
+			tar zxf dl/$NAME-$VER.tar.gz -C out
+		fi
+	fi
+
+	if [ "$REWRITE" == "" ]
+	then
+		cd out/$NAME-$VER
+	else
+		cd out/$REWRITE
+	fi
+
+	if [ "$(pwd)" == "$TOP_DIR" ]
+	then
+		logd "!!!! Still in Top Dir !!!!"
+		exit
+	fi
+	echo "Enter $(pwd)"
+}
+
 ## prepare env ##
 
 compile_zlib()
@@ -346,44 +384,6 @@ compile_php5()
 function logd()
 {
 	echo "$1"
-}
-
-function decompress_package()
-{
-	NAME=$1
-	VER=$2
-	EXT_NAME=$3
-
-	REWRITE=$4
-
-	logd "Decompressing $NAME-$VER"
-	cd $TOP_DIR
-	rm -rf out/$NAME-$VER
-	if [ "$EXT_NAME" == "tar.xz" ]
-	then
-		tar Jxf $NAME-$VER.$EXT_NAME -C out
-	else
-		if [ "$EXT_NAME" == "tar.bz2" ]
-		then
-			tar jxf $NAME-$VER.$EXT_NAME -C out
-		else
-			tar zxf $NAME-$VER.tar.gz -C out
-		fi
-	fi
-
-	if [ "$REWRITE" == "" ]
-	then
-		cd out/$NAME-$VER
-	else
-		cd out/$REWRITE
-	fi
-
-	if [ "$(pwd)" == "$TOP_DIR" ]
-	then
-		logd "!!!! Still in Top Dir !!!!"
-		exit
-	fi
-	echo "Enter $(pwd)"
 }
 
 function patch_packages()
