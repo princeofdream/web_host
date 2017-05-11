@@ -86,9 +86,11 @@ compile_zlib()
 	CONF_ARGS="--prefix=$PREFIX_PATH"
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	sed -i "s/gcc/arm-openwrt-linux-gcc/g" Makefile
+	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	# make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
-	make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
 	check_compile_status "$PREFIX_PATH/lib/libz.a"
@@ -320,13 +322,18 @@ compile_php5()
 	return $ret;
 }
 
-compile_common()
+function logd()
+{
+	echo "$1"
+}
+
+function decompress_package()
 {
 	NAME=$1
 	VER=$2
 	EXT_NAME=$3
 	OUTPUT_FILE=$4
-	echo "Compileing $1-$VER"
+	logd "Decompressing $1-$VER"
 	cd $TOP_DIR
 	rm -rf ./$1-$VER
 	if [ "$EXT_NAME" == "tar.xz" ]
@@ -343,9 +350,14 @@ compile_common()
 	cd ./$1-$VER
 	if [ "$(pwd)" == "$TOP_DIR" ]
 	then
-		echo "!!!! Still in Top Dir !!!!"
+		logd "!!!! Still in Top Dir !!!!"
 		exit
 	fi
+}
+
+function patch_packages()
+{
+	NAME=$1
 
 	#############################################################################
 	if [ "$NAME" == "libiconv" ]
@@ -386,6 +398,17 @@ compile_common()
 		patch -p1 < 001-fix-compile-error.patch
 	fi
 	#############################################################################
+}
+
+
+compile_common()
+{
+	NAME=$1
+	OUTPUT_FILE=$4
+
+	decompress_package $NAME $2 $3 $4 $5 $6
+
+	patch_packages $NAME
 
 	echo "Enter $(pwd)"
 	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
@@ -1285,6 +1308,11 @@ fi
 if [ "$1" == "swoole" ]
 then
 	compile_swoole
+fi
+
+if [ "$1" == "libevent" ]
+then
+	compile_common "libevent" "1.4.15" "tar.gz" "lib/libevent.so"
 fi
 
 if [ "$1" == "tmux" ]
