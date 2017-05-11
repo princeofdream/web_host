@@ -543,6 +543,18 @@ compile_glibc()
 	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 
+	cd $PREFIX_PATH/include/gnu/
+	ln -s stubs-hard.h stubs-soft.h
+	ln -s stubs-hard.h stubs-soft.h
+	cd -
+	TOOLCHAIN_PATH=/extern/lijin/extern_projects/Environment/toolchain/toolchain-arm_cortex-a7+neon_gcc-4.8-linaro_eglibc-2.19_eabi
+	cp -r $TOOLCHAIN_PATH/lib/libstdc++.so* $PREFIX_PATH/lib/
+	cp -r $TOOLCHAIN_PATH/lib/libgcc_s.so* $PREFIX_PATH/lib/
+	cd $PREFIX_PATH/lib/
+	# ln -s libc.so.6 libstdc++.so.6
+	# ln -s libc.so.6 libstdc++.so
+	cd -
+
 	check_compile_status "$PREFIX_PATH/lib/libc.so"
 	ret=$?
 	echo "build stat: $ret .";
@@ -1127,6 +1139,8 @@ echo "TOP Dir is $TOP_DIR"
 if [ "$1" == "ok" ]
 then
 	echo "Start compile ..." > $TOP_DIR/full.log
+	compile_glibc
+	# compile_binutils
 	compile_zlib
 	compile_openssl
 	compile_libpng
@@ -1156,7 +1170,9 @@ then
 	compile_common "libpcap" "1.7.4" "tar.gz" "lib/libpcap.a"
 	compile_common "nmap" "6.47" "tar.bz2" "bin/nmap"
 	compile_common "iptables" "1.4.19.1" "tar.bz2" "sbin/iptables"
-	#compile_openssh
+
+	compile_openssh
+	# compile_libvirt
 
 fi
 
