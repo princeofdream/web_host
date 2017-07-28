@@ -124,13 +124,19 @@ function decompress_package()
 compile_zlib()
 {
 	NAME=zlib
-	VER=1.2.8
-	EXT_NAME="tar.gz"
+	VER=1.2.11
+	EXT_NAME=tar.gz
+
+	if [ ! -f $TOP_DIR/dl/$NAME-$VER.$EXT_NAME-dlok ]
+	then
+		cd $TOP_DIR/dl && wget -c http://zlib.net/$NAME-$VER.$EXT_NAME && touch $NAME-$VER.$EXT_NAME-dlok && cd -
+	fi
 
 	decompress_package $NAME $VER $EXT_NAME
 
 	CONF_ARGS="--prefix=$PREFIX_PATH"
-	echo "./configure $CONF_ARGS"
+	echo "./configure $CONF_ARGS" >> $TOP_DIR/info.log
+	echo "sed -i \"s/gcc/arm-openwrt-linux-gcc/g\" Makefile" >>$TOP_DIR/info.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/gcc/arm-openwrt-linux-gcc/g" Makefile
 	DO_MAKE_ALL
@@ -236,30 +242,26 @@ compile_libxml2()
 compile_openssl()
 {
 	# VER=1.1.0e
-	VER=1.0.2k
+	VER=1.0.2l
 	NAME=openssl
-	EXT_NAME="tar.gz"
+	EXT_NAME=tar.gz
 	echo "Compileing $NAME-$VER"
+
+	if [ ! -f $TOP_DIR/dl/$NAME-$VER.$EXT_NAME-dlok ]
+	then
+		cd $TOP_DIR/dl && wget -c https://www.openssl.org/source/$NAME-$VER.$EXT_NAME && touch $NAME-$VER.$EXT_NAME-dlok && cd -
+	fi
 
 	decompress_package $NAME $VER $EXT_NAME
 
 
 	CONF_ARGS+=" --prefix=$PREFIX_PATH "
 
-	if [ "$VER" == "1.0.2k" ]
-	then
-		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		# CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld >> $TOP_DIR/info.log 2>> $TOP_DIR/info_warn.log
-	fi
-
-	if [ "$VER" == "1.1.0e" ]
-	then
-		echo "./Configure linux-armv4 $CONF_ARGS --prefix=/system/usr -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-		./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 no-ec2m no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	fi
-
+	echo "./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2"
+	echo "make depend"
+	echo "make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD"
+	./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
@@ -530,7 +532,7 @@ compile_glibc()
 	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
 	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
 	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
-	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
+	echo "../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar"  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
