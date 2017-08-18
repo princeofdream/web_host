@@ -4,21 +4,9 @@ TOP_DIR=$(pwd)
 
 arch=x86_64
 
-PREFIX_PATH=/home/lijin/Environment/env_rootfs
+PREFIX_PATH=$HOME/Environment/env_rootfs
 
 mkdir -p $PREFIX_PATH
-if [ -d "/system/usr" ];
-then
-	PREFIX_PATH=/system/usr
-else
-   	if [ -d "/share/lijin/system/usr" ];
-	then
-		PREFIX_PATH=/share/lijin/system/usr
-		mkdir -p /share/lijin/system/usr
-	else
-		echo "do not have any suitable dirs"
-	fi
-fi
 echo "use $PREFIX_PATH as prefix!"
 
 echo "" > $TOP_DIR/info.log
@@ -69,7 +57,7 @@ function DO_MAKE_ALL()
 
 function DO_MAKE_INSTALL()
 {
-	if [ "$NAME" == "gcc" ]
+	if [ "$NAME" == "gcc" -o "$NAME" == "llvm" ]
 	then
 		make install DESTDIR=$PREFIX_PATH >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 		ret=$?
@@ -121,7 +109,7 @@ function decompress_package()
 		mkdir $TOP_DIR/out
 	fi
 	cd $TOP_DIR
-	rm -rf out/$NAME-$VER
+	# rm -rf out/$NAME-$VER
 	if [ "$EXT_NAME" == "tar.xz" ]
 	then
 		tar Jxf dl/$NAME-$VER.$EXT_NAME -C out
@@ -223,13 +211,60 @@ compile_common()
 }
 
 
+compile_llvm()
+{
+	NAME=llvm
+	VER=3.8.1.src
+	EXT_NAME=tar.xz
+	URL=http://releases.llvm.org/3.8.1/
+
+	get_package $NAME $VER $EXT_NAME $URL
+	decompress_package $NAME $VER $EXT_NAME
+
+	patch_packages $NAME
+
+	CONF_ARGS="--prefix=$PREFIX_PATH "
+	# CONF_ARGS=" --host=arm-openwrt-linux"
+	# CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
+	# CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
+	# CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	# CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+
+		CONF_ARGS=" --disable-bindings "
+	#############################################################################
+
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/Environment/env_rootfs/lib:$HOME/Environment/env_rootfs/usr/local/lib64
+	mkdir -p $TOP_DIR/out/$NAME-$VER/james
+	cd $TOP_DIR/out/$NAME-$VER/james
+
+	echo "../configure $CONF_ARGS \
+		CFLAGS=\"-I$PREFIX_PATH/include \" \
+		CXXFLAGS=\"-I$PREFIX_PATH/include \" \
+		CPPFLAGS=\"-I$PREFIX_PATH/include \" \
+		LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib  \""
+
+	../configure $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include " \
+		CXXFLAGS="-I$PREFIX_PATH/include " \
+		CPPFLAGS="-I$PREFIX_PATH/include " \
+		LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+
+	DO_MAKE_ALL
+	DO_MAKE_INSTALL
+
+	# check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
+}
+
 
 #main
 echo "start compile ..."
-echo "TOP Dir is $TOP_DIR"
+echo "TOP_DIR is $TOP_DIR"
 #################### OK ###################
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/lijin/Environment/env_rootfs/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/Environment/env_rootfs/lib
 
 if [ "$1" == "ok" ]
 then
@@ -239,5 +274,8 @@ then
 	compile_common "mpc" "1.0.3" "tar.gz" "ftp://ftp.gnu.org/gnu/mpc/"
 
 	compile_common "gcc" "5.4.0" "tar.bz2" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-5.4.0/"
+elif [ "$1" == "llvm" ]
+then
+	compile_llvm
 fi
 
