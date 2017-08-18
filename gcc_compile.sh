@@ -233,7 +233,6 @@ compile_llvm()
 		CONF_ARGS=" --disable-bindings "
 	#############################################################################
 
-	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/Environment/env_rootfs/lib:$HOME/Environment/env_rootfs/usr/local/lib64
 	mkdir -p $TOP_DIR/out/$NAME-$VER/james
 	cd $TOP_DIR/out/$NAME-$VER/james
 
@@ -248,6 +247,38 @@ compile_llvm()
 		CXXFLAGS="-I$PREFIX_PATH/include " \
 		CPPFLAGS="-I$PREFIX_PATH/include " \
 		LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+
+	DO_MAKE_ALL
+	DO_MAKE_INSTALL
+
+	# check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
+}
+
+compile_clang()
+{
+	NAME=$1
+	VER=$2
+	EXT_NAME=$3
+	URL=$4
+
+	get_package $NAME $VER $EXT_NAME $URL
+	decompress_package $NAME $VER $EXT_NAME
+
+	patch_packages $NAME
+
+
+	#############################################################################
+
+	mkdir -p $TOP_DIR/out/$NAME-$VER/james
+	cd $TOP_DIR/out/$NAME-$VER/james
+
+	cmake -DCMAKE_CXX_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/g++ \
+		-DCMAKE_C_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/gcc \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH \
+		-DCMAKE_BUILD_TYPE:STRING=RELEASE $TOP_DIR/out/$NAME-$VER/
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL
@@ -277,5 +308,11 @@ then
 elif [ "$1" == "llvm" ]
 then
 	compile_llvm
+elif [ "$1" == "clang" ]
+then
+	compile_clang "cfe" "3.8.1.src" "tar.xz" "http://releases.llvm.org/3.8.1/"
+elif [ "$1" == "cmake" ]
+then
+	compile_common "cmake" "3.9.1" "tar.gz" "https://cmake.org/files/v3.9/"
 fi
 
