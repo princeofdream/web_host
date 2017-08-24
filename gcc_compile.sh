@@ -272,13 +272,26 @@ compile_clang()
 
 	#############################################################################
 
+	if [ -d $TOP_DIR/out/$NAME-$VER/james ]
+	then
+		rm -rf $TOP_DIR/out/$NAME-$VER/james
+	fi
 	mkdir -p $TOP_DIR/out/$NAME-$VER/james
 	cd $TOP_DIR/out/$NAME-$VER/james
 
-	cmake -DCMAKE_CXX_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/g++ \
-		-DCMAKE_C_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/gcc \
+		# -DCMAKE_CXX_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/g++ \
+		# -DCMAKE_C_COMPILER:FILEPATH=$HOME/Environment/env_rootfs/usr/local/bin/gcc \
+
+	cmake \
 		-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH \
+		-DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
 		-DCMAKE_BUILD_TYPE:STRING=RELEASE $TOP_DIR/out/$NAME-$VER/
+
+	echo "cmake \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH \
+		-DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
+		-DCMAKE_BUILD_TYPE:STRING=RELEASE $TOP_DIR/out/$NAME-$VER/"
+
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL
