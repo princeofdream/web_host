@@ -7,6 +7,21 @@ arch=ARM
 PREFIX_PATH=/system/usr
 #PREFIX_PATH=/share/lijin/system/usr
 
+
+CROSS_HOST=arm-linux-gnueabihf
+CROSS_CC=arm-linux-gnueabihf-gcc
+CROSS_CPP=arm-linux-gnueabihf-cpp
+CROSS_CXX=arm-linux-gnueabihf-g++
+CROSS_LD=arm-linux-gnueabihf-ld
+CROSS_AR=arm-linux-gnueabihf-ar
+CROSS_STRIP=arm-linux-gnueabihf-strip
+CROSS_RANLIB=arm-linux-gnueabihf-ranlib
+
+TOOLCHAIN_PATH=/home/lijin/Environment/toolchain/gcc-linaro-arm-linux-gnueabihf
+TOOLCHAIN_LIB_PATH=$TOOLCHAIN_PATH/arm-linux-gnueabihf
+
+EXT_DISTDIR=$TOP_DIR/out/target
+
 mkdir -p $PREFIX_PATH
 if [ -d "/system/usr" ];
 then
@@ -25,13 +40,13 @@ echo "use $PREFIX_PATH as prefix!"
 echo "" > $TOP_DIR/info.log
 echo "" > $TOP_DIR/info_warn.log
 
-# export CC="arm-openwrt-linux-gcc"
-# export CXX="arm-openwrt-linux-g++"
-# export CPP="arm-openwrt-linux-cpp"
-# export LD="arm-openwrt-linux-ld"
-# export AR="arm-openwrt-linux-ar"
-# export STRIP="arm-openwrt-linux-strip"
-# export RANLIB="arm-openwrt-linux-ranlib"
+# export CC="$CROSS_CC"
+# export CXX="$CROSS_CXX"
+# export CPP="$CROSS_CPP"
+# export LD="$CROSS_LD"
+# export AR="$CROSS_AR"
+# export STRIP="$CROSS_STRIP"
+# export RANLIB="$CROSS_RANLIB"
 
 ############# caclcate cpu number ################
 CPU_INFO=`cat /proc/cpuinfo |grep processor | cut -f 2 -d ' ' `
@@ -45,6 +60,14 @@ done
 MAKE_THREAD=-j$CPU_NUMBER
 echo "make $MAKE_THREAD"
 #################################################
+
+check_cmd_stat()
+{
+	if [ $1 -gt 0 ]
+	then
+		exit $1;
+	fi
+}
 
 check_compile_status()
 {
@@ -70,14 +93,18 @@ check_compile_status()
 
 function DO_MAKE_ALL()
 {
-	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make stat: $?" >> $TOP_DIR/full.log
+	make $MAKE_THREAD $@ >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	ret=$?
+	echo "$NAME make $@ stat: $ret" >> $TOP_DIR/full.log
+	check_cmd_stat $ret
 }
 
 function DO_MAKE_INSTALL()
 {
-	make install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
+	make install $@ >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	ret=$?
+	echo "$NAME make install $@ stat: $ret" >> $TOP_DIR/full.log
+	check_cmd_stat $ret
 }
 
 
@@ -136,11 +163,11 @@ compile_zlib()
 
 	CONF_ARGS="--prefix=$PREFIX_PATH"
 	echo "./configure $CONF_ARGS" >> $TOP_DIR/info.log
-	echo "sed -i \"s/gcc/arm-openwrt-linux-gcc/g\" Makefile" >>$TOP_DIR/info.log
+	echo "sed -i \"s/gcc/$CROSS_CC/g\" Makefile" >>$TOP_DIR/info.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	sed -i "s/gcc/arm-openwrt-linux-gcc/g" Makefile
+	sed -i "s/gcc/$CROSS_CC/g" Makefile
 	DO_MAKE_ALL
-	# make CC="arm-openwrt-linux-gcc" CXX="arm-openwrt-linux-g++" CPP="arm-openwrt-linux-cpp" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	# make CC="$CROSS_CC" CXX="$CROSS_CXX" CPP="$CROSS_CPP" LDSHARED="$CC -shared -Wl,-soname,libz.so.1,--version-script,zlib.map" $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_INSTALL
 	echo "$NAME make install install stat: $?" >> $TOP_DIR/full.log
 
@@ -160,11 +187,11 @@ compile_libpng()
 
 
 	CONF_ARGS="--prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS+=" --host=$CROSS_HOST "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+	CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	CONF_ARGS+=" --enable-static=yes "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
@@ -187,10 +214,10 @@ compile_libjpeg()
 	decompress_package "jpegsrc" "v9a" $EXT_NAME "jpeg-9a"
 
 	CONF_ARGS="--prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" --host=$CROSS_HOST "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	CONF_ARGS+=" --enable-static=yes "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
@@ -212,11 +239,11 @@ compile_libxml2()
 	decompress_package $NAME $VER $EXT_NAME
 
 	CONF_ARGS="--prefix=$PREFIX_PATH "
-	CONF_ARGS+="--host=arm-openwrt-linux "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS+="--host=$CROSS_HOST "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+	CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	CONF_ARGS+="--enable-static=yes"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/\-llzma//g" Makefile
@@ -259,12 +286,12 @@ compile_openssl()
 
 	echo "./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2"
 	echo "make depend"
-	echo "make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD"
+	echo "make CC=$CROSS_CC RANLIB=$CROSS_RANLIB LD=$CROSS_LD $MAKE_THREAD"
 	./Configure linux-armv4 $CONF_ARGS -I/system/usr/include -L/system/usr/lib -ldl -DOPENSSL_SMALL_FOOTPRINT no-idea no-md2 no-mdc2 no-rc5 no-camellia shared no-err no-hw zlib-dynamic no-sse2 >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	make depend >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	make CC=arm-openwrt-linux-gcc RANLIB=arm-openwrt-linux-ranlib LD=arm-openwrt-linux-ld install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make CC=$CROSS_CC RANLIB=$CROSS_RANLIB LD=$CROSS_LD $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	make CC=$CROSS_CC RANLIB=$CROSS_RANLIB LD=$CROSS_LD install >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	check_compile_status "$PREFIX_PATH/lib/libssl.a"
 	ret=$?
@@ -300,11 +327,11 @@ compile_php5()
 	CONF_ARGS="--prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
-		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+		CONF_ARGS+=" --host=$CROSS_HOST --enable-static=yes "
+		CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+		CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+		CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+		CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	else
 		echo "compile for host"
 	fi
@@ -436,12 +463,12 @@ compile_common()
 
 	patch_packages $NAME
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
-	#CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST"
+	#CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST"
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+	CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 
 	if [ "$NAME" == "libiconv" ]
 	then
@@ -502,11 +529,11 @@ compile_libvirt()
 
 	decompress_package $NAME $VER $EXT_NAME
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST"
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+	CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils"
 	./configure $CONF_ARGS  CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/usr/local/include -O -Werror=cpp" 	LDFLAGS="-L$PREFIX_PATH/usr/local/lib -L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib/elfutils" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
@@ -516,7 +543,6 @@ compile_libvirt()
 
 compile_glibc()
 {
-	# VER=2.22
 	VER=2.25
 	NAME=glibc
 	EXT_NAME="tar.xz"
@@ -527,27 +553,32 @@ compile_glibc()
 	cd for_arm
 	echo "Enter $(pwd)"
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static=yes "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR RANLIB=$CROSS_RANLIB "
 	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
-	echo "../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar"  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	echo "../configure --prefix=$PREFIX_PATH --host=$CROSS_HOST CC=$CROSS_CC CXX=$CROSS_CXX \
+		CPP=$CROSS_CPP LD=$CROSS_LD  AR=$CROSS_AR RANLIB=$CROSS_RANLIB"  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
-	../configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	../configure $CONF_ARGS  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	check_cmd_stat $?
 
 	DO_MAKE_ALL
-	DO_MAKE_INSTALL
+	DO_MAKE_INSTALL DESTDIR=$EXT_DISTDIR
 
-	cd $PREFIX_PATH/include/gnu/
-	ln -s stubs-hard.h stubs-soft.h
-	ln -s stubs-hard.h stubs-soft.h
+	cd $EXT_DISTDIR/$PREFIX_PATH/include/gnu/
+	if [ ! -f stubs-soft.h ]
+	then
+		ln -s stubs-hard.h stubs-soft.h
+	fi
 	cd -
-	TOOLCHAIN_PATH=/extern/lijin/extern_projects/Environment/toolchain/toolchain-arm_cortex-a7+neon_gcc-4.8-linaro_eglibc-2.19_eabi
-	cp -r $TOOLCHAIN_PATH/lib/libstdc++.so* $PREFIX_PATH/lib/
-	cp -r $TOOLCHAIN_PATH/lib/libgcc_s.so* $PREFIX_PATH/lib/
 
-	check_compile_status "$PREFIX_PATH/lib/libc.so"
+	cp -r $TOOLCHAIN_LIB_PATH/lib/libstdc++.so* $EXT_DISTDIR/$PREFIX_PATH/lib/
+	cp -r $TOOLCHAIN_LIB_PATH/lib/libgcc_s.so* $EXT_DISTDIR/$PREFIX_PATH/lib/
+	check_cmd_stat $?
+
+	check_compile_status "$EXT_DISTDIR/$PREFIX_PATH/lib/libc.so"
 	ret=$?
 	echo "build stat: $ret .";
 	return $ret;
@@ -562,14 +593,14 @@ compile_binutils()
 
 	decompress_package $NAME $VER $EXT_NAME
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static=yes "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST --enable-static=yes "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
 	echo "./configure $CONF_ARGS" CFLAGS=\"-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils\" LDFLAGS=\"-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib\"
 
-	./configure --prefix=$PREFIX_PATH --host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++  CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld  AR=arm-openwrt-linux-ar >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	./configure --prefix=$PREFIX_PATH --host=$CROSS_HOST CC=$CROSS_CC CXX=$CROSS_CXX  CPP=$CROSS_CPP LD=$CROSS_LD  AR=$CROSS_AR >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL
@@ -595,10 +626,10 @@ compile_systemtap()
 		exit
 	fi
 	echo "Enter $(pwd)"
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST"
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	echo "./configure $CONF_ARGS" CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils" LDFLAGS="-L$PREFIX_PATH/lib/elfutils -L$PREFIX_PATH/lib"
 	./configure $CONF_ARGS \
 		CFLAGS="-I$PREFIX_PATH/include -I$PREFIX_PATH/include/elfutils -O -Werror=cpp" \
@@ -621,10 +652,10 @@ compile_elfutils()
 	cp $TOP_DIR/patches/elfutils/*.patch ./
 	patch -p1 < elfutils-portability-0.163.patch
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux"
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST"
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
@@ -645,10 +676,10 @@ compile_ncurses()
 	decompress_package $NAME $VER $EXT_NAME
 
 
-	CONF_ARGS="--prefix=$PREFIX_PATH --host=arm-openwrt-linux --enable-static "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS="--prefix=$PREFIX_PATH --host=$CROSS_HOST --enable-static "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	echo "./configure $CONF_ARGS" >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	sed -i "s/samples//g" Ada95/Makefile
@@ -678,10 +709,10 @@ compile_mysql()
 		patch -p1 < fix_my_fast_mutexattr.patch
 		cp $TOP_DIR/patches/$NAME-$VER/gen_lex_hash ./sql
 		CONF_ARGS=" --prefix=$PREFIX_PATH "
-		CONF_ARGS+=" --host=arm-openwrt-linux "
-		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-		CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+		CONF_ARGS+=" --host=$CROSS_HOST "
+		CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+		CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+		CONF_ARGS+=" AR=$CROSS_AR "
 		CONF_ARGS+=" --enable-shared=yes --enable-static=yes "
 		CONF_ARGS+=" --with-extra-charsets=complex "
 		CONF_ARGS+=" --enable-assembler "
@@ -702,7 +733,7 @@ compile_mysql()
 		then
 			echo "build mysql for arm!"
 			CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=$PREFIX_PATH "
-			CMAKE_ARGS+=" -DCMAKE_C_COMPILER=arm-openwrt-linux-gcc -DCMAKE_CXX_COMPILER=arm-openwrt-linux-g++ "
+			CMAKE_ARGS+=" -DCMAKE_C_COMPILER=$CROSS_CC -DCMAKE_CXX_COMPILER=$CROSS_CXX "
 			#CMAKE_ARGS+=" -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci "
 			#CMAKE_ARGS+=" -DWITH_READLINE=1 "
 			#CMAKE_ARGS+=" -DWITH_SSL=system "
@@ -738,10 +769,10 @@ compile_pcre()
 	decompress_package $NAME $VER $EXT_NAME
 
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" --host=$CROSS_HOST --enable-static=yes "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include "
 	CONF_ARGS+=" CPPFLAGS=-I$PREFIX_PATH/include "
 	CONF_ARGS+=" LDFLAGS=-L$PREFIX_PATH/lib "
@@ -782,11 +813,11 @@ compile_openssh()
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS+=" --host=arm-openwrt-linux "
-		CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-		CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-		CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-		CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+		CONF_ARGS+=" --host=$CROSS_HOST "
+		CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+		CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+		CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+		CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	fi
 
 	CONF_ARGS+=" --with-privsep-path=$PREFIX_PATH/data/var/empty "
@@ -830,10 +861,10 @@ compile_atomic_ops()
 
 	./autogen.sh
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux --enable-static=yes "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar "
+	CONF_ARGS+=" --host=$CROSS_HOST --enable-static=yes "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR "
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	DO_MAKE_ALL
 	cd src
@@ -876,7 +907,7 @@ compile_nginx()
 	CONF_ARGS=" --prefix=$PREFIX_PATH "
 	if [ "$arch" == "ARM" ]
 	then
-		CONF_ARGS+=" --with-cc=arm-openwrt-linux-gcc "
+		CONF_ARGS+=" --with-cc=$CROSS_CC "
 		CONF_ARGS+=" --crossbuild=Linux::arm "
 	else
 		echo "compile for host"
@@ -904,14 +935,14 @@ compile_nginx()
 	CONF_ARGS+=" --conf-path=/data/etc/nginx.conf "
 
 
-	echo "./configure $CONF_ARGS --with-pcre-opt=\"--host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include \" \
-	--with-openssl-opt=\"linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$PREFIX_PATH \""
+	echo "./configure $CONF_ARGS --with-pcre-opt=\"--host=$CROSS_HOST CC=$CROSS_CC CXX=$CROSS_CXX --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include \" \
+	--with-openssl-opt=\"linux-elf-arm -DB_ENDIAN linux:' $CROSS_CC' --prefix=$PREFIX_PATH \""
 
 
 
 	./configure $CONF_ARGS \
-		--with-pcre-opt="--host=arm-openwrt-linux CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " \
-		--with-openssl-opt="linux-elf-arm -DB_ENDIAN linux:' arm-openwrt-linux-gcc' --prefix=$PREFIX_PATH " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+		--with-pcre-opt="--host=$CROSS_HOST CC=$CROSS_CC CXX=$CROSS_CXX --enable-static=yes --enable-pcre16 --enable-pcre32 --enable-jit --enable-utf8 --enable-unicode-properties LDFLAGS=-I$PREFIX_PATH/lib CFLAGS=-I$PREFIX_PATH/include CPPFLAGS=-I$PREFIX_PATH/include " \
+		--with-openssl-opt="linux-elf-arm -DB_ENDIAN linux:' $CROSS_CC' --prefix=$PREFIX_PATH " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 
 	#--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
@@ -943,13 +974,13 @@ compile_swoole()
 	####################################################################################################################
 	###for cmake
 	#cmake -DCMAKE_INSTALL_PREFIX=/system/usr \
-		#-DCMAKE_C_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-gcc \
-		#-DCMAKE_CXX_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-g++ \
-		#-DCMAKE_AR=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ar \
-		#-DCMAKE_RANLIB=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ranlib \
-		#-DCMAKE_LINKER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-ld \
+		#-DCMAKE_C_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_CC \
+		#-DCMAKE_CXX_COMPILER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_CXX \
+		#-DCMAKE_AR=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_AR \
+		#-DCMAKE_RANLIB=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_RANLIB \
+		#-DCMAKE_LINKER=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_LD \
 		#-DCMAKE_NM=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-nm \
-		#-DCMAKE_STRIP=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/arm-openwrt-linux-strip \
+		#-DCMAKE_STRIP=/home/lijin/tools/toolchain-arm_cortex-a9+vfpv3_gcc-4.8-linaro_eglibc-2.19_eabi/bin/$CROSS_STRIP \
 		#-DCMAKE_C_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
 		#-DCMAKE_CXX_FLAGS="-I/system/usr/include -Wl,-rpath=/system/usr/lib " \
 		#-DCMAKE_EXE_LINKER_FLAGS="-L/system/usr/lib -Wl,-rpath=/system/usr/lib " \
@@ -962,18 +993,19 @@ compile_swoole()
 	$TOP_DIR/php-5.4.27/scripts/phpize
 
 	CONF_ARGS="--prefix=$PREFIX_PATH "
-	CONF_ARGS+=" --host=arm-openwrt-linux "
-	CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
-	CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
-	CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
-	CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+	CONF_ARGS+=" --host=$CROSS_HOST "
+	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
+	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
+	CONF_ARGS+=" AR=$CROSS_AR STRIP=$CROSS_STRIP "
+	CONF_ARGS+=" RANLIB=$CROSS_RANLIB "
 	CONF_ARGS+=" CFLAGS=-I$PREFIX_PATH/include LDFLAGS=-L$PREFIX_PATH/lib "
 	CONF_ARGS+=" --with-php-config=/system/usr/bin/php-config "
 	echo "./configure $CONF_ARGS"
 	./configure $CONF_ARGS >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	DO_MAKE_ALL
-	DO_MAKE_INSTALL
+	check_cmd_stat $?
 
+	DO_MAKE_ALL
+	DO_MAKE_INSTALL DESTDIR=$EXT_DISTDIR
 }
 
 #main
