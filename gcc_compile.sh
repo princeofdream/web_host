@@ -88,7 +88,15 @@ function get_package()
 	then
 		echo "file exist! Will not download!"
 	else
-		wget -c "$URL/$NAME-$VER.$EXT_NAME"
+		if [ "$NAME" == "boost" ]
+		then
+			if [ ! -f $NAME"_"$VER.$EXT_NAME ]
+			then
+				wget -c "$URL/$NAME""_""$VER.$EXT_NAME"
+			fi
+		else
+			wget -c "$URL/$NAME-$VER.$EXT_NAME"
+		fi
 		echo "Download $NAME-$VER Done!"
 	fi
 	cd $TOP_DIR
@@ -116,7 +124,12 @@ function decompress_package()
 	else
 		if [ "$EXT_NAME" == "tar.bz2" ]
 		then
-			tar jxf dl/$NAME-$VER.$EXT_NAME -C out
+			if [ "$NAME" == "boost" ]
+			then
+				tar jxf dl/$NAME"_"$VER.$EXT_NAME -C out
+			else
+				tar jxf dl/$NAME-$VER.$EXT_NAME -C out
+			fi
 		else
 			tar zxf dl/$NAME-$VER.tar.gz -C out
 		fi
@@ -124,7 +137,12 @@ function decompress_package()
 
 	if [ "$REWRITE" == "" ]
 	then
-		cd out/$NAME-$VER
+		if [ "$NAME" == "boost" ]
+		then
+			cd $TOP_DIR/out/$NAME"_"$VER
+		else
+			cd out/$NAME-$VER
+		fi
 	else
 		cd out/$REWRITE
 	fi
@@ -203,6 +221,53 @@ compile_common()
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL
+
+	# check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
+	ret=$?
+	echo "build stat: $ret .";
+	return $ret;
+}
+
+compile_boost()
+{
+	NAME=$1
+	VER=$2
+	EXT_NAME=$3
+	URL=$4
+
+	get_package $NAME $VER $EXT_NAME $URL
+	decompress_package $NAME $VER $EXT_NAME
+
+	patch_packages $NAME
+
+	CONF_ARGS="--prefix=$PREFIX_PATH "
+	# CONF_ARGS=" --host=arm-openwrt-linux"
+	# CONF_ARGS+=" CC=arm-openwrt-linux-gcc CXX=arm-openwrt-linux-g++ "
+	# CONF_ARGS+=" CPP=arm-openwrt-linux-cpp LD=arm-openwrt-linux-ld "
+	# CONF_ARGS+=" AR=arm-openwrt-linux-ar STRIP=arm-openwrt-linux-strip "
+	# CONF_ARGS+=" RANLIB=arm-openwrt-linux-ranlib "
+
+	#############################################################################
+
+	# echo "./configure $CONF_ARGS"
+
+	echo "./bootstrap.sh $CONF_ARGS \
+		CFLAGS=\"-I$PREFIX_PATH/include \" \
+		CXXFLAGS=\"-I$PREFIX_PATH/include \" \
+		CPPFLAGS=\"-I$PREFIX_PATH/include \" \
+		LDFLAGS=\"-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib  \""
+
+	./bootstrap.sh $CONF_ARGS \
+		CFLAGS="-I$PREFIX_PATH/include " \
+		CXXFLAGS="-I$PREFIX_PATH/include " \
+		CPPFLAGS="-I$PREFIX_PATH/include " \
+		LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+
+	# sed -i "s#/usr/local#$HOME/Environment/env_rootfs#g" project-config.jam
+
+	./b2
+	# DO_MAKE_ALL
+	# DO_MAKE_INSTALL
 
 	# check_compile_status "$PREFIX_PATH/$OUTPUT_FILE"
 	ret=$?
@@ -317,7 +382,8 @@ then
 	compile_common "mpfr" "3.1.5" "tar.xz" "http://www.mpfr.org/mpfr-current/"
 	compile_common "mpc" "1.0.3" "tar.gz" "ftp://ftp.gnu.org/gnu/mpc/"
 
-	compile_common "gcc" "5.4.0" "tar.bz2" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-5.4.0/"
+	# compile_common "gcc" "5.4.0" "tar.bz2" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-5.4.0/"
+	compile_common "gcc" "6.4.0" "tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-6.4.0/"
 elif [ "$1" == "llvm" ]
 then
 	compile_llvm
@@ -327,5 +393,12 @@ then
 elif [ "$1" == "cmake" ]
 then
 	compile_common "cmake" "3.9.1" "tar.gz" "https://cmake.org/files/v3.9/"
+elif [ "$1" == "gcc" ]
+then
+	# compile_common "gcc" "5.4.0" "tar.bz2" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-5.4.0/"
+	compile_common "gcc" "6.4.0" "tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-6.4.0/"
+elif [ "$1" == "boost" ]
+then
+	compile_boost "boost" "1_65_0" "tar.bz2" "http://dl.bintray.com/boostorg/release/1.65.0/source/"
 fi
 
