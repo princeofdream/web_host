@@ -25,6 +25,15 @@ MAKE_THREAD=-j$CPU_NUMBER
 echo "make $MAKE_THREAD"
 #################################################
 
+check_cmd_stat()
+{
+	if [ $1 -gt 0 ]
+	then
+		echo "$2 exit $1"
+		exit $1;
+	fi
+}
+
 check_compile_status()
 {
 	echo "========================================================"
@@ -52,6 +61,7 @@ function DO_MAKE_ALL()
 	make $MAKE_THREAD >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 	ret=$?
 	echo "$NAME make stat: $ret" >> $TOP_DIR/full.log
+	check_cmd_stat $ret "configure"
 	return $ret
 }
 
@@ -67,6 +77,7 @@ function DO_MAKE_INSTALL()
 		ret=$?
 		echo "$NAME make install stat: $?" >> $TOP_DIR/full.log
 	fi
+	check_cmd_stat $ret "configure"
 	return $ret
 }
 
@@ -218,6 +229,7 @@ compile_common()
 		CXXFLAGS="-I$PREFIX_PATH/include " \
 		CPPFLAGS="-I$PREFIX_PATH/include " \
 		LDFLAGS="-L$PREFIX_PATH/lib -Wl,-rpath=$PREFIX_PATH/lib " >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
+	check_cmd_stat $? "configure"
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL
@@ -383,7 +395,7 @@ then
 	compile_common "mpc" "1.0.3" "tar.gz" "ftp://ftp.gnu.org/gnu/mpc/"
 
 	# compile_common "gcc" "5.4.0" "tar.bz2" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-5.4.0/"
-	compile_common "gcc" "6.4.0" "tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-6.4.0/"
+	# compile_common "gcc" "6.4.0" "tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-6.4.0/"
 elif [ "$1" == "llvm" ]
 then
 	compile_llvm

@@ -65,6 +65,7 @@ check_cmd_stat()
 {
 	if [ $1 -gt 0 ]
 	then
+		echo "$2 exit $1"
 		exit $1;
 	fi
 }
@@ -557,12 +558,12 @@ compile_glibc()
 	CONF_ARGS+=" CC=$CROSS_CC CXX=$CROSS_CXX "
 	CONF_ARGS+=" CPP=$CROSS_CPP LD=$CROSS_LD "
 	CONF_ARGS+=" AR=$CROSS_AR RANLIB=$CROSS_RANLIB "
-	CONF_ARGS+=" --enable-shared=yes --enable-static=yes"
+	CONF_ARGS+=" --enable-shared=yes --enable-static=no"
 	echo "../configure --prefix=$PREFIX_PATH --host=$CROSS_HOST CC=$CROSS_CC CXX=$CROSS_CXX \
 		CPP=$CROSS_CPP LD=$CROSS_LD  AR=$CROSS_AR RANLIB=$CROSS_RANLIB"  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
 
 	../configure $CONF_ARGS  >> $TOP_DIR/info.log 2>>$TOP_DIR/info_warn.log
-	check_cmd_stat $?
+	check_cmd_stat $? "configure error"
 
 	DO_MAKE_ALL
 	DO_MAKE_INSTALL DESTDIR=$EXT_DISTDIR
